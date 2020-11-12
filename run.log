@@ -1,0 +1,324 @@
+   ------------------------------------------------------------
+  | Welcome to ROOT 6.18/04                  https://root.cern |
+  |                               (c) 1995-2019, The ROOT Team |
+  | Built for linuxx8664gcc on Sep 11 2019, 15:38:23           |
+  | From tags/v6-18-04@v6-18-04                                |
+  | Try '.help', '.demo', '.license', '.credits', '.quit'/'.q' |
+   ------------------------------------------------------------
+
+GeoApaChannelGroupService::ctor: Group 0 (apa0) has 2560 channels from 4/4 readout planes.
+GeoApaChannelGroupService::ctor: Group 1 (apa1) has 2560 channels from 4/4 readout planes.
+GeoApaChannelGroupService::ctor: Group 2 (apa2) has 2560 channels from 4/4 readout planes.
+GeoApaChannelGroupService::ctor: Group 3 (apa3) has 2560 channels from 4/4 readout planes.
+GeoApaChannelGroupService::ctor: Group 4 (apa4) has 2560 channels from 4/4 readout planes.
+GeoApaChannelGroupService::ctor: Group 5 (apa5) has 2560 channels from 4/4 readout planes.
+PDSP Channel Map: Building RCE TPC wiremap from file protoDUNETPCChannelMap_RCE_v4.txt
+PDSP Channel Map: Building FELIX TPC wiremap from file protoDUNETPCChannelMap_RCE_v4.txt
+PDSP Channel Map: Building SSP channel map from file protoDUNESSPChannelMap_v1.txt
+ToolBasedRawDigitPrepService::ctor: ToolBasedRawDigitPrepService:
+ToolBasedRawDigitPrepService::ctor:                     LogLevel: 3
+ToolBasedRawDigitPrepService::ctor:                      DoWires: 0
+ToolBasedRawDigitPrepService::ctor:     No ADC channel tools.
+DuneToolManager::instance: Configuration file: mytools.fcl
+(DuneToolManager *) 0x894b720
+Tool manager is available at ptm
+
+Processing run.C(0, "0", 2, 0.090, 16855, 1)...
+run: Fetching waveform plotter.
+StandardAdcChannelStringTool::ctor: Configuration parameters:
+StandardAdcChannelStringTool::ctor:       LogLevel: 1
+StandardAdcChannelStringTool::ctor:       RunWidth: 6
+StandardAdcChannelStringTool::ctor:    SubRunWidth: 4
+StandardAdcChannelStringTool::ctor:     EventWidth: 6
+StandardAdcChannelStringTool::ctor:   ChannelWidth: 5
+StandardAdcChannelStringTool::ctor:     CountWidth: 4
+StandardAdcChannelStringTool::ctor:      FembWidth: 4
+StandardAdcChannelStringTool::ctor:   TriggerWidth: 2
+StandardAdcChannelStringTool::ctor:      TrigNames: [
+flag 0flag 1flag 2flag 3flag 4flag 5flag 6flag 7randomflag 9flag 10flag 11beamCRTNGT]
+AdcChannelPlotter::ctor: Fetching channel status service.
+AdcChannelPlotter::ctor:       LogLevel: 1
+AdcChannelPlotter::ctor:      HistTypes: [prepared]
+AdcChannelPlotter::ctor:       HistName: adc_%TYPE%_ev%EVENT%_ch%CHAN%
+AdcChannelPlotter::ctor:      HistTitle: ADC %TYPE% run %RUN% event %EVENT% channel %CHAN%
+AdcChannelPlotter::ctor:   RootFileName: 
+AdcChannelPlotter::ctor:   PlotFileName: 
+AdcChannelPlotter::ctor:     PlotSamMin: 0
+AdcChannelPlotter::ctor:     PlotSamMax: 1000
+AdcChannelPlotter::ctor:     PlotSigOpt: full
+AdcChannelPlotter::ctor:     PlotSigMin: 0
+AdcChannelPlotter::ctor:     PlotSigMax: 0
+AdcChannelPlotter::ctor:    PlotDistMin: 0
+AdcChannelPlotter::ctor:    PlotDistMax: 0
+AdcChannelPlotter::ctor:       ColorBad: 633
+AdcChannelPlotter::ctor:     ColorNoisy: 636
+AdcChannelPlotter::ctor:      LabelSize: 0.01
+AdcChannelPlotter::ctor:       SkipFlags: []
+run: Fetching reponse convolution tool.
+AdcDeconvoluteFFT:ctor: Using channel mapping tool pdspChannelToPlane
+AdcDeconvoluteFFT:ctor: Parameters:
+AdcDeconvoluteFFT:ctor:          LogLevel: 1
+AdcDeconvoluteFFT:ctor:            Action: 2 (FFT response convolution.)
+AdcDeconvoluteFFT:ctor:   ResponseVectors: [
+AdcDeconvoluteFFT:ctor:                      [  0.0012385,   0.0013957,   0.0015833,   0.0018085,   0.0020812,   0.0024141,   0.0028265,   0.0033739,   0.0043385,   0.0065527, 
+AdcDeconvoluteFFT:ctor:                         0.0109848,   0.0179115,   0.0266767,   0.0352190,   0.0393419,   0.0348150,   0.0212409,   0.0025350,  -0.0157293,  -0.0290488, 
+AdcDeconvoluteFFT:ctor:                        -0.0354568,  -0.0355463,  -0.0314740,  -0.0256824,  -0.0198311,  -0.0146580,  -0.0103759,  -0.0069977,  -0.0044654,  -0.0026774, 
+AdcDeconvoluteFFT:ctor:                        -0.0014978,  -0.0007753,  -0.0003674,  -0.0001569,  -0.0000590,  -0.0000188,  -0.0000049,  -0.0000011,  -0.0000005,  -0.0000004], 
+AdcDeconvoluteFFT:ctor:                      [  0.0002332,   0.0002589,   0.0002889,   0.0003239,   0.0003650,   0.0004135,   0.0004713,   0.0005460,   0.0006826,   0.0010144, 
+AdcDeconvoluteFFT:ctor:                         0.0016902,   0.0027450,   0.0041410,   0.0060075,   0.0089036,   0.0136016,   0.0204460,   0.0287503,   0.0359051,   0.0374584, 
+AdcDeconvoluteFFT:ctor:                         0.0302649,   0.0154112,  -0.0029333,  -0.0203670,  -0.0329147,  -0.0382135,  -0.0365549,  -0.0302588,  -0.0221915,  -0.0145915, 
+AdcDeconvoluteFFT:ctor:                        -0.0086380,  -0.0045918,  -0.0021684,  -0.0008887,  -0.0003015,  -0.0000762,  -0.0000111,  -0.0000019,  -0.0000049,  -0.0000064], 
+AdcDeconvoluteFFT:ctor:                      [  0.0000436,   0.0000480,   0.0000530,   0.0000587,   0.0000653,   0.0000730,   0.0000820,   0.0000935,   0.0001156,   0.0001719, 
+AdcDeconvoluteFFT:ctor:                         0.0002883,   0.0004691,   0.0007037,   0.0010068,   0.0014613,   0.0021849,   0.0032521,   0.0047398,   0.0069598,   0.0105867, 
+AdcDeconvoluteFFT:ctor:                         0.0163138,   0.0247836,   0.0400853,   0.0694278,   0.1073940,   0.1375910,   0.1473380,   0.1352770,   0.1088480,   0.0778980, 
+AdcDeconvoluteFFT:ctor:                         0.0499836,   0.0287999,   0.0148160,   0.0066973,   0.0025690,   0.0007717,   0.0001410,  -0.0000058,  -0.0000033,   0.0000178]
+AdcDeconvoluteFFT:ctor:                    ]
+AdcDeconvoluteFFT:ctor:   GausFilterSigmas: [3.0000000, 3.0000000, 3.0000000]
+AdcDeconvoluteFFT:ctor:   LowFilterWidths: [-1.0000000, -1.0000000, -1.0000000]
+AdcDeconvoluteFFT:ctor:   LowFilterPowers: [0.0000000, 0.0000000, 0.0000000]
+AdcDeconvoluteFFT:ctor:     ChannelMapTool: pdspChannelToPlane
+run: Fetching deconvolution tool.
+AdcDeconvoluteFFT:ctor: Using channel mapping tool pdspChannelToPlane
+AdcDeconvoluteFFT:ctor: Parameters:
+AdcDeconvoluteFFT:ctor:          LogLevel: 1
+AdcDeconvoluteFFT:ctor:            Action: 1 (Deconvolution.)
+AdcDeconvoluteFFT:ctor:   ResponseVectors: [
+AdcDeconvoluteFFT:ctor:                      [  0.0012385,   0.0013957,   0.0015833,   0.0018085,   0.0020812,   0.0024141,   0.0028265,   0.0033739,   0.0043385,   0.0065527, 
+AdcDeconvoluteFFT:ctor:                         0.0109848,   0.0179115,   0.0266767,   0.0352190,   0.0393419,   0.0348150,   0.0212409,   0.0025350,  -0.0157293,  -0.0290488, 
+AdcDeconvoluteFFT:ctor:                        -0.0354568,  -0.0355463,  -0.0314740,  -0.0256824,  -0.0198311,  -0.0146580,  -0.0103759,  -0.0069977,  -0.0044654,  -0.0026774, 
+AdcDeconvoluteFFT:ctor:                        -0.0014978,  -0.0007753,  -0.0003674,  -0.0001569,  -0.0000590,  -0.0000188,  -0.0000049,  -0.0000011,  -0.0000005,  -0.0000004], 
+AdcDeconvoluteFFT:ctor:                      [  0.0002332,   0.0002589,   0.0002889,   0.0003239,   0.0003650,   0.0004135,   0.0004713,   0.0005460,   0.0006826,   0.0010144, 
+AdcDeconvoluteFFT:ctor:                         0.0016902,   0.0027450,   0.0041410,   0.0060075,   0.0089036,   0.0136016,   0.0204460,   0.0287503,   0.0359051,   0.0374584, 
+AdcDeconvoluteFFT:ctor:                         0.0302649,   0.0154112,  -0.0029333,  -0.0203670,  -0.0329147,  -0.0382135,  -0.0365549,  -0.0302588,  -0.0221915,  -0.0145915, 
+AdcDeconvoluteFFT:ctor:                        -0.0086380,  -0.0045918,  -0.0021684,  -0.0008887,  -0.0003015,  -0.0000762,  -0.0000111,  -0.0000019,  -0.0000049,  -0.0000064], 
+AdcDeconvoluteFFT:ctor:                      [  0.0000436,   0.0000480,   0.0000530,   0.0000587,   0.0000653,   0.0000730,   0.0000820,   0.0000935,   0.0001156,   0.0001719, 
+AdcDeconvoluteFFT:ctor:                         0.0002883,   0.0004691,   0.0007037,   0.0010068,   0.0014613,   0.0021849,   0.0032521,   0.0047398,   0.0069598,   0.0105867, 
+AdcDeconvoluteFFT:ctor:                         0.0163138,   0.0247836,   0.0400853,   0.0694278,   0.1073940,   0.1375910,   0.1473380,   0.1352770,   0.1088480,   0.0778980, 
+AdcDeconvoluteFFT:ctor:                         0.0499836,   0.0287999,   0.0148160,   0.0066973,   0.0025690,   0.0007717,   0.0001410,  -0.0000058,  -0.0000033,   0.0000178]
+AdcDeconvoluteFFT:ctor:                    ]
+AdcDeconvoluteFFT:ctor:   GausFilterSigmas: [3.0000000, 3.0000000, 3.0000000]
+AdcDeconvoluteFFT:ctor:   LowFilterWidths: [1.0000000, 1.0000000, -1.0000000]
+AdcDeconvoluteFFT:ctor:   LowFilterPowers: [2.0000000, 2.0000000, 2.0000000]
+AdcDeconvoluteFFT:ctor:     ChannelMapTool: pdspChannelToPlane
+run: Fetching DFT before plotter.
+AdcMultiChannelPlotter::ctor:            LogLevel: 1
+AdcMultiChannelPlotter::ctor:    PlotChannelRanges: []
+AdcMultiChannelPlotter::ctor:    PlotChannelGroups: []
+AdcMultiChannelPlotter::ctor:   PlotOverlayGroups: 1
+AdcMultiChannelPlotter::ctor:        PlotDataView: 
+AdcMultiChannelPlotter::ctor:            PlotName: 
+AdcMultiChannelPlotter::ctor:    PlotSummaryNames: [dftpwrbefore_run%0RUN%_ch%0CHAN%.png, ]
+AdcMultiChannelPlotter::ctor:           PlotSizeX: 700
+AdcMultiChannelPlotter::ctor:           PlotSizeY: 500
+AdcMultiChannelPlotter::ctor:          PlotSplitX: 1
+AdcMultiChannelPlotter::ctor:          PlotSplitY: 1
+AdcMultiChannelPlotter::ctor: Drawing pad count is 0
+AdcChannelDftPlotter::ctor: Configuration: 
+AdcChannelDftPlotter::ctor:            Variable: power
+AdcChannelDftPlotter::ctor:   ChannelStatusFlag: 0
+AdcChannelDftPlotter::ctor:          SampleFreq: 2000
+AdcChannelDftPlotter::ctor:               NBinX: 0
+AdcChannelDftPlotter::ctor:                XMin: 0
+AdcChannelDftPlotter::ctor:                XMax: 400
+AdcChannelDftPlotter::ctor:                YMax: 0
+AdcChannelDftPlotter::ctor:             YMinLog: 0
+AdcChannelDftPlotter::ctor:            HistName: hdftpower_run%0RUN%_evt%0EVENT_ch%0CHAN%%
+AdcChannelDftPlotter::ctor:           HistTitle: 
+AdcChannelDftPlotter::ctor:   HistSummaryTitles: [DFT power before deconvolution for %CRNAME%, ]
+run: Fetching DFT after plotter.
+AdcMultiChannelPlotter::ctor:            LogLevel: 4
+AdcMultiChannelPlotter::ctor:    PlotChannelRanges: []
+AdcMultiChannelPlotter::ctor:    PlotChannelGroups: []
+AdcMultiChannelPlotter::ctor:   PlotOverlayGroups: 1
+AdcMultiChannelPlotter::ctor:        PlotDataView: 
+AdcMultiChannelPlotter::ctor:            PlotName: 
+AdcMultiChannelPlotter::ctor:    PlotSummaryNames: [dftpwrafter_run%0RUN%_ch%0CHAN%.png, ]
+AdcMultiChannelPlotter::ctor:           PlotSizeX: 700
+AdcMultiChannelPlotter::ctor:           PlotSizeY: 500
+AdcMultiChannelPlotter::ctor:          PlotSplitX: 1
+AdcMultiChannelPlotter::ctor:          PlotSplitY: 1
+AdcMultiChannelPlotter::ctor: Drawing pad count is 0
+AdcChannelDftPlotter::ctor: Configuration: 
+AdcChannelDftPlotter::ctor:            Variable: power
+AdcChannelDftPlotter::ctor:   ChannelStatusFlag: 0
+AdcChannelDftPlotter::ctor:          SampleFreq: 2000
+AdcChannelDftPlotter::ctor:               NBinX: 0
+AdcChannelDftPlotter::ctor:                XMin: 0
+AdcChannelDftPlotter::ctor:                XMax: 400
+AdcChannelDftPlotter::ctor:                YMax: 0
+AdcChannelDftPlotter::ctor:             YMinLog: 0
+AdcChannelDftPlotter::ctor:            HistName: hdftpower_run%0RUN%_evt%0EVENT_ch%0CHAN%%
+AdcChannelDftPlotter::ctor:           HistTitle: 
+AdcChannelDftPlotter::ctor:   HistSummaryTitles: [DFT power after deconvolution for %CRNAME%, ]
+run: Fetching FFT calculator.
+AdcChannelFFT::ctor: Configuration: 
+AdcChannelFFT::ctor:             LogLevel: 1
+AdcChannelFFT::ctor:            FirstTick: 0
+AdcChannelFFT::ctor:                NTick: 0
+AdcChannelFFT::ctor:               Action: 3
+AdcChannelFFT::ctor:            ReturnOpt: 1
+AdcChannelFFT::ctor:             DataView: 
+run: Fetching signal finder.
+AdcThresholdSignalFinder::ctor: Configuration parameters:
+AdcThresholdSignalFinder::ctor:       LogLevel: 1
+AdcThresholdSignalFinder::ctor:      Threshold: 0.5
+AdcThresholdSignalFinder::ctor:     BinsBefore: 10
+AdcThresholdSignalFinder::ctor:      BinsAfter: 20
+AdcThresholdSignalFinder::ctor:   FlagPositive: true
+AdcThresholdSignalFinder::ctor:   FlagNegative: true
+run: Fetching sample RMS calculator.
+AdcChannelMetric::ctor: Configuration: 
+AdcChannelMetric::ctor:             LogLevel: 1
+AdcChannelMetric::ctor:               Metric: samRms
+AdcChannelMetric::ctor:             DataView: 
+AdcChannelMetric::ctor:    PedestalReference: 
+AdcChannelMetric::ctor:    MetricSummaryView: 
+AdcChannelMetric::ctor:        ChannelRanges: [all]
+AdcChannelMetric::ctor:            MetricMin: 0
+AdcChannelMetric::ctor:            MetricMax: 11
+AdcChannelMetric::ctor:           MetricBins: 0
+AdcChannelMetric::ctor:   ChannelLineModulus: 0
+AdcChannelMetric::ctor:   ChannelLinePattern: {}
+AdcChannelMetric::ctor:   ChannelCounts: {}
+AdcChannelMetric::ctor:            PlotSizeX: 1400
+AdcChannelMetric::ctor:            PlotSizeY: 500
+AdcChannelMetric::ctor:             HistName: hchsamrms_%0RUN%_%0EVENT%_%0CHAN1%_%0CHAN2%
+AdcChannelMetric::ctor:            HistTitle: ADC sample RMS for run %RUN% event %EVENT%
+AdcChannelMetric::ctor:          MetricLabel: RMS [ke]
+AdcChannelMetric::ctor:         PlotFileName: hchsamrms_run%0RUN%_evt%0EVENT%_chans%0CHAN1%-%0CHAN2%.png
+AdcChannelMetric::ctor:       PlotUsesStatus: 0
+AdcChannelMetric::ctor:         RootFileName: 
+AdcChannelMetric::initialize: Initializing 1 channel ranges.
+AdcChannelMetric::initialize: Initialized 0 channels.
+run: Fetching signal RMS calculator.
+AdcChannelMetric::ctor: Configuration: 
+AdcChannelMetric::ctor:             LogLevel: 1
+AdcChannelMetric::ctor:               Metric: sigRms
+AdcChannelMetric::ctor:             DataView: 
+AdcChannelMetric::ctor:    PedestalReference: 
+AdcChannelMetric::ctor:    MetricSummaryView: 
+AdcChannelMetric::ctor:        ChannelRanges: [all]
+AdcChannelMetric::ctor:            MetricMin: 0
+AdcChannelMetric::ctor:            MetricMax: 11
+AdcChannelMetric::ctor:           MetricBins: 0
+AdcChannelMetric::ctor:   ChannelLineModulus: 0
+AdcChannelMetric::ctor:   ChannelLinePattern: {}
+AdcChannelMetric::ctor:   ChannelCounts: {}
+AdcChannelMetric::ctor:            PlotSizeX: 1400
+AdcChannelMetric::ctor:            PlotSizeY: 500
+AdcChannelMetric::ctor:             HistName: hchsigrms_%0RUN%_%0EVENT%_%0CHAN1%_%0CHAN2%
+AdcChannelMetric::ctor:            HistTitle: ADC signal RMS for run %RUN% event %EVENT%
+AdcChannelMetric::ctor:          MetricLabel: RMS [ke]
+AdcChannelMetric::ctor:         PlotFileName: hchsigrms_run%0RUN%_evt%0EVENT%_chans%0CHAN1%-%0CHAN2%.png
+AdcChannelMetric::ctor:       PlotUsesStatus: 0
+AdcChannelMetric::ctor:         RootFileName: 
+AdcChannelMetric::initialize: Initializing 1 channel ranges.
+AdcChannelMetric::initialize: Initialized 0 channels.
+run:   ds = 4.79 mm
+run:   dt = 0 tick
+run:   dq = 28.74 ke
+run:   Q[0] = 28.74
+run: Sample count: 100
+run: Convoluting channel 2000
+Status: 0
+run: Deconvoluting channel 2000
+Status: 0
+AdcMultiChannelPlotter::viewMap: Per page pad count is 0 (0 x 0)
+AdcMultiChannelPlotter::viewMap: Pad count is 1
+AdcMultiChannelPlotter::viewMap:   Processing pad 0 for channel group chan002000
+AdcMultiChannelPlotter::viewMap:     Processing channel range chan002000 with 1 entry in 1 channel.
+AdcMultiChannelPlotter::viewMap:     Creating canvas for run 100, event 1.
+AdcMultiChannelPlotter::viewMap:     Created pad with no plot name.
+AdcChannelDftPlotter::viewLocal: Filling CR chan002000 with ADC channel data size 1
+AdcMultiChannelPlotter::viewMap:   Not printing canvas for channel group chan002000.
+AdcMultiChannelPlotter::viewSummary: Summmary plots not named for level 1
+run: Sample RMS: 0.292958
+run: Signal RMS: 0.0718572
+TH1.Print Name  = adc_prepared_ev1_ch2000, Entries= 1000, Total sum= 32.1316
+run: X: Area = 32.1, #Sigma|Area| = -32.1, Asym = -1.002
+run: Convoluting channel 0
+Status: 0
+run: Deconvoluting channel 0
+Status: 0
+AdcMultiChannelPlotter::viewMap: Per page pad count is 0 (0 x 0)
+AdcMultiChannelPlotter::viewMap: Pad count is 1
+AdcMultiChannelPlotter::viewMap:   Processing pad 0 for channel group chan000000
+AdcMultiChannelPlotter::viewMap:     Processing channel range chan000000 with 1 entry in 1 channel.
+AdcMultiChannelPlotter::viewMap:     Creating canvas for run 100, event 1.
+AdcMultiChannelPlotter::viewMap:     Created pad with no plot name.
+AdcChannelDftPlotter::viewLocal: Filling CR chan000000 with ADC channel data size 1
+AdcMultiChannelPlotter::viewMap:   Not printing canvas for channel group chan000000.
+AdcMultiChannelPlotter::viewSummary: Summmary plots not named for level 1
+run: Sample RMS: 0.00114235
+run: Signal RMS: 0.00114235
+TH1.Print Name  = adc_prepared_ev1_ch0, Entries= 1000, Total sum= 2.11571e-10
+run: U: Area = 0.0, #Sigma|Area| = 0.0, Asym = 0.000
+run: Convoluting channel 1000
+Status: 0
+run: Deconvoluting channel 1000
+Status: 0
+AdcMultiChannelPlotter::viewMap: Per page pad count is 0 (0 x 0)
+AdcMultiChannelPlotter::viewMap: Pad count is 1
+AdcMultiChannelPlotter::viewMap:   Processing pad 0 for channel group chan001000
+AdcMultiChannelPlotter::viewMap:     Processing channel range chan001000 with 1 entry in 1 channel.
+AdcMultiChannelPlotter::viewMap:     Creating canvas for run 100, event 1.
+AdcMultiChannelPlotter::viewMap:     Created pad with no plot name.
+AdcChannelDftPlotter::viewLocal: Filling CR chan001000 with ADC channel data size 1
+AdcMultiChannelPlotter::viewMap:   Not printing canvas for channel group chan001000.
+AdcMultiChannelPlotter::viewSummary: Summmary plots not named for level 1
+run: Sample RMS: 0.00119958
+run: Signal RMS: 0.00119958
+TH1.Print Name  = adc_prepared_ev1_ch1000, Entries= 1000, Total sum= -6.08878e-10
+run: V: Area = -0.0, #Sigma|Area| = 0.0, Asym = -0.000
+run: Printing wfdeconv-sigma0-thtxz0.0nsam01000.{png,tpad}
+run: Closing tools.
+AdcChannelDftPlotter::dtor: Closing.
+AdcChannelDftPlotter::dtor: No channel ranges specified.
+AdcChannelDftPlotter::dtor: No channel groups specified.
+AdcMultiChannelPlotter::viewSummary: Creating summmary plots for level 0
+AdcMultiChannelPlotter::viewSummary: Pad count/page is 1 (1 x 1)
+AdcMultiChannelPlotter::viewSummary: Pad count is 3
+AdcMultiChannelPlotter::viewSummary:   Channel group chan000000 channel range count is 1
+AdcMultiChannelPlotter::viewSummary:     Processing group/range chan000000/chan000000
+AdcMultiChannelPlotter::viewSummary:     Creating canvas for run 100, event 1.
+AdcChannelDftPlotter::viewMapSummary: Processing chan000000/chan000000 (0/1)
+AdcMultiChannelPlotter::viewSummary:   Printing summary canvas to dftpwrafter_run000100_ch00000.png
+AdcMultiChannelPlotter::viewSummary:   Channel group chan001000 channel range count is 1
+AdcMultiChannelPlotter::viewSummary:     Processing group/range chan001000/chan001000
+AdcMultiChannelPlotter::viewSummary:     Creating canvas for run 100, event 1.
+AdcChannelDftPlotter::viewMapSummary: Processing chan001000/chan001000 (0/1)
+AdcMultiChannelPlotter::viewSummary:   Printing summary canvas to dftpwrafter_run000100_ch01000.png
+AdcMultiChannelPlotter::viewSummary:   Channel group chan002000 channel range count is 1
+AdcMultiChannelPlotter::viewSummary:     Processing group/range chan002000/chan002000
+AdcMultiChannelPlotter::viewSummary:     Creating canvas for run 100, event 1.
+AdcChannelDftPlotter::viewMapSummary: Processing chan002000/chan002000 (0/1)
+AdcMultiChannelPlotter::viewSummary:   Printing summary canvas to dftpwrafter_run000100_ch02000.png
+run: Exiting.
+(int) 0
+AdcChannelMetric::dtor: Summary for metric sigRms
+AdcChannelMetric::dtor:                            # inits: 1
+AdcChannelMetric::dtor:                            # calls: 0
+AdcChannelMetric::dtor:                           # events: 0
+AdcChannelMetric::dtor:                             # runs: 0
+AdcChannelMetric::dtor:    Maximum # entries for a channel: 0
+AdcChannelMetric::dtor:   Maximum weight sum for a channel: 0
+AdcChannelMetric::dtor:         Total # channels in ranges: 0
+AdcChannelMetric::dtor:            # channels without data: 0
+AdcChannelMetric::dtor:               # channels with data: 0
+AdcChannelMetric::dtor:      # channels with max # entries: 0
+AdcChannelMetric::dtor: Summary for metric samRms
+AdcChannelMetric::dtor:                            # inits: 1
+AdcChannelMetric::dtor:                            # calls: 0
+AdcChannelMetric::dtor:                           # events: 0
+AdcChannelMetric::dtor:                             # runs: 0
+AdcChannelMetric::dtor:    Maximum # entries for a channel: 0
+AdcChannelMetric::dtor:   Maximum weight sum for a channel: 0
+AdcChannelMetric::dtor:         Total # channels in ranges: 0
+AdcChannelMetric::dtor:            # channels without data: 0
+AdcChannelMetric::dtor:               # channels with data: 0
+AdcChannelMetric::dtor:      # channels with max # entries: 0
+ToolBasedRawDigitPrepService:dtor: Event count: 0
+ToolBasedRawDigitPrepService:dtor:  Call count: 0
+ToolBasedRawDigitPrepService:dtor: Time report for 0 tools.
+DIR: /dune/data/users/dladams/wwwdune/protodune/test/test07
+URL: http://internal.dunescience.org/people/dladams/protodune/test/test07

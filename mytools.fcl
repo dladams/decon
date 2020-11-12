@@ -1,0 +1,118 @@
+#include "load_dataprep.fcl"
+
+tools.wf: @local::tools.adcPlotPrepared
+
+# These are the Oct 2020 offset -2 values
+data.ResponseVectorU: [
+   0.00123846,  0.00139574,  0.00158327,  0.00180854,  0.00208124,  0.00241413,  0.00282647,  0.00337392,  0.00433854,  0.00655272,
+    0.0109848,   0.0179115,   0.0266767,    0.035219,   0.0393419,    0.034815,   0.0212409,  0.00253496,  -0.0157293,  -0.0290488,
+   -0.0354568,  -0.0355463,   -0.031474,  -0.0256824,  -0.0198311,   -0.014658,  -0.0103759, -0.00699765,  -0.0044654, -0.00267745,
+  -0.00149777,-0.000775304, -0.00036739,-0.000156911,-5.89844e-05,-1.88179e-05, -4.8794e-06,  -1.121e-06,-4.83491e-07,-4.28621e-07
+]
+data.ResponseVectorV: [
+   0.00023318, 0.000258945,  0.00028891, 0.000323924, 0.000365023, 0.000413484, 0.000471287, 0.000546042, 0.000682586,  0.00101444,
+   0.00169017,  0.00274497,  0.00414105,  0.00600755,  0.00890356,   0.0136016,    0.020446,   0.0287503,   0.0359051,   0.0374584,
+    0.0302649,   0.0154112, -0.00293334,   -0.020367,  -0.0329147,  -0.0382135,  -0.0365549,  -0.0302588,  -0.0221915,  -0.0145915,
+  -0.00863804,  -0.0045918, -0.00216836,-0.000888679,-0.000301458, -7.6215e-05,-1.10614e-05,-1.92908e-06, -4.8822e-06,-6.42341e-06
+]
+data.ResponseVectorX: [
+   4.3648e-05, 4.80077e-05, 5.29995e-05, 5.87355e-05, 6.53484e-05, 7.29987e-05, 8.19575e-05, 9.34966e-05, 0.000115576, 0.000171926,
+  0.000288335, 0.000469116, 0.000703668,  0.00100676,  0.00146128,  0.00218491,  0.00325212,  0.00473977,   0.0069598,   0.0105867,
+    0.0163138,   0.0247836,   0.0400853,   0.0694278,    0.107394,    0.137591,    0.147338,    0.135277,    0.108848,    0.077898,
+    0.0499836,   0.0287999,    0.014816,  0.00669725,    0.002569, 0.000771684, 0.000140983,-5.75054e-06, -3.2669e-06, 1.78128e-05
+]
+
+data.ResponseVectors: [ @local::data.ResponseVectorU, @local::data.ResponseVectorV, @local::data.ResponseVectorX]
+
+data.filterSigma:  3.0
+data.filterWidth:  1.0   # Negative deactivates, 0 filters only DC
+data.filterPower:  2.0
+
+# Order is u, v, x
+data.filterSigmas: [ @local::data.filterSigma, @local::data.filterSigma, @local::data.filterSigma]
+data.filterWidths: [ @local::data.filterWidth, @local::data.filterWidth, -1.0]
+data.filterPowers: [ @local::data.filterPower, @local::data.filterPower, @local::data.filterPower]
+
+# Deconvolute with response function
+tools.decon: {
+  tool_type: AdcDeconvoluteFFT
+  LogLevel: 1
+  Action: 1
+  ResponseVectors: @local::data.ResponseVectors
+  GausFilterSigmas: @local::data.filterSigmas
+  LowFilterWidths: @local::data.filterWidths
+  LowFilterPowers: @local::data.filterPowers
+  IndexMapTool: pdspChannelToPlane
+}
+
+# Convolute with response function
+tools.convo: {
+  tool_type: AdcDeconvoluteFFT
+  LogLevel: 1
+  Action: 2
+  ResponseVectors: @local::data.ResponseVectors
+  GausFilterSigmas: @local::data.filterSigmas
+  LowFilterWidths: [-1.0, -1.0, -1.0]
+  LowFilterPowers: [ 0.0,  0.0,  0.0]
+  IndexMapTool: pdspChannelToPlane
+}
+
+# Convolute with Gaussian.
+tools.convg1: {
+  tool_type: AdcDeconvoluteFFT
+  LogLevel: 1
+  Action: 3
+  ResponseVectors: [[]]
+  GausFilterSigmas: [1.0]
+  LowFilterWidths: [-1.0]
+  LowFilterPowers: [ 0.0]
+  IndexMapTool: ""
+}
+
+tools.convg2: @local::tools.convg1
+tools.convg2.GausFilterSigmas: [2.0]
+
+tools.convg3: @local::tools.convg1
+tools.convg3.GausFilterSigmas: [3.0]
+
+########################################################################
+
+tools.plotDft: @local::tools.adcPlotDftPower
+tools.plotDft.YMax: 10.0
+tools.plotDft.YMax: 0.0
+tools.plotDft.NBinX:   0
+tools.plotDft.XMin:   0.0
+tools.plotDft.XMax: 400.0
+tools.plotDft.PlotName: "dftpwr_run%0RUN%_evt%0EVENT%_ch%0CHAN%.png"
+tools.plotDft.HistTitle: "DFT power for run %RUN% event %EVENT% channel %CHAN%"
+
+tools.plotDftBefore: @local::tools.plotDft
+tools.plotDftBefore.PlotName: "dftpwrbefore_run%0RUN%_evt%0EVENT%_ch%0CHAN%.png"
+tools.plotDftBefore.PlotName: ""
+tools.plotDftBefore.HistTitle: ""
+tools.plotDftBefore.HistSummaryTitles: ["DFT power before deconvolution for %CRNAME%", ""]
+tools.plotDftBefore.PlotSummaryNames: ["dftpwrbefore_run%0RUN%_ch%0CHAN%.png", ""]
+tools.plotDftBefore.PlotSizeX: 700
+tools.plotDftBefore.PlotSizeY: 500
+tools.plotDftBefore.PlotSplitX: 1
+tools.plotDftBefore.PlotSplitY: 1
+
+tools.plotDftAfter: @local::tools.plotDft
+tools.plotDftAfter.PlotName: "dftpwrafter_run%0RUN%_evt%0EVENT%_ch%0CHAN%.png"
+tools.plotDftAfter.PlotName: ""
+tools.plotDftAfter.HistTitle: ""
+tools.plotDftAfter.HistSummaryTitles: ["DFT power after deconvolution for %CRNAME%", ""]
+tools.plotDftAfter.PlotSummaryNames: ["dftpwrafter_run%0RUN%_ch%0CHAN%.png", ""]
+tools.plotDftAfter.PlotSizeX: 700
+tools.plotDftAfter.PlotSizeY: 500
+tools.plotDftAfter.PlotSplitX: 1
+tools.plotDftAfter.PlotSplitY: 1
+
+tools.plotDftAfter.LogLevel: 4
+
+########################################################################
+
+tools.adcThresholdSignalFinder.Threshold: 0.5
+
+tools.adcChannelSamplelRmsPlotter.MetricLabel: "RMS [ke]"
+tools.adcChannelSignalRmsPlotter.MetricLabel: "RMS [ke]"

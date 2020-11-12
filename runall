@@ -1,0 +1,8 @@
+rm -f wf*png
+rm -f wsave/*
+for THT in 0 15 30 60; do
+  for SIG in 0 1 2; do
+    ./run $THT $SIG
+  done
+  ./run $THT 0 true
+done
