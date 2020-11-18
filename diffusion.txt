@@ -1,0 +1,29 @@
+Diffusion estimates
+David Adams
+November 2020
+
+The RMS spread in space of signal is
+
+  sig_x = sqrt(2 D t)
+
+where D is the diffusion coefficient and t is the drift time.
+
+For constant drift speed v, the corresponding spread in time
+
+  sig_t = sqrt(2 D t)/v
+
+        = sqrt(2 D x / v) /v
+
+where D is the diffusion coefficient and t is the drift time.
+In the second expression x is the drift distance and v is the
+drift speed.
+
+For protoDUNE and DUNE with E = 0.5 kV/cm:
+
+  v = 1.60 mm/us = 0.16 cm/us
+
+  D = 5 cm^2/s = 5e-6 cm^s/us
+
+  sig_t = 0.49 sqrt(x)
+
+where the drift distance x is in meters.
