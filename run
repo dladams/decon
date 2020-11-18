@@ -1,11 +1,20 @@
+#!/bin/sh
+
+# run
+#
+# David Adams
+# November 2020
+#
+# Shell script to run the simulation in run.C.
+
 ICONV=$1
 DXDZ=$2
 SIGMA=$3
 NOISE=$4
-SEED=$5
+RUN=$5
 NEVT=$6
 if [ -z "$SIGMA" ]; then
-  echo Usage: $0 ICONV THTDZ SIGMA [NOISE]
+  echo Usage: $0 ICONV THTDZ SIGMA [NOISE [RUN [NEVT]]]]
   echo "         ICONV = 0: True energy deposit"
   echo "         ICONV = 1: Convolution and smearing"
   echo "         ICONV = 2: Deconvolution"
@@ -13,10 +22,15 @@ if [ -z "$SIGMA" ]; then
 fi
 if [ -z "$NOISE" ]; then
   NOISE=0.0
-  SEED=0
+fi
+if [ -z "RUN" ]; then
+  RUN=1
+fi
+if [ -z "NEVT" ]; then
+  NEVT=1
 fi
 rm -f wsave/* &&
-root.exe -q 'run.C('$DXDZ', "'$SIGMA'", '$ICONV', '$NOISE', '$SEED', '$NEVT')' &&
-cp wf*.png wsave
-cp dft*.png wsave
+rm -f *.png *.tpad
+root.exe -b -q 'run.C('$DXDZ', "'$SIGMA'", '$ICONV', '$NOISE', '$RUN', '$NEVT')' | tee run.log &&
+cp *.png wsave
 makeIndex wsave

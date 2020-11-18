@@ -23,9 +23,10 @@ data.ResponseVectorX: [
 ]
 
 data.ResponseVectors: [ @local::data.ResponseVectorU, @local::data.ResponseVectorV, @local::data.ResponseVectorX]
+data.ResponseCenters: [25, 25, 25]
 
 data.filterSigma:  3.0
-data.filterWidth:  1.0   # Negative deactivates, 0 filters only DC
+data.filterWidth: -1.0   # Negative deactivates, 0 filters only DC
 data.filterPower:  2.0
 
 # Order is u, v, x
@@ -39,6 +40,7 @@ tools.decon: {
   LogLevel: 1
   Action: 1
   ResponseVectors: @local::data.ResponseVectors
+  ResponseCenters: @local::data.ResponseCenters
   GausFilterSigmas: @local::data.filterSigmas
   LowFilterWidths: @local::data.filterWidths
   LowFilterPowers: @local::data.filterPowers
@@ -51,6 +53,7 @@ tools.convo: {
   LogLevel: 1
   Action: 2
   ResponseVectors: @local::data.ResponseVectors
+  ResponseCenters: @local::data.ResponseCenters
   GausFilterSigmas: @local::data.filterSigmas
   LowFilterWidths: [-1.0, -1.0, -1.0]
   LowFilterPowers: [ 0.0,  0.0,  0.0]
@@ -63,6 +66,7 @@ tools.convg1: {
   LogLevel: 1
   Action: 3
   ResponseVectors: [[]]
+  ResponseCenters: []
   GausFilterSigmas: [1.0]
   LowFilterWidths: [-1.0]
   LowFilterPowers: [ 0.0]
@@ -77,7 +81,7 @@ tools.convg3.GausFilterSigmas: [3.0]
 
 ########################################################################
 
-tools.plotDft: @local::tools.adcPlotDftPower
+tools.plotDft: @local::tools.adcPlotDftTickPower
 tools.plotDft.YMax: 10.0
 tools.plotDft.YMax: 0.0
 tools.plotDft.NBinX:   0
@@ -91,7 +95,7 @@ tools.plotDftBefore.PlotName: "dftpwrbefore_run%0RUN%_evt%0EVENT%_ch%0CHAN%.png"
 tools.plotDftBefore.PlotName: ""
 tools.plotDftBefore.HistTitle: ""
 tools.plotDftBefore.HistSummaryTitles: ["DFT power before deconvolution for %CRNAME%", ""]
-tools.plotDftBefore.PlotSummaryNames: ["dftpwrbefore_run%0RUN%_ch%0CHAN%.png", ""]
+tools.plotDftBefore.PlotSummaryNames: ["dftpwrbefore_run%0RUN%_ch%0CHAN%.{png,tpad}", ""]
 tools.plotDftBefore.PlotSizeX: 700
 tools.plotDftBefore.PlotSizeY: 500
 tools.plotDftBefore.PlotSplitX: 1
@@ -102,17 +106,100 @@ tools.plotDftAfter.PlotName: "dftpwrafter_run%0RUN%_evt%0EVENT%_ch%0CHAN%.png"
 tools.plotDftAfter.PlotName: ""
 tools.plotDftAfter.HistTitle: ""
 tools.plotDftAfter.HistSummaryTitles: ["DFT power after deconvolution for %CRNAME%", ""]
-tools.plotDftAfter.PlotSummaryNames: ["dftpwrafter_run%0RUN%_ch%0CHAN%.png", ""]
+tools.plotDftAfter.PlotSummaryNames: ["dftpwrafter_run%0RUN%_ch%0CHAN%.{png,tpad}", ""]
 tools.plotDftAfter.PlotSizeX: 700
 tools.plotDftAfter.PlotSizeY: 500
 tools.plotDftAfter.PlotSplitX: 1
 tools.plotDftAfter.PlotSplitY: 1
 
-tools.plotDftAfter.LogLevel: 4
+tools.plotDftAfter.LogLevel: 1
 
 ########################################################################
 
-tools.adcThresholdSignalFinder.Threshold: 0.5
+# Final signal finder, e.g. after deconvolution and rebaselining.
+tools.deconSignalFinder: {
+  tool_type: AdcThresholdSignalFinder
+  LogLevel: 1
+  Threshold: 2.0
+  BinsBefore: 10
+  BinsAfter: 10
+  FlagPositive: true
+  FlagNegative: false
+}
 
 tools.adcChannelSamplelRmsPlotter.MetricLabel: "RMS [ke]"
 tools.adcChannelSignalRmsPlotter.MetricLabel: "RMS [ke]"
+
+########################################################################
+
+tools.rebaselineSignalFinder: {
+  tool_type: AdcThresholdSignalFinder
+  LogLevel: 1
+  Threshold: 2.0
+  BinsBefore: 10
+  BinsAfter: 10
+  FlagPositive: true
+  FlagNegative: false
+}
+
+tools.rebaseline: {
+  tool_type: ExpTailPedRemover
+  LogLevel: 3
+  DecayTime: 0
+  SignalFlag: 3
+  SignalIterationLimit: 10
+  SignalTool: rebaselineSignalFinder
+  MaxTick: 21000
+  PedDegree: 0
+  PedTick0: 50
+  PedFreqs: []
+  NoWarnStatuses: [1]
+  IncludeChannelRanges: ["apa3u", "apa3v"]
+  ExcludeChannelRanges: []
+}
+
+# This only worke with raw data, not samples
+tools.adcPedestalFit: {
+  tool_type: AdcPedestalFitter
+  LogLevel: 1
+  FitOpt: 1
+  FitPrecision: 1.0
+  SkipFlags: [8, 9, 10, 11, 12]
+  AdcFitRange: 100
+  FitRmsMin:  3.0
+  FitRmsMax: 20.0
+  RemoveStickyCode: true
+  HistName: "adcped_ev%0EVENT%_ch%0CHAN%"
+  HistTitle: "ADC pedestal fit for run %RUN% event %EVENT% channel %CHAN%"
+  PlotFileName: ""
+  RootFileName: ""
+  HistManager: ""
+  PlotSizeX: 0
+  PlotSizeY: 0
+  PlotSplitX: 0
+  PlotSplitY: 0
+  PlotShowFit: 1
+}
+
+########################################################################
+
+# This ROI viewer cretaes the final charge histograms.
+
+tools.roiViewer: @local::tools.adcRoiViewer
+tools.roiViewer.SumHists: [
+  {var:sigArea  name:"hsa_ch%0CHAN%"  title:"ROI signal area run %RUN% channel %CHAN%"    nbin:200  xmin:-50 xmax:150 fit:gaus  plot:"hsa_ch%0CHAN%.{png,tpad}"  pwid:0}
+]
+tools.roiViewer.SumPlotPadX: 1
+tools.roiViewer.SumPlotPadY: 1
+
+tools.roiViewerWide: @local::tools.roiViewer
+tools.roiViewerWide.SumHists: [
+  {var:sigArea  name:"hsa_ch%0CHAN%"  title:"ROI signal area run %RUN% channel %CHAN%"    nbin:250  xmin:-100 xmax:400 fit:gaus  plot:"hsa_ch%0CHAN%.{png,tpad}"  pwid:0}
+]
+
+tools.roiViewerWide2: @local::tools.roiViewer
+tools.roiViewerWide2.SumHists: [
+  {var:sigArea  name:"hsa_ch%0CHAN%"  title:"ROI signal area run %RUN% channel %CHAN%"    nbin:200  xmin:-100 xmax:700 fit:gaus  plot:"hsa_ch%0CHAN%.{png,tpad}"  pwid:0}
+]
+
+tools.roiViewer.LogLevel: 3

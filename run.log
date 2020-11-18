@@ -20,10 +20,10 @@ ToolBasedRawDigitPrepService::ctor:                     LogLevel: 3
 ToolBasedRawDigitPrepService::ctor:                      DoWires: 0
 ToolBasedRawDigitPrepService::ctor:     No ADC channel tools.
 DuneToolManager::instance: Configuration file: mytools.fcl
-(DuneToolManager *) 0x894b720
+(DuneToolManager *) 0x828ddd0
 Tool manager is available at ptm
 
-Processing run.C(0, "0", 2, 0.090, 16855, 1)...
+Processing run.C(80, "0", 2, 0.090, 101, 8)...
 run: Fetching waveform plotter.
 StandardAdcChannelStringTool::ctor: Configuration parameters:
 StandardAdcChannelStringTool::ctor:       LogLevel: 1
@@ -73,6 +73,7 @@ AdcDeconvoluteFFT:ctor:                         0.0002883,   0.0004691,   0.0007
 AdcDeconvoluteFFT:ctor:                         0.0163138,   0.0247836,   0.0400853,   0.0694278,   0.1073940,   0.1375910,   0.1473380,   0.1352770,   0.1088480,   0.0778980, 
 AdcDeconvoluteFFT:ctor:                         0.0499836,   0.0287999,   0.0148160,   0.0066973,   0.0025690,   0.0007717,   0.0001410,  -0.0000058,  -0.0000033,   0.0000178]
 AdcDeconvoluteFFT:ctor:                    ]
+AdcDeconvoluteFFT:ctor:     ResponseShifts: [25, 25, 25]
 AdcDeconvoluteFFT:ctor:   GausFilterSigmas: [3.0000000, 3.0000000, 3.0000000]
 AdcDeconvoluteFFT:ctor:   LowFilterWidths: [-1.0000000, -1.0000000, -1.0000000]
 AdcDeconvoluteFFT:ctor:   LowFilterPowers: [0.0000000, 0.0000000, 0.0000000]
@@ -96,8 +97,9 @@ AdcDeconvoluteFFT:ctor:                         0.0002883,   0.0004691,   0.0007
 AdcDeconvoluteFFT:ctor:                         0.0163138,   0.0247836,   0.0400853,   0.0694278,   0.1073940,   0.1375910,   0.1473380,   0.1352770,   0.1088480,   0.0778980, 
 AdcDeconvoluteFFT:ctor:                         0.0499836,   0.0287999,   0.0148160,   0.0066973,   0.0025690,   0.0007717,   0.0001410,  -0.0000058,  -0.0000033,   0.0000178]
 AdcDeconvoluteFFT:ctor:                    ]
+AdcDeconvoluteFFT:ctor:     ResponseShifts: [25, 25, 25]
 AdcDeconvoluteFFT:ctor:   GausFilterSigmas: [3.0000000, 3.0000000, 3.0000000]
-AdcDeconvoluteFFT:ctor:   LowFilterWidths: [1.0000000, 1.0000000, -1.0000000]
+AdcDeconvoluteFFT:ctor:   LowFilterWidths: [-1.0000000, -1.0000000, -1.0000000]
 AdcDeconvoluteFFT:ctor:   LowFilterPowers: [2.0000000, 2.0000000, 2.0000000]
 AdcDeconvoluteFFT:ctor:     ChannelMapTool: pdspChannelToPlane
 run: Fetching DFT before plotter.
@@ -107,14 +109,14 @@ AdcMultiChannelPlotter::ctor:    PlotChannelGroups: []
 AdcMultiChannelPlotter::ctor:   PlotOverlayGroups: 1
 AdcMultiChannelPlotter::ctor:        PlotDataView: 
 AdcMultiChannelPlotter::ctor:            PlotName: 
-AdcMultiChannelPlotter::ctor:    PlotSummaryNames: [dftpwrbefore_run%0RUN%_ch%0CHAN%.png, ]
+AdcMultiChannelPlotter::ctor:    PlotSummaryNames: [dftpwrbefore_run%0RUN%_ch%0CHAN%.{png,tpad}, ]
 AdcMultiChannelPlotter::ctor:           PlotSizeX: 700
 AdcMultiChannelPlotter::ctor:           PlotSizeY: 500
 AdcMultiChannelPlotter::ctor:          PlotSplitX: 1
 AdcMultiChannelPlotter::ctor:          PlotSplitY: 1
 AdcMultiChannelPlotter::ctor: Drawing pad count is 0
 AdcChannelDftPlotter::ctor: Configuration: 
-AdcChannelDftPlotter::ctor:            Variable: power
+AdcChannelDftPlotter::ctor:            Variable: power/tick
 AdcChannelDftPlotter::ctor:   ChannelStatusFlag: 0
 AdcChannelDftPlotter::ctor:          SampleFreq: 2000
 AdcChannelDftPlotter::ctor:               NBinX: 0
@@ -122,24 +124,24 @@ AdcChannelDftPlotter::ctor:                XMin: 0
 AdcChannelDftPlotter::ctor:                XMax: 400
 AdcChannelDftPlotter::ctor:                YMax: 0
 AdcChannelDftPlotter::ctor:             YMinLog: 0
-AdcChannelDftPlotter::ctor:            HistName: hdftpower_run%0RUN%_evt%0EVENT_ch%0CHAN%%
+AdcChannelDftPlotter::ctor:            HistName: hdftpowt_run%0RUN%_evt%0EVENT_ch%0CHAN%%
 AdcChannelDftPlotter::ctor:           HistTitle: 
 AdcChannelDftPlotter::ctor:   HistSummaryTitles: [DFT power before deconvolution for %CRNAME%, ]
 run: Fetching DFT after plotter.
-AdcMultiChannelPlotter::ctor:            LogLevel: 4
+AdcMultiChannelPlotter::ctor:            LogLevel: 1
 AdcMultiChannelPlotter::ctor:    PlotChannelRanges: []
 AdcMultiChannelPlotter::ctor:    PlotChannelGroups: []
 AdcMultiChannelPlotter::ctor:   PlotOverlayGroups: 1
 AdcMultiChannelPlotter::ctor:        PlotDataView: 
 AdcMultiChannelPlotter::ctor:            PlotName: 
-AdcMultiChannelPlotter::ctor:    PlotSummaryNames: [dftpwrafter_run%0RUN%_ch%0CHAN%.png, ]
+AdcMultiChannelPlotter::ctor:    PlotSummaryNames: [dftpwrafter_run%0RUN%_ch%0CHAN%.{png,tpad}, ]
 AdcMultiChannelPlotter::ctor:           PlotSizeX: 700
 AdcMultiChannelPlotter::ctor:           PlotSizeY: 500
 AdcMultiChannelPlotter::ctor:          PlotSplitX: 1
 AdcMultiChannelPlotter::ctor:          PlotSplitY: 1
 AdcMultiChannelPlotter::ctor: Drawing pad count is 0
 AdcChannelDftPlotter::ctor: Configuration: 
-AdcChannelDftPlotter::ctor:            Variable: power
+AdcChannelDftPlotter::ctor:            Variable: power/tick
 AdcChannelDftPlotter::ctor:   ChannelStatusFlag: 0
 AdcChannelDftPlotter::ctor:          SampleFreq: 2000
 AdcChannelDftPlotter::ctor:               NBinX: 0
@@ -147,7 +149,7 @@ AdcChannelDftPlotter::ctor:                XMin: 0
 AdcChannelDftPlotter::ctor:                XMax: 400
 AdcChannelDftPlotter::ctor:                YMax: 0
 AdcChannelDftPlotter::ctor:             YMinLog: 0
-AdcChannelDftPlotter::ctor:            HistName: hdftpower_run%0RUN%_evt%0EVENT_ch%0CHAN%%
+AdcChannelDftPlotter::ctor:            HistName: hdftpowt_run%0RUN%_evt%0EVENT_ch%0CHAN%%
 AdcChannelDftPlotter::ctor:           HistTitle: 
 AdcChannelDftPlotter::ctor:   HistSummaryTitles: [DFT power after deconvolution for %CRNAME%, ]
 run: Fetching FFT calculator.
@@ -161,11 +163,11 @@ AdcChannelFFT::ctor:             DataView:
 run: Fetching signal finder.
 AdcThresholdSignalFinder::ctor: Configuration parameters:
 AdcThresholdSignalFinder::ctor:       LogLevel: 1
-AdcThresholdSignalFinder::ctor:      Threshold: 0.5
+AdcThresholdSignalFinder::ctor:      Threshold: 2
 AdcThresholdSignalFinder::ctor:     BinsBefore: 10
-AdcThresholdSignalFinder::ctor:      BinsAfter: 20
+AdcThresholdSignalFinder::ctor:      BinsAfter: 10
 AdcThresholdSignalFinder::ctor:   FlagPositive: true
-AdcThresholdSignalFinder::ctor:   FlagNegative: true
+AdcThresholdSignalFinder::ctor:   FlagNegative: false
 run: Fetching sample RMS calculator.
 AdcChannelMetric::ctor: Configuration: 
 AdcChannelMetric::ctor:             LogLevel: 1
@@ -214,85 +216,1334 @@ AdcChannelMetric::ctor:       PlotUsesStatus: 0
 AdcChannelMetric::ctor:         RootFileName: 
 AdcChannelMetric::initialize: Initializing 1 channel ranges.
 AdcChannelMetric::initialize: Initialized 0 channels.
-run:   ds = 4.79 mm
-run:   dt = 0 tick
-run:   dq = 28.74 ke
-run:   Q[0] = 28.74
+run: Fetching rebaseline tool.
+AdcThresholdSignalFinder::ctor: Configuration parameters:
+AdcThresholdSignalFinder::ctor:       LogLevel: 1
+AdcThresholdSignalFinder::ctor:      Threshold: 2
+AdcThresholdSignalFinder::ctor:     BinsBefore: 10
+AdcThresholdSignalFinder::ctor:      BinsAfter: 10
+AdcThresholdSignalFinder::ctor:   FlagPositive: true
+AdcThresholdSignalFinder::ctor:   FlagNegative: false
+ExpTailPedRemover::ctor: Parameters:
+ExpTailPedRemover::ctor:               LogLevel: 3
+ExpTailPedRemover::ctor:             SignalFlag: 3
+ExpTailPedRemover::ctor:   SignalIterationLimit: 10
+ExpTailPedRemover::ctor:             SignalTool: rebaselineSignalFinder
+ExpTailPedRemover::ctor:              DecayTime: 0
+ExpTailPedRemover::ctor:                MaxTick: 21000
+ExpTailPedRemover::ctor:              PedDegree: 0
+ExpTailPedRemover::ctor:               PedTick0: 50
+ExpTailPedRemover::ctor:               PedFreqs: []
+ExpTailPedRemover::ctor:   IncludeChannelRanges: [apa3u, apa3v]
+ExpTailPedRemover::ctor:   NoWarnStatuses: [1]
+ExpTailPedRemover::ctor:   ExcludeChannelRanges: []
+ExpTailPedRemover::ctor: Channel checking enabled for 1600 channels.
+run: Fetching ROI viewer.
+AdcRoiViewer::ctor:              LogLevel: 1
+AdcRoiViewer::ctor:            RoiHistOpt: 1
+AdcRoiViewer::ctor:             SigThresh: 0
+AdcRoiViewer::ctor:            TickBorder: 0
+AdcRoiViewer::ctor:                FitOpt: 0
+AdcRoiViewer::ctor:             StartTime: 0 (1970-01-01 00:00:00 UTC)
+AdcRoiViewer::ctor:      PulserStepCharge: 0
+AdcRoiViewer::ctor:       PulserDacOffset: 0
+AdcRoiViewer::ctor:      PulserChargeUnit: 
+AdcRoiViewer::ctor:            RoiPlotOpt: 2
+AdcRoiViewer::ctor:           MaxRoiPlots: 1000
+AdcRoiViewer::ctor:           RoiPlotPadX: 4
+AdcRoiViewer::ctor:           RoiPlotPadY: 4
+AdcRoiViewer::ctor:             SumNegate: false
+AdcRoiViewer::ctor:           SumPlotPadX: 1
+AdcRoiViewer::ctor:           SumPlotPadY: 1
+AdcRoiViewer::ctor:         ChannelRanges: []
+AdcRoiViewer::ctor:   ChannelLineModulus: 0
+AdcRoiViewer::ctor:   ChannelLinePattern: {}
+AdcRoiViewer::ctor:       RoiRootFileName: 
+AdcRoiViewer::ctor:       SumRootFileName: 
+AdcRoiViewer::ctor:   ChanSumRootFileName: 
+AdcRoiViewer::ctor:          SumHists:
+AdcRoiViewer::ctor:                    hsa_ch%0CHAN%(sigArea) fit=gaus plot=hsa_ch%0CHAN%.{png,tpad}
+AdcRoiViewer::ctor:   No channel summary histograms
+AdcRoiViewer::ctor:         PlotLabels: []
+AdcRoiViewer::ctor:       RunDataTool: "" @ 0
+AdcRoiViewer::ctor:    TickOffsetTool: "" @ 0
+run:   ds = 27.5845 mm
+run:   dt = 33.9568 tick
+run:   dq = 165.507 ke
+run:   Q[0] = 4.87405
+run:   Q[1] = 4.87405
+run:   Q[2] = 4.87405
+run:   Q[3] = 4.87405
+run:   Q[4] = 4.87405
+run:   Q[5] = 4.87405
+run:   Q[6] = 4.87405
+run:   Q[7] = 4.87405
+run:   Q[8] = 4.87405
+run:   Q[9] = 4.87405
+run:   Q[10] = 4.87405
+run:   Q[11] = 4.87405
+run:   Q[12] = 4.87405
+run:   Q[13] = 4.87405
+run:   Q[14] = 4.87405
+run:   Q[15] = 4.87405
+run:   Q[16] = 4.87405
+run:   Q[17] = 4.87405
+run:   Q[18] = 4.87405
+run:   Q[19] = 4.87405
+run:   Q[20] = 4.87405
+run:   Q[21] = 4.87405
+run:   Q[22] = 4.87405
+run:   Q[23] = 4.87405
+run:   Q[24] = 4.87405
+run:   Q[25] = 4.87405
+run:   Q[26] = 4.87405
+run:   Q[27] = 4.87405
+run:   Q[28] = 4.87405
+run:   Q[29] = 4.87405
+run:   Q[30] = 4.87405
+run:   Q[31] = 4.87405
+run:   Q[32] = 4.87405
+run:   Q[33] = 4.66343
 run: Sample count: 100
-run: Convoluting channel 2000
+run: ################################# Event 1
+run: Noise counts: 0, 0.  Last = 0
+run: Convoluting with detector reponse 2080
 Status: 0
-run: Deconvoluting channel 2000
+run: Adding noise 2080
+run: Deconvoluting channel 2080
 Status: 0
-AdcMultiChannelPlotter::viewMap: Per page pad count is 0 (0 x 0)
-AdcMultiChannelPlotter::viewMap: Pad count is 1
-AdcMultiChannelPlotter::viewMap:   Processing pad 0 for channel group chan002000
-AdcMultiChannelPlotter::viewMap:     Processing channel range chan002000 with 1 entry in 1 channel.
-AdcMultiChannelPlotter::viewMap:     Creating canvas for run 100, event 1.
-AdcMultiChannelPlotter::viewMap:     Created pad with no plot name.
-AdcChannelDftPlotter::viewLocal: Filling CR chan002000 with ADC channel data size 1
-AdcMultiChannelPlotter::viewMap:   Not printing canvas for channel group chan002000.
-AdcMultiChannelPlotter::viewSummary: Summmary plots not named for level 1
-run: Sample RMS: 0.292958
-run: Signal RMS: 0.0718572
-TH1.Print Name  = adc_prepared_ev1_ch2000, Entries= 1000, Total sum= 32.1316
-run: X: Area = 32.1, #Sigma|Area| = -32.1, Asym = -1.002
-run: Convoluting channel 0
+run: Rebaselining channel 2080
+ExpTailPedRemover::update: Skipping channel 2080
 Status: 0
-run: Deconvoluting channel 0
+run: Finding signal
 Status: 0
-AdcMultiChannelPlotter::viewMap: Per page pad count is 0 (0 x 0)
-AdcMultiChannelPlotter::viewMap: Pad count is 1
-AdcMultiChannelPlotter::viewMap:   Processing pad 0 for channel group chan000000
-AdcMultiChannelPlotter::viewMap:     Processing channel range chan000000 with 1 entry in 1 channel.
-AdcMultiChannelPlotter::viewMap:     Creating canvas for run 100, event 1.
-AdcMultiChannelPlotter::viewMap:     Created pad with no plot name.
-AdcChannelDftPlotter::viewLocal: Filling CR chan000000 with ADC channel data size 1
-AdcMultiChannelPlotter::viewMap:   Not printing canvas for channel group chan000000.
-AdcMultiChannelPlotter::viewSummary: Summmary plots not named for level 1
-run: Sample RMS: 0.00114235
-run: Signal RMS: 0.00114235
-TH1.Print Name  = adc_prepared_ev1_ch0, Entries= 1000, Total sum= 2.11571e-10
-run: U: Area = 0.0, #Sigma|Area| = 0.0, Asym = 0.000
-run: Convoluting channel 1000
+Integers:
+  nThresholdBins: 36
+  nroi: 1
+run: Updating ROI histograms
 Status: 0
-run: Deconvoluting channel 1000
+Integers:
+  roiChannel: 2080
+  roiCount: 1
+  roiEvent: 1
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 56
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 35
+  roiTickMins[1]: 55
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 165.555
+  roiSigMaxs[1]: 5.01132
+  roiSigMins[1]: -0.0805646
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.69789
+run: Signal RMS: 0.0608153
+TH1.Print Name  = adc_prepared_ev1_ch2080, Entries= 100, Total sum= 164.251
+run: X: Area = 164.3, #Sigma|Area| = 0.0, Asym = inf
+run: Convoluting with detector reponse 80
 Status: 0
-AdcMultiChannelPlotter::viewMap: Per page pad count is 0 (0 x 0)
-AdcMultiChannelPlotter::viewMap: Pad count is 1
-AdcMultiChannelPlotter::viewMap:   Processing pad 0 for channel group chan001000
-AdcMultiChannelPlotter::viewMap:     Processing channel range chan001000 with 1 entry in 1 channel.
-AdcMultiChannelPlotter::viewMap:     Creating canvas for run 100, event 1.
-AdcMultiChannelPlotter::viewMap:     Created pad with no plot name.
-AdcChannelDftPlotter::viewLocal: Filling CR chan001000 with ADC channel data size 1
-AdcMultiChannelPlotter::viewMap:   Not printing canvas for channel group chan001000.
-AdcMultiChannelPlotter::viewSummary: Summmary plots not named for level 1
-run: Sample RMS: 0.00119958
-run: Signal RMS: 0.00119958
-TH1.Print Name  = adc_prepared_ev1_ch1000, Entries= 1000, Total sum= -6.08878e-10
-run: V: Area = -0.0, #Sigma|Area| = 0.0, Asym = -0.000
-run: Printing wfdeconv-sigma0-thtxz0.0nsam01000.{png,tpad}
+run: Adding noise 80
+run: Deconvoluting channel 80
+Status: 0
+run: Rebaselining channel 80
+ExpTailPedRemover::update: Correcting run 101 event 1 channel 80
+ExpTailPedRemover::update:  Channel 80: Iteration 0: nsamfit=5, noise=0.0526081; {ped}: {1.59129}
+ExpTailPedRemover::update:  Channel 80: Iteration 1: nsamfit=44, noise=0.19873; {ped}: {1.90958}
+ExpTailPedRemover::update:  Channel 80: Iteration 2: nsamfit=45, noise=0.197127; {ped}: {1.912}
+ExpTailPedRemover::update:  Channel 80: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 80: Iteration count: 3
+ExpTailPedRemover::update:  Channel 80: Noise: 0.197127 ke/tick from 45/100 samples
+ExpTailPedRemover::update:  Channel 80: Final {ped}: {1.912}
+Status: 0
+Integers:
+  uscNiteration: 3
+  uscNsamFit: 45
+Floats:
+  uscNoise: 0.197127
+  uscPedestal: 1.912
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 35
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 80
+  roiCount: 1
+  roiEvent: 1
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 55
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 38
+  roiTickMins[1]: 0
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 159.548
+  roiSigMaxs[1]: 4.79441
+  roiSigMins[1]: -0.143243
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.60523
+run: Signal RMS: 0.194924
+TH1.Print Name  = adc_prepared_ev1_ch80, Entries= 100, Total sum= 159.548
+run: U: Area = 159.5, #Sigma|Area| = -158.2, Asym = -1.008
+run: Convoluting with detector reponse 1080
+Status: 0
+run: Adding noise 1080
+run: Deconvoluting channel 1080
+Status: 0
+run: Rebaselining channel 1080
+ExpTailPedRemover::update: Correcting run 101 event 1 channel 1080
+ExpTailPedRemover::update: WARNING: Good channel 1080: Not-signal sample count of 0 is not sufficient to evaluate the 1 fit parameters. Using all samples.
+ExpTailPedRemover::update:  Channel 1080: Iteration 0: nsamfit=100, noise=2.09752; {ped}: {5.36611}
+ExpTailPedRemover::update:  Channel 1080: Iteration 1: nsamfit=51, noise=0.497596; {ped}: {3.78321}
+ExpTailPedRemover::update:  Channel 1080: Iteration 2: nsamfit=45, noise=0.500995; {ped}: {3.76787}
+ExpTailPedRemover::update:  Channel 1080: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 1080: Iteration count: 3
+ExpTailPedRemover::update:  Channel 1080: Noise: 0.500995 ke/tick from 45/100 samples
+ExpTailPedRemover::update:  Channel 1080: Final {ped}: {3.76787}
+Status: 0
+Integers:
+  uscNiteration: 3
+  uscNsamFit: 45
+Floats:
+  uscNoise: 0.500995
+  uscPedestal: 3.76787
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 35
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 1080
+  roiCount: 1
+  roiEvent: 1
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 55
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 24
+  roiTickMaxs[1]: 38
+  roiTickMins[1]: 0
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 159.824
+  roiSigMaxs[1]: 4.91424
+  roiSigMins[1]: -0.406321
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.62868
+run: Signal RMS: 0.495398
+TH1.Print Name  = adc_prepared_ev1_ch1080, Entries= 100, Total sum= 159.824
+run: V: Area = 159.8, #Sigma|Area| = -159.5, Asym = -1.002
+run: Printing wfdeconv-sigma0-thtxz80.0nsam00100-evt001.{png,tpad}
+run: ################################# Event 2
+run: Noise counts: 300, 300.  Last = -0.566659
+run: Convoluting with detector reponse 2080
+Status: 0
+run: Adding noise 2080
+run: Deconvoluting channel 2080
+Status: 0
+run: Rebaselining channel 2080
+ExpTailPedRemover::update: Skipping channel 2080
+Status: 0
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 36
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 2080
+  roiCount: 1
+  roiEvent: 2
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 56
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 37
+  roiTickMins[1]: 51
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 166.096
+  roiSigMaxs[1]: 4.96665
+  roiSigMins[1]: -0.0908311
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.71181
+run: Signal RMS: 0.0822923
+TH1.Print Name  = adc_prepared_ev2_ch2080, Entries= 100, Total sum= 166.096
+run: X: Area = 166.1, #Sigma|Area| = -165.4, Asym = -1.004
+run: Convoluting with detector reponse 80
+Status: 0
+run: Adding noise 80
+run: Deconvoluting channel 80
+Status: 0
+run: Rebaselining channel 80
+ExpTailPedRemover::update: Correcting run 101 event 2 channel 80
+ExpTailPedRemover::update:  Channel 80: Iteration 0: nsamfit=46, noise=0.155128; {ped}: {-0.234862}
+ExpTailPedRemover::update:  Channel 80: Iteration 1: nsamfit=45, noise=0.156773; {ped}: {-0.235713}
+ExpTailPedRemover::update:  Channel 80: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 80: Iteration count: 2
+ExpTailPedRemover::update:  Channel 80: Noise: 0.156773 ke/tick from 45/100 samples
+ExpTailPedRemover::update:  Channel 80: Final {ped}: {-0.235713}
+Status: 0
+Integers:
+  uscNiteration: 2
+  uscNsamFit: 45
+Floats:
+  uscNoise: 0.156773
+  uscPedestal: -0.235713
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 35
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 80
+  roiCount: 1
+  roiEvent: 2
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 55
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 24
+  roiTickMaxs[1]: 22
+  roiTickMins[1]: 1
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 158.721
+  roiSigMaxs[1]: 4.92725
+  roiSigMins[1]: -0.446739
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.63164
+run: Signal RMS: 0.155021
+TH1.Print Name  = adc_prepared_ev2_ch80, Entries= 100, Total sum= 158.72
+run: U: Area = 158.7, #Sigma|Area| = -158.6, Asym = -1.001
+run: Convoluting with detector reponse 1080
+Status: 0
+run: Adding noise 1080
+run: Deconvoluting channel 1080
+Status: 0
+run: Rebaselining channel 1080
+ExpTailPedRemover::update: Correcting run 101 event 2 channel 1080
+ExpTailPedRemover::update: WARNING: Good channel 1080: Not-signal sample count of 0 is not sufficient to evaluate the 1 fit parameters. Using all samples.
+ExpTailPedRemover::update:  Channel 1080: Iteration 0: nsamfit=100, noise=2.13451; {ped}: {4.70982}
+ExpTailPedRemover::update:  Channel 1080: Iteration 1: nsamfit=49, noise=0.262736; {ped}: {3.0208}
+ExpTailPedRemover::update:  Channel 1080: Iteration 2: nsamfit=44, noise=0.276359; {ped}: {3.01865}
+ExpTailPedRemover::update:  Channel 1080: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 1080: Iteration count: 3
+ExpTailPedRemover::update:  Channel 1080: Noise: 0.276359 ke/tick from 44/100 samples
+ExpTailPedRemover::update:  Channel 1080: Final {ped}: {3.01865}
+Status: 0
+Integers:
+  uscNiteration: 3
+  uscNsamFit: 44
+Floats:
+  uscNoise: 0.276359
+  uscPedestal: 3.01865
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 36
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 1080
+  roiCount: 1
+  roiEvent: 2
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 56
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 19
+  roiTickMins[1]: 53
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 169.117
+  roiSigMaxs[1]: 5.04067
+  roiSigMins[1]: -0.0671165
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.71489
+run: Signal RMS: 0.2732
+TH1.Print Name  = adc_prepared_ev2_ch1080, Entries= 100, Total sum= 169.117
+run: V: Area = 169.1, #Sigma|Area| = 0.0, Asym = inf
+run: Printing wfdeconv-sigma0-thtxz80.0nsam00100-evt002.{png,tpad}
+run: ################################# Event 3
+run: Noise counts: 600, 600.  Last = -0.116392
+run: Convoluting with detector reponse 2080
+Status: 0
+run: Adding noise 2080
+run: Deconvoluting channel 2080
+Status: 0
+run: Rebaselining channel 2080
+ExpTailPedRemover::update: Skipping channel 2080
+Status: 0
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 36
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 2080
+  roiCount: 1
+  roiEvent: 3
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 56
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 34
+  roiTickMins[1]: 55
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 163.785
+  roiSigMaxs[1]: 4.98738
+  roiSigMins[1]: -0.0414921
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.67583
+run: Signal RMS: 0.0692834
+TH1.Print Name  = adc_prepared_ev3_ch2080, Entries= 100, Total sum= 164.154
+run: X: Area = 164.2, #Sigma|Area| = -163.4, Asym = -1.004
+run: Convoluting with detector reponse 80
+Status: 0
+run: Adding noise 80
+run: Deconvoluting channel 80
+Status: 0
+run: Rebaselining channel 80
+ExpTailPedRemover::update: Correcting run 101 event 3 channel 80
+ExpTailPedRemover::update:  Channel 80: Iteration 0: nsamfit=44, noise=0.162627; {ped}: {0.605209}
+ExpTailPedRemover::update:  Channel 80: Iteration 1: nsamfit=46, noise=0.161521; {ped}: {0.601593}
+ExpTailPedRemover::update:  Channel 80: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 80: Iteration count: 2
+ExpTailPedRemover::update:  Channel 80: Noise: 0.161521 ke/tick from 46/100 samples
+ExpTailPedRemover::update:  Channel 80: Final {ped}: {0.601593}
+Status: 0
+Integers:
+  uscNiteration: 2
+  uscNsamFit: 46
+Floats:
+  uscNoise: 0.161521
+  uscPedestal: 0.601593
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 34
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 80
+  roiCount: 1
+  roiEvent: 3
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 54
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 24
+  roiTickMaxs[1]: 17
+  roiTickMins[1]: 50
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 152.455
+  roiSigMaxs[1]: 4.91377
+  roiSigMins[1]: -0.493755
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.55817
+run: Signal RMS: 0.159755
+TH1.Print Name  = adc_prepared_ev3_ch80, Entries= 100, Total sum= 152.455
+run: U: Area = 152.5, #Sigma|Area| = -149.3, Asym = -1.021
+run: Convoluting with detector reponse 1080
+Status: 0
+run: Adding noise 1080
+run: Deconvoluting channel 1080
+Status: 0
+run: Rebaselining channel 1080
+ExpTailPedRemover::update: Correcting run 101 event 3 channel 1080
+ExpTailPedRemover::update: WARNING: Good channel 1080: Not-signal sample count of 0 is not sufficient to evaluate the 1 fit parameters. Using all samples.
+ExpTailPedRemover::update:  Channel 1080: Iteration 0: nsamfit=100, noise=2.12875; {ped}: {3.81008}
+ExpTailPedRemover::update:  Channel 1080: Iteration 1: nsamfit=51, noise=0.11022; {ped}: {2.20465}
+ExpTailPedRemover::update:  Channel 1080: Iteration 2: nsamfit=45, noise=0.101049; {ped}: {2.21517}
+ExpTailPedRemover::update:  Channel 1080: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 1080: Iteration count: 3
+ExpTailPedRemover::update:  Channel 1080: Noise: 0.101049 ke/tick from 45/100 samples
+ExpTailPedRemover::update:  Channel 1080: Final {ped}: {2.21517}
+Status: 0
+Integers:
+  uscNiteration: 3
+  uscNsamFit: 45
+Floats:
+  uscNoise: 0.101049
+  uscPedestal: 2.21517
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 35
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 1080
+  roiCount: 1
+  roiEvent: 3
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 55
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 30
+  roiTickMins[1]: 52
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 159.491
+  roiSigMaxs[1]: 5.0585
+  roiSigMins[1]: -0.234083
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.65142
+run: Signal RMS: 0.0999201
+TH1.Print Name  = adc_prepared_ev3_ch1080, Entries= 100, Total sum= 159.491
+run: V: Area = 159.5, #Sigma|Area| = 0.0, Asym = inf
+run: Printing wfdeconv-sigma0-thtxz80.0nsam00100-evt003.{png,tpad}
+run: ################################# Event 4
+run: Noise counts: 900, 900.  Last = 0.690696
+run: Convoluting with detector reponse 2080
+Status: 0
+run: Adding noise 2080
+run: Deconvoluting channel 2080
+Status: 0
+run: Rebaselining channel 2080
+ExpTailPedRemover::update: Skipping channel 2080
+Status: 0
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 35
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 2080
+  roiCount: 1
+  roiEvent: 4
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 55
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 31
+  roiTickMins[1]: 52
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 164.161
+  roiSigMaxs[1]: 4.99541
+  roiSigMins[1]: -0.0764106
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.69032
+run: Signal RMS: 0.0920494
+TH1.Print Name  = adc_prepared_ev4_ch2080, Entries= 100, Total sum= 164.693
+run: X: Area = 164.7, #Sigma|Area| = 0.0, Asym = inf
+run: Convoluting with detector reponse 80
+Status: 0
+run: Adding noise 80
+run: Deconvoluting channel 80
+Status: 0
+run: Rebaselining channel 80
+ExpTailPedRemover::update: Correcting run 101 event 4 channel 80
+ExpTailPedRemover::update:  Channel 80: Iteration 0: nsamfit=48, noise=0.235395; {ped}: {-1.17062}
+ExpTailPedRemover::update:  Channel 80: Iteration 1: nsamfit=44, noise=0.243354; {ped}: {-1.16932}
+ExpTailPedRemover::update:  Channel 80: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 80: Iteration count: 2
+ExpTailPedRemover::update:  Channel 80: Noise: 0.243354 ke/tick from 44/100 samples
+ExpTailPedRemover::update:  Channel 80: Final {ped}: {-1.16932}
+Status: 0
+Integers:
+  uscNiteration: 2
+  uscNsamFit: 44
+Floats:
+  uscNoise: 0.243354
+  uscPedestal: -1.16932
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 36
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 80
+  roiCount: 1
+  roiEvent: 4
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 56
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 30
+  roiTickMins[1]: 2
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 172.607
+  roiSigMaxs[1]: 5.28875
+  roiSigMins[1]: -0.167966
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.80186
+run: Signal RMS: 0.240573
+TH1.Print Name  = adc_prepared_ev4_ch80, Entries= 100, Total sum= 172.607
+run: U: Area = 172.6, #Sigma|Area| = -171.2, Asym = -1.008
+run: Convoluting with detector reponse 1080
+Status: 0
+run: Adding noise 1080
+run: Deconvoluting channel 1080
+Status: 0
+run: Rebaselining channel 1080
+ExpTailPedRemover::update: Correcting run 101 event 4 channel 1080
+ExpTailPedRemover::update:  Channel 1080: Iteration 0: nsamfit=100, noise=2.13742; {ped}: {-4.18671}
+ExpTailPedRemover::update:  Channel 1080: Iteration 1: nsamfit=51, noise=0.159349; {ped}: {-5.83122}
+ExpTailPedRemover::update:  Channel 1080: Iteration 2: nsamfit=44, noise=0.166513; {ped}: {-5.82649}
+ExpTailPedRemover::update:  Channel 1080: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 1080: Iteration count: 3
+ExpTailPedRemover::update:  Channel 1080: Noise: 0.166513 ke/tick from 44/100 samples
+ExpTailPedRemover::update:  Channel 1080: Final {ped}: {-5.82649}
+Status: 0
+Integers:
+  uscNiteration: 3
+  uscNsamFit: 44
+Floats:
+  uscNoise: 0.166513
+  uscPedestal: -5.82649
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 36
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 1080
+  roiCount: 1
+  roiEvent: 4
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 56
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 22
+  roiTickMaxs[1]: 24
+  roiTickMins[1]: 55
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 163.978
+  roiSigMaxs[1]: 5.19246
+  roiSigMins[1]: -0.143587
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.68548
+run: Signal RMS: 0.16461
+TH1.Print Name  = adc_prepared_ev4_ch1080, Entries= 100, Total sum= 163.978
+run: V: Area = 164.0, #Sigma|Area| = -160.9, Asym = -1.019
+run: Printing wfdeconv-sigma0-thtxz80.0nsam00100-evt004.{png,tpad}
+run: ################################# Event 5
+run: Noise counts: 1200, 1200.  Last = 0.366921
+run: Convoluting with detector reponse 2080
+Status: 0
+run: Adding noise 2080
+run: Deconvoluting channel 2080
+Status: 0
+run: Rebaselining channel 2080
+ExpTailPedRemover::update: Skipping channel 2080
+Status: 0
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 36
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 2080
+  roiCount: 1
+  roiEvent: 5
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 56
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 18
+  roiTickMins[1]: 0
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 166.762
+  roiSigMaxs[1]: 4.96925
+  roiSigMins[1]: -0.0172727
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.71358
+run: Signal RMS: 0.0734538
+TH1.Print Name  = adc_prepared_ev5_ch2080, Entries= 100, Total sum= 167.956
+run: X: Area = 168.0, #Sigma|Area| = 0.0, Asym = inf
+run: Convoluting with detector reponse 80
+Status: 0
+run: Adding noise 80
+run: Deconvoluting channel 80
+Status: 0
+run: Rebaselining channel 80
+ExpTailPedRemover::update: Correcting run 101 event 5 channel 80
+ExpTailPedRemover::update:  Channel 80: Iteration 0: nsamfit=45, noise=0.0712165; {ped}: {-0.246053}
+ExpTailPedRemover::update:  Channel 80: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 80: Iteration count: 1
+ExpTailPedRemover::update:  Channel 80: Noise: 0.0712165 ke/tick from 45/100 samples
+ExpTailPedRemover::update:  Channel 80: Final {ped}: {-0.246053}
+Status: 0
+Integers:
+  uscNiteration: 1
+  uscNsamFit: 45
+Floats:
+  uscNoise: 0.0712165
+  uscPedestal: -0.246053
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 35
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 80
+  roiCount: 1
+  roiEvent: 5
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 55
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 25
+  roiTickMins[1]: 52
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 163.342
+  roiSigMaxs[1]: 5.17998
+  roiSigMins[1]: -0.304541
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.71822
+run: Signal RMS: 0.0704207
+TH1.Print Name  = adc_prepared_ev5_ch80, Entries= 100, Total sum= 163.342
+run: U: Area = 163.3, #Sigma|Area| = 0.0, Asym = inf
+run: Convoluting with detector reponse 1080
+Status: 0
+run: Adding noise 1080
+run: Deconvoluting channel 1080
+Status: 0
+run: Rebaselining channel 1080
+ExpTailPedRemover::update: Correcting run 101 event 5 channel 1080
+ExpTailPedRemover::update: WARNING: Good channel 1080: Not-signal sample count of 0 is not sufficient to evaluate the 1 fit parameters. Using all samples.
+ExpTailPedRemover::update:  Channel 1080: Iteration 0: nsamfit=100, noise=2.04516; {ped}: {5.36604}
+ExpTailPedRemover::update:  Channel 1080: Iteration 1: nsamfit=49, noise=0.145302; {ped}: {3.76145}
+ExpTailPedRemover::update:  Channel 1080: Iteration 2: nsamfit=44, noise=0.146049; {ped}: {3.76297}
+ExpTailPedRemover::update:  Channel 1080: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 1080: Iteration count: 3
+ExpTailPedRemover::update:  Channel 1080: Noise: 0.146049 ke/tick from 44/100 samples
+ExpTailPedRemover::update:  Channel 1080: Final {ped}: {3.76297}
+Status: 0
+Integers:
+  uscNiteration: 3
+  uscNsamFit: 44
+Floats:
+  uscNoise: 0.146049
+  uscPedestal: 3.76297
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 36
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 1080
+  roiCount: 1
+  roiEvent: 5
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 56
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 22
+  roiTickMins[1]: 54
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 160.307
+  roiSigMaxs[1]: 4.86372
+  roiSigMins[1]: -0.13934
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.5905
+run: Signal RMS: 0.14438
+TH1.Print Name  = adc_prepared_ev5_ch1080, Entries= 100, Total sum= 160.307
+run: V: Area = 160.3, #Sigma|Area| = -156.7, Asym = -1.023
+run: Printing wfdeconv-sigma0-thtxz80.0nsam00100-evt005.{png,tpad}
+run: ################################# Event 6
+run: Noise counts: 1500, 1500.  Last = -1.44081
+run: Convoluting with detector reponse 2080
+Status: 0
+run: Adding noise 2080
+run: Deconvoluting channel 2080
+Status: 0
+run: Rebaselining channel 2080
+ExpTailPedRemover::update: Skipping channel 2080
+Status: 0
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 36
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 2080
+  roiCount: 1
+  roiEvent: 6
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 56
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 25
+  roiTickMins[1]: 55
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 167.099
+  roiSigMaxs[1]: 4.96287
+  roiSigMins[1]: -0.0438563
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.70391
+run: Signal RMS: 0.0528446
+TH1.Print Name  = adc_prepared_ev6_ch2080, Entries= 100, Total sum= 166.485
+run: X: Area = 166.5, #Sigma|Area| = 0.0, Asym = inf
+run: Convoluting with detector reponse 80
+Status: 0
+run: Adding noise 80
+run: Deconvoluting channel 80
+Status: 0
+run: Rebaselining channel 80
+ExpTailPedRemover::update: Correcting run 101 event 6 channel 80
+ExpTailPedRemover::update:  Channel 80: Iteration 0: nsamfit=40, noise=0.168347; {ped}: {1.38195}
+ExpTailPedRemover::update:  Channel 80: Iteration 1: nsamfit=45, noise=0.188375; {ped}: {1.34809}
+ExpTailPedRemover::update:  Channel 80: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 80: Iteration count: 2
+ExpTailPedRemover::update:  Channel 80: Noise: 0.188375 ke/tick from 45/100 samples
+ExpTailPedRemover::update:  Channel 80: Final {ped}: {1.34809}
+Status: 0
+Integers:
+  uscNiteration: 2
+  uscNsamFit: 45
+Floats:
+  uscNoise: 0.188375
+  uscPedestal: 1.34809
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 35
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 80
+  roiCount: 1
+  roiEvent: 6
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 55
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 18
+  roiTickMins[1]: 3
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 159.196
+  roiSigMaxs[1]: 5.03044
+  roiSigMins[1]: -0.557113
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.70494
+run: Signal RMS: 0.18627
+TH1.Print Name  = adc_prepared_ev6_ch80, Entries= 100, Total sum= 159.196
+run: U: Area = 159.2, #Sigma|Area| = -154.3, Asym = -1.032
+run: Convoluting with detector reponse 1080
+Status: 0
+run: Adding noise 1080
+run: Deconvoluting channel 1080
+Status: 0
+run: Rebaselining channel 1080
+ExpTailPedRemover::update: Correcting run 101 event 6 channel 1080
+ExpTailPedRemover::update:  Channel 1080: Iteration 0: nsamfit=52, noise=0.204363; {ped}: {-2.43161}
+ExpTailPedRemover::update:  Channel 1080: Iteration 1: nsamfit=42, noise=0.151055; {ped}: {-2.49324}
+ExpTailPedRemover::update:  Channel 1080: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 1080: Iteration count: 2
+ExpTailPedRemover::update:  Channel 1080: Noise: 0.151055 ke/tick from 42/100 samples
+ExpTailPedRemover::update:  Channel 1080: Final {ped}: {-2.49324}
+Status: 0
+Integers:
+  uscNiteration: 2
+  uscNsamFit: 42
+Floats:
+  uscNoise: 0.151055
+  uscPedestal: -2.49324
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 38
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 1080
+  roiCount: 1
+  roiEvent: 6
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 58
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 22
+  roiTickMaxs[1]: 37
+  roiTickMins[1]: 57
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 201.284
+  roiSigMaxs[1]: 5.80003
+  roiSigMins[1]: 0.0572038
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 3.15027
+run: Signal RMS: 0.149246
+TH1.Print Name  = adc_prepared_ev6_ch1080, Entries= 100, Total sum= 201.284
+run: V: Area = 201.3, #Sigma|Area| = 0.0, Asym = inf
+run: Printing wfdeconv-sigma0-thtxz80.0nsam00100-evt006.{png,tpad}
+run: ################################# Event 7
+run: Noise counts: 1800, 1800.  Last = -0.996042
+run: Convoluting with detector reponse 2080
+Status: 0
+run: Adding noise 2080
+run: Deconvoluting channel 2080
+Status: 0
+run: Rebaselining channel 2080
+ExpTailPedRemover::update: Skipping channel 2080
+Status: 0
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 36
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 2080
+  roiCount: 1
+  roiEvent: 7
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 56
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 22
+  roiTickMins[1]: 55
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 163.016
+  roiSigMaxs[1]: 4.97357
+  roiSigMins[1]: 0.0030935
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.64982
+run: Signal RMS: 0.0562949
+TH1.Print Name  = adc_prepared_ev7_ch2080, Entries= 100, Total sum= 163.876
+run: X: Area = 163.9, #Sigma|Area| = 0.0, Asym = inf
+run: Convoluting with detector reponse 80
+Status: 0
+run: Adding noise 80
+run: Deconvoluting channel 80
+Status: 0
+run: Rebaselining channel 80
+ExpTailPedRemover::update: Correcting run 101 event 7 channel 80
+ExpTailPedRemover::update:  Channel 80: Iteration 0: nsamfit=46, noise=0.186231; {ped}: {-0.557438}
+ExpTailPedRemover::update:  Channel 80: Iteration 1: nsamfit=44, noise=0.188419; {ped}: {-0.562161}
+ExpTailPedRemover::update:  Channel 80: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 80: Iteration count: 2
+ExpTailPedRemover::update:  Channel 80: Noise: 0.188419 ke/tick from 44/100 samples
+ExpTailPedRemover::update:  Channel 80: Final {ped}: {-0.562161}
+Status: 0
+Integers:
+  uscNiteration: 2
+  uscNsamFit: 44
+Floats:
+  uscNoise: 0.188419
+  uscPedestal: -0.562161
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 36
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 80
+  roiCount: 1
+  roiEvent: 7
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 56
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 18
+  roiTickMins[1]: 3
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 159.927
+  roiSigMaxs[1]: 4.77309
+  roiSigMins[1]: -0.0753219
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.57394
+run: Signal RMS: 0.186266
+TH1.Print Name  = adc_prepared_ev7_ch80, Entries= 100, Total sum= 159.927
+run: U: Area = 159.9, #Sigma|Area| = 0.0, Asym = inf
+run: Convoluting with detector reponse 1080
+Status: 0
+run: Adding noise 1080
+run: Deconvoluting channel 1080
+Status: 0
+run: Rebaselining channel 1080
+ExpTailPedRemover::update: Correcting run 101 event 7 channel 1080
+ExpTailPedRemover::update:  Channel 1080: Iteration 0: nsamfit=39, noise=0.308226; {ped}: {1.27215}
+ExpTailPedRemover::update:  Channel 1080: Iteration 1: nsamfit=43, noise=0.301215; {ped}: {1.29363}
+ExpTailPedRemover::update:  Channel 1080: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 1080: Iteration count: 2
+ExpTailPedRemover::update:  Channel 1080: Noise: 0.301215 ke/tick from 43/100 samples
+ExpTailPedRemover::update:  Channel 1080: Final {ped}: {1.29363}
+Status: 0
+Integers:
+  uscNiteration: 2
+  uscNsamFit: 43
+Floats:
+  uscNoise: 0.301215
+  uscPedestal: 1.29363
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 37
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 1080
+  roiCount: 1
+  roiEvent: 7
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 57
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 22
+  roiTickMaxs[1]: 39
+  roiTickMins[1]: 52
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 182.87
+  roiSigMaxs[1]: 5.51978
+  roiSigMins[1]: -0.308473
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.97263
+run: Signal RMS: 0.297691
+TH1.Print Name  = adc_prepared_ev7_ch1080, Entries= 100, Total sum= 182.87
+run: V: Area = 182.9, #Sigma|Area| = 0.0, Asym = inf
+run: Printing wfdeconv-sigma0-thtxz80.0nsam00100-evt007.{png,tpad}
+run: ################################# Event 8
+run: Noise counts: 2100, 2100.  Last = -1.12423
+run: Convoluting with detector reponse 2080
+Status: 0
+run: Adding noise 2080
+run: Deconvoluting channel 2080
+Status: 0
+run: Rebaselining channel 2080
+ExpTailPedRemover::update: Skipping channel 2080
+Status: 0
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 36
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 2080
+  roiCount: 1
+  roiEvent: 8
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 56
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 23
+  roiTickMaxs[1]: 20
+  roiTickMins[1]: 0
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 167.192
+  roiSigMaxs[1]: 5.00139
+  roiSigMins[1]: -0.0623614
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.71793
+run: Signal RMS: 0.0646677
+TH1.Print Name  = adc_prepared_ev8_ch2080, Entries= 100, Total sum= 167.642
+run: X: Area = 167.6, #Sigma|Area| = -167.0, Asym = -1.004
+run: Convoluting with detector reponse 80
+Status: 0
+run: Adding noise 80
+run: Deconvoluting channel 80
+Status: 0
+run: Rebaselining channel 80
+ExpTailPedRemover::update: Correcting run 101 event 8 channel 80
+ExpTailPedRemover::update:  Channel 80: Iteration 0: nsamfit=46, noise=0.13008; {ped}: {-0.149883}
+ExpTailPedRemover::update:  Channel 80: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 80: Iteration count: 1
+ExpTailPedRemover::update:  Channel 80: Noise: 0.13008 ke/tick from 46/100 samples
+ExpTailPedRemover::update:  Channel 80: Final {ped}: {-0.149883}
+Status: 0
+Integers:
+  uscNiteration: 1
+  uscNsamFit: 46
+Floats:
+  uscNoise: 0.13008
+  uscPedestal: -0.149883
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 34
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 80
+  roiCount: 1
+  roiEvent: 8
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 54
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 24
+  roiTickMaxs[1]: 33
+  roiTickMins[1]: 2
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 148.258
+  roiSigMaxs[1]: 4.60838
+  roiSigMins[1]: -0.246909
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.45845
+run: Signal RMS: 0.128658
+TH1.Print Name  = adc_prepared_ev8_ch80, Entries= 100, Total sum= 148.258
+run: U: Area = 148.3, #Sigma|Area| = -148.1, Asym = -1.001
+run: Convoluting with detector reponse 1080
+Status: 0
+run: Adding noise 1080
+run: Deconvoluting channel 1080
+Status: 0
+run: Rebaselining channel 1080
+ExpTailPedRemover::update: Correcting run 101 event 8 channel 1080
+ExpTailPedRemover::update:  Channel 1080: Iteration 0: nsamfit=49, noise=0.452848; {ped}: {-1.39706}
+ExpTailPedRemover::update:  Channel 1080: Iteration 1: nsamfit=44, noise=0.461517; {ped}: {-1.43408}
+ExpTailPedRemover::update:  Channel 1080: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 1080: Iteration count: 2
+ExpTailPedRemover::update:  Channel 1080: Noise: 0.461517 ke/tick from 44/100 samples
+ExpTailPedRemover::update:  Channel 1080: Final {ped}: {-1.43408}
+Status: 0
+Integers:
+  uscNiteration: 2
+  uscNsamFit: 44
+Floats:
+  uscNoise: 0.461517
+  uscPedestal: -1.43408
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 36
+  nroi: 1
+run: Updating ROI histograms
+Status: 0
+Integers:
+  roiChannel: 1080
+  roiCount: 1
+  roiEvent: 8
+  roiNTickChannel: 100
+  roiRawCount: 1
+  roiRun: 101
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 56
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 22
+  roiTickMaxs[1]: 18
+  roiTickMins[1]: 51
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 176.186
+  roiSigMaxs[1]: 5.45405
+  roiSigMins[1]: 0.0276561
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 2.79125
+run: Signal RMS: 0.456243
+TH1.Print Name  = adc_prepared_ev8_ch1080, Entries= 100, Total sum= 176.186
+run: V: Area = 176.2, #Sigma|Area| = 193.6, Asym = 0.910
+run: Printing wfdeconv-sigma0-thtxz80.0nsam00100-evt008.{png,tpad}
 run: Closing tools.
-AdcChannelDftPlotter::dtor: Closing.
-AdcChannelDftPlotter::dtor: No channel ranges specified.
-AdcChannelDftPlotter::dtor: No channel groups specified.
-AdcMultiChannelPlotter::viewSummary: Creating summmary plots for level 0
-AdcMultiChannelPlotter::viewSummary: Pad count/page is 1 (1 x 1)
-AdcMultiChannelPlotter::viewSummary: Pad count is 3
-AdcMultiChannelPlotter::viewSummary:   Channel group chan000000 channel range count is 1
-AdcMultiChannelPlotter::viewSummary:     Processing group/range chan000000/chan000000
-AdcMultiChannelPlotter::viewSummary:     Creating canvas for run 100, event 1.
-AdcChannelDftPlotter::viewMapSummary: Processing chan000000/chan000000 (0/1)
-AdcMultiChannelPlotter::viewSummary:   Printing summary canvas to dftpwrafter_run000100_ch00000.png
-AdcMultiChannelPlotter::viewSummary:   Channel group chan001000 channel range count is 1
-AdcMultiChannelPlotter::viewSummary:     Processing group/range chan001000/chan001000
-AdcMultiChannelPlotter::viewSummary:     Creating canvas for run 100, event 1.
-AdcChannelDftPlotter::viewMapSummary: Processing chan001000/chan001000 (0/1)
-AdcMultiChannelPlotter::viewSummary:   Printing summary canvas to dftpwrafter_run000100_ch01000.png
-AdcMultiChannelPlotter::viewSummary:   Channel group chan002000 channel range count is 1
-AdcMultiChannelPlotter::viewSummary:     Processing group/range chan002000/chan002000
-AdcMultiChannelPlotter::viewSummary:     Creating canvas for run 100, event 1.
-AdcChannelDftPlotter::viewMapSummary: Processing chan002000/chan002000 (0/1)
-AdcMultiChannelPlotter::viewSummary:   Printing summary canvas to dftpwrafter_run000100_ch02000.png
+AdcRoiViewer::dtor: Exiting.
+AdcRoiViewer::dtor:   Event count: 8
+AdcRoiViewer::dtor:    Call count: 24
+AdcRoiViewer::dtor:   Sample unit: ke/tick
+AdcRoiViewer::fitSumHists: Fitting summary histograms. Count is 3.
+AdcRoiViewer::writeSumPlots: Plotting 1 set of summary histograms 
 run: Exiting.
 (int) 0
 AdcChannelMetric::dtor: Summary for metric sigRms
@@ -320,5 +1571,3 @@ AdcChannelMetric::dtor:      # channels with max # entries: 0
 ToolBasedRawDigitPrepService:dtor: Event count: 0
 ToolBasedRawDigitPrepService:dtor:  Call count: 0
 ToolBasedRawDigitPrepService:dtor: Time report for 0 tools.
-DIR: /dune/data/users/dladams/wwwdune/protodune/test/test07
-URL: http://internal.dunescience.org/people/dladams/protodune/test/test07
