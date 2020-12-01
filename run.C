@@ -1,6 +1,6 @@
 // run.C
 // David Adams
-// Nvember 2020
+// November 2020
 //
 // This is the script used to generate most of the plots I showed at the
 // protoDUNE sim/reco meetings in November 2020.
@@ -26,23 +26,30 @@
 //    0 - Energy deposit and diffusion smearing
 //    1 - Convoluted with detector response
 //    2 - Deconvoluted
+//    3 - Direct matrix deconvoluted
+//    4 - Filtered matrix deconvoluted
+//    5 - Chi-square matrix deconvoluted
 // noise is the noise level in ke
 // run is the run number and is used to seed the noise
 // nevt is the number of events to process (1 track with 3 views for each event)
 //
 // Products of the script include:
 // Waveform plots - One for each event overlaying the three views.
-// Power plots - One fo each view, before and after reonstruction.
+// Power plots - One for each view, before and after reonstruction.
 
 int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned int irun =0, unsigned int nevt =1) {
   string myname = "run: ";
   using Index = unsigned int;
-  Index nsam =   100;
+  Index nsam =   200;
   Index isig = nsam/2;
   float wfxmin = isig - 45;
   float wfxmax = isig + 45;
   float wfymin = -2.0;
   float wfymax = 7.0;
+  if ( false ) {
+    wfymax = 50;
+    wfymin = -wfymax;
+  }
 
   bool doWideXRange = true;
   bool doOldXRange = false;
@@ -66,7 +73,7 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
     
 
   // Check arguments.
-  if ( iproc > 2 ) {
+  if ( iproc > 5 ) {
     cout << myname << "Invalid conv option: " << iproc << endl;
     return 1;
   }
@@ -81,8 +88,17 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
   AdcChannelTool* pwf = ptm->getShared<AdcChannelTool>("wf");
   cout << myname << "Fetching reponse convolution tool." << endl;
   AdcChannelTool* pconvo = ptm->getShared<AdcChannelTool>("convo");
+  AdcChannelTool* pdecon = nullptr;
   cout << myname << "Fetching deconvolution tool." << endl;
-  AdcChannelTool* pdecon = ptm->getShared<AdcChannelTool>("decon");
+  string deconName;
+  if ( iproc > 1 ) {
+    deconName = iproc==5 ? "cmdecon" : iproc==4 ? "fmdecon" : iproc==3 ? "dmdecon" : "decon";
+    pdecon = ptm->getShared<AdcChannelTool>(deconName);
+    if ( pdecon == nullptr ) {
+      cout << myname << "ERROR: Unable to find tool " << deconName << endl;
+      return 2;
+    }
+  }
   AdcChannelTool* pconvg = nullptr;
   string slabsmr = "no smearing";
   bool doSig = ssig != "nosig";
@@ -307,14 +323,17 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
       ostringstream ssout;
       ssout << std::fixed << std::setprecision(1) << thtxzdeg;
       string stht = ssout.str();
-      string sttl = iproc == 2 ? "Deconvoluted reponse" :
+      string sttl = iproc == 5 ? "Chi-square matrix deconvoluted reponse" :
+                    iproc == 4 ? "Filtered matrix deconvoluted reponse" :
+                    iproc == 3 ? "Direct matrix deconvoluted reponse" :
+                    iproc == 2 ? "DFT deconvoluted reponse" :
                     iproc == 1 ? "Response to" : "Deposit from";
       sttl += " to 1 MIP for #theta_{xz}=" + stht + "#circ with " + slabsmr;
       man.setTitle(sttl);
       man.addHorizontalLine(0.0);
       man.setLabel("Run " + to_string(irun) + " event " + to_string(ievt));
       string fnam = "wf";
-      fnam += (iproc==2 ? "deconv" : iproc ? "conv" : "noconv");
+      fnam += (iproc>1 ? deconName : iproc ? "conv" : "noconv");
       fnam += "-sigma" + ssig;
       fnam += "-thtxz" + stht;
       string snsam = to_string(nsam);

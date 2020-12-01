@@ -2,6 +2,7 @@
 
 tools.wf: @local::tools.adcPlotPrepared
 
+# Diagonal response.
 # These are the Oct 2020 offset -2 values
 data.ResponseVectorU: [
    0.00123846,  0.00139574,  0.00158327,  0.00180854,  0.00208124,  0.00241413,  0.00282647,  0.00337392,  0.00433854,  0.00655272,
@@ -22,8 +23,69 @@ data.ResponseVectorX: [
     0.0499836,   0.0287999,    0.014816,  0.00669725,    0.002569, 0.000771684, 0.000140983,-5.75054e-06, -3.2669e-06, 1.78128e-05
 ]
 
+# First off-diagonal reponse.
+data.ResponseVector1U: [
+  0.000889634, 0.000965896,  0.00104907,  0.00113889,   0.0012344,  0.00133356,  0.00143407,  0.00154782,  0.00179573,  0.00254169,
+   0.00410543,  0.00629946,  0.00843081,  0.00970031,  0.00963031,  0.00810141,  0.00517617,  0.00114037, -0.00335132, -0.00736211,
+   -0.0100897,  -0.0112417,  -0.0110774,  -0.0101387, -0.00881604, -0.00728739, -0.00567762, -0.00413326, -0.00279429, -0.00174626,
+  -0.00100399,-0.000527475,-0.000250499,-0.000105614,-3.83444e-05,-1.13856e-05,-2.59752e-06,-6.01107e-07,-4.58944e-07,-4.96721e-07
+]
+data.ResponseVector1V: [
+  0.000181024,   0.0001964, 0.000213444, 0.000232312, 0.000253154, 0.000276114, 0.000301652, 0.000334001, 0.000403215, 0.000599062,
+   0.00101449,  0.00165215,  0.00244546,  0.00339616,  0.00469282,  0.00653809,    0.008785,   0.0108319,   0.0118956,   0.0113587,
+   0.00893208,  0.00474577,-0.000732143, -0.00674326,  -0.0118507,  -0.0146568,  -0.0147394,  -0.0127086, -0.00964837, -0.00654165,
+  -0.00398468, -0.00217827, -0.00105895,-0.000448152,-0.000157841,-4.16287e-05,-5.79976e-06, 1.62581e-07,-1.24823e-06,-2.47367e-06
+]
+data.ResponseVector1X: [
+  3.54585e-05, 3.83627e-05, 4.15845e-05, 4.51601e-05, 4.91283e-05, 5.35343e-05, 5.84965e-05, 6.49058e-05, 7.88583e-05, 0.000118528,
+  0.000202989, 0.000333655, 0.000498961, 0.000703454, 0.000996654,  0.00144628,  0.00207812,  0.00289177,  0.00397673,  0.00553981,
+     0.007614,  0.00961312,  0.00989135,   0.0065796, 0.000289182, -0.00621532,  -0.0104682,  -0.0116644,  -0.0104354, -0.00797941,
+  -0.00535543, -0.00318641, -0.00167757,-0.000769707,-0.000296162,-8.64769e-05,-1.26353e-05, 3.69538e-06, 2.15692e-06,-1.37468e-06
+]
+
+# Second off diagonal
+ResponseVector2U: [
+  0.000301878, 0.000278552, 0.000243603,  0.00019379, 0.000125203, 3.34149e-05,-8.56191e-05,-0.000230406,-0.000366374,-0.000392173,
+ -0.000225586, 8.05792e-05, 0.000367811, 0.000501654, 0.000474536, 0.000362206, 0.000198912,-5.14795e-05,-0.000412819, -0.00082776,
+  -0.00119622, -0.00145487, -0.00161291, -0.00171642, -0.00175378,  -0.0016756, -0.00146727, -0.00116864, -0.00084595,-0.000556996,
+ -0.000333341,-0.000180549,-8.76204e-05,-3.73527e-05,-1.34602e-05,-3.78087e-06,-6.76969e-07,-6.07635e-08,-1.04611e-07,-1.78121e-07
+]
+ResponseVector2V: [
+  7.98121e-05, 7.89337e-05, 7.66877e-05, 7.26525e-05, 6.63129e-05, 5.70726e-05, 4.44317e-05, 2.94832e-05, 2.38235e-05, 6.17706e-05,
+  0.000174426, 0.000351117, 0.000547504, 0.000732284, 0.000923159,  0.00114597,  0.00135915,  0.00146133,  0.00138745,   0.0011685,
+  0.000861206, 0.000458767,-0.000121036,-0.000929196, -0.00177867, -0.00236443, -0.00251376, -0.00226383, -0.00178073, -0.00124451,
+ -0.000779051,-0.000437094,-0.000218147,-9.49767e-05,-3.45689e-05,-9.48502e-06,-1.33674e-06, 2.01222e-07,-5.96432e-08,-3.86586e-07
+]
+ResponseVector2X: [
+   1.8178e-05, 1.84746e-05, 1.86263e-05,  1.8582e-05, 1.82773e-05, 1.76405e-05, 1.66338e-05,   1.562e-05, 1.76067e-05, 3.14924e-05,
+   6.5897e-05, 0.000119575, 0.000183546,  0.00025399, 0.000343093, 0.000466641, 0.000619495, 0.000778193,  0.00093524,   0.0011079,
+   0.00127954,  0.00134749,  0.00111739, 0.000427309,-0.000555995, -0.00143787, -0.00192011, -0.00194834, -0.00165251, -0.00121862,
+ -0.000795538,-0.000462453,-0.000238352,-0.000107075,-4.02566e-05,-1.14223e-05,-1.59852e-06, 4.31778e-07,  1.6367e-07,-2.90921e-07
+]
+
+
 data.ResponseVectors: [ @local::data.ResponseVectorU, @local::data.ResponseVectorV, @local::data.ResponseVectorX]
 data.ResponseCenters: [25, 25, 25]
+
+data.EmptyVectors: [[]]
+data.EmptyVector:  []
+
+data.FilterVector: [0.1, 0.2, 0.4, 0.2, 0.1]
+# sigma = 3 tick
+data.FilterVector: [4.46101e-05,0.00016009,0.000514093,0.00147728,0.00379866,0.00874063,0.017997,0.033159,0.05467,0.0806569,0.106483,0.125794,0.132981,0.125794,0.106483,0.0806569,0.05467,0.033159,0.017997,0.00874063,0.00379866,0.00147728,0.000514093,0.00016009,4.46101e-05]
+# sigma = 5 tick
+data.FilterVector: [2.6766e-05,5.83894e-05,0.00012238,0.000246444,0.000476818,0.00088637,0.00158309,0.00271659,0.00447891,0.00709492,0.0107982,0.01579,0.0221842,0.0299455,0.0388372,0.0483941,0.0579383,0.0666449,0.073654,0.0782085,0.0797885,0.0782085,0.073654,0.0666449,0.0579383,0.0483941,0.0388372,0.0299455,0.0221842,0.01579,0.0107982,0.00709492,0.00447891,0.00271659,0.00158309,0.00088637,0.000476818,0.000246444,0.00012238,5.83894e-05,2.6766e-05]
+data.FilterVectors: [@local::data.FilterVector, @local::data.FilterVector, @local::data.FilterVector]
+
+#data.SmoothVectorX: [0.1, 0.2, -0.2, -0.1]
+data.SmoothVector: [-0.5, 1.0, -0.5]
+data.SmoothVector: [-0.5, 1.0, -0.5]
+#data.SmoothVector: [-0.1, -0.4, 1.0, -0.4, -0.1]
+data.SmoothVectorX: [-0.5, 0.5]
+data.SmoothVectors: [@local::data.SmoothVector, @local::data.SmoothVector, @local::data.SmoothVectorX]
+data.SmoothScales: [18.0, 15.0,  8.0]
+#data.SmoothScales: [11.6,  9.7,  5.0]
+
 
 data.filterSigma:  3.0
 data.filterWidth: -1.0   # Negative deactivates, 0 filters only DC
@@ -41,6 +103,53 @@ tools.decon: {
   Action: 1
   ResponseVectors: @local::data.ResponseVectors
   ResponseCenters: @local::data.ResponseCenters
+  SmoothVectors: [[]]
+  SmoothScales: [1.0]
+  GausFilterSigmas: @local::data.filterSigmas
+  LowFilterWidths: @local::data.filterWidths
+  LowFilterPowers: @local::data.filterPowers
+  IndexMapTool: pdspChannelToPlane
+}
+
+# Direct matrix deconvolution.
+tools.dmdecon: {
+  tool_type: AdcDeconvoluteFFT
+  LogLevel: 1
+  Action: 6
+  ResponseVectors: @local::data.ResponseVectors
+  ResponseCenters: @local::data.ResponseCenters
+  SmoothVectors: @local::data.EmptyVectors
+  SmoothScales: @local::data.EmptyVector
+  GausFilterSigmas: @local::data.filterSigmas
+  LowFilterWidths: @local::data.filterWidths
+  LowFilterPowers: @local::data.filterPowers
+  IndexMapTool: pdspChannelToPlane
+}
+
+# Filtered matrix deconvolution.
+tools.fmdecon: {
+  tool_type: AdcDeconvoluteFFT
+  LogLevel: 1
+  Action: 7
+  ResponseVectors: @local::data.ResponseVectors
+  ResponseCenters: @local::data.ResponseCenters
+  SmoothVectors: @local::data.FilterVectors
+  SmoothScales: @local::data.EmptyVector
+  GausFilterSigmas: @local::data.filterSigmas
+  LowFilterWidths: @local::data.filterWidths
+  LowFilterPowers: @local::data.filterPowers
+  IndexMapTool: pdspChannelToPlane
+}
+
+# Chi-square matrix deconvolution.
+tools.cmdecon: {
+  tool_type: AdcDeconvoluteFFT
+  LogLevel: 1
+  Action: 8
+  ResponseVectors: @local::data.ResponseVectors
+  ResponseCenters: @local::data.ResponseCenters
+  SmoothVectors: @local::data.SmoothVectors
+  SmoothScales: @local::data.SmoothScales
   GausFilterSigmas: @local::data.filterSigmas
   LowFilterWidths: @local::data.filterWidths
   LowFilterPowers: @local::data.filterPowers
@@ -54,6 +163,8 @@ tools.convo: {
   Action: 2
   ResponseVectors: @local::data.ResponseVectors
   ResponseCenters: @local::data.ResponseCenters
+  SmoothVectors: [[]]
+  SmoothScales: [1.0]
   GausFilterSigmas: @local::data.filterSigmas
   LowFilterWidths: [-1.0, -1.0, -1.0]
   LowFilterPowers: [ 0.0,  0.0,  0.0]
@@ -67,6 +178,8 @@ tools.convg1: {
   Action: 3
   ResponseVectors: [[]]
   ResponseCenters: []
+  SmoothVectors: [[]]
+  SmoothScales: [1.0]
   GausFilterSigmas: [1.0]
   LowFilterWidths: [-1.0]
   LowFilterPowers: [ 0.0]
@@ -120,7 +233,7 @@ tools.plotDftAfter.LogLevel: 1
 tools.deconSignalFinder: {
   tool_type: AdcThresholdSignalFinder
   LogLevel: 1
-  Threshold: 2.0
+  Threshold: 1.0
   BinsBefore: 10
   BinsAfter: 10
   FlagPositive: true
@@ -135,7 +248,7 @@ tools.adcChannelSignalRmsPlotter.MetricLabel: "RMS [ke]"
 tools.rebaselineSignalFinder: {
   tool_type: AdcThresholdSignalFinder
   LogLevel: 1
-  Threshold: 2.0
+  Threshold: 1.0
   BinsBefore: 10
   BinsAfter: 10
   FlagPositive: true
