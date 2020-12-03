@@ -40,8 +40,11 @@
 int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned int irun =0, unsigned int nevt =1) {
   string myname = "run: ";
   using Index = unsigned int;
-  Index nsam =   200;
-  Index isig = nsam/2;
+  Index nsam =    70;     // Number of time samples
+  Index nchDep = 1;       // Number of neighboring cells with signals
+  Index nbinPerWire = 2;  // Number of energy deposit bins per wire.
+  vector<int> apaConCells = {-1, 1};      // Cells contributing to central signal.
+  Index isig = nsam/2;    // Position of the signal.
   float wfxmin = isig - 45;
   float wfxmax = isig + 45;
   float wfymin = -2.0;
@@ -88,6 +91,7 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
   AdcChannelTool* pwf = ptm->getShared<AdcChannelTool>("wf");
   cout << myname << "Fetching reponse convolution tool." << endl;
   AdcChannelTool* pconvo = ptm->getShared<AdcChannelTool>("convo");
+  AdcChannelTool* pconvo1 = ptm->getShared<AdcChannelTool>("convo1");
   AdcChannelTool* pdecon = nullptr;
   cout << myname << "Fetching deconvolution tool." << endl;
   string deconName;
@@ -148,48 +152,159 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
   if ( proiview == nullptr ) return 3;
 
   // Create charge deposition.
+  // Charge is deposited in time-wire pixels with
   // We integrate across each 0.5 us time bin starting at the left edge of bin 0.
-  vector<float> samples(100, 0.0);
+  string sttlPrefix;
+  map<int, vector<float>> pixsamples;
+  map<int, vector<float>> celsamples;
+  int ncel = int(nchDep);
+  for ( int icel=-ncel; icel<=ncel; ++icel ) {
+    celsamples[icel].resize(nsam, 0.0);
+  }
   if ( doSig ) {
-    float dz = 4.79;    // mm
+    float dzcell = 4.79;    // mm
     float dxdt = 0.8;  // mm/tick
     float dqds = 6.0;  // ke/mm
     float thtxz = thtxzdeg*acos(-1.0)/180.0;
     float dxdz = tan(thtxz);
-    float dx = dxdz*dz;
-    float dt = dx/dxdt;
-    float ds = sqrt(dz*dz + dx*dx);
-    float dq = dqds*ds;
-    cout << myname << "  ds = " << ds << " mm" << endl;
-    cout << myname << "  dt = " << dt << " tick" << endl;
-    cout << myname << "  dq = " << dq << " ke" << endl;
-    unsigned int itick = 0;
-    float dtrem = dt;
-    float dqrem = dq;
-    if ( dt > 1.0 ) {
-      float dqdt = dq/dt;
-      while ( dtrem >= 1.0 ) {
-        samples[itick] = dqdt;
-        cout << myname << "  Q[" << itick << "] = " << dqdt << endl;
-        ++itick;
-        dtrem -= 1.0;
-        dqrem -= dqdt;
+#if 0
+    if ( nbinPerWire != 1 ) {
+      cout << myname << "Error: Must have 1 bin/wire for old simulation." << endl;
+    }
+    sttlPrefix = "Old ";
+    float dxcell = dxdz*dzcell;
+    float dtcell = dxcell/dxdt;
+    float dscell = sqrt(dzcell*dzcell + dxcell*dxcell);
+    float dqcell = dqds*dscell;
+    float dt = dtcell;
+    float dq = dqcell;
+    cout << myname << "  dzcell = " << dzcell << " mm" << endl;
+    cout << myname << "  dscell = " << dscell << " mm" << endl;
+    cout << myname << "  dtcell = " << dtcell << " tick" << endl;
+    cout << myname << "  dqcell = " << dqcell << " ke" << endl;
+    unsigned int itick = isig;
+    // Loop over wire pixels.
+    for ( auto& kwir : celsamples ) {
+      int iwir = kwir.first;
+      vector<float>& csamples = kwir.second;
+      // Handle track parallel to APA
+      if ( dxdz == 0.0 ) {
+        csamples[isig] = dqcell;
+        cout << myname << "  Q[" << iwir << "][" << isig << "] = " << dqcell << endl;
+        continue;
+      }
+      float tmin = isig + iwir*dtcell;
+      float tmax = isig + (iwir+1)*dtcell;
+      int it1 = tmin - 1.0;
+      int it2 = tmax + 1.0;
+      float dqdt = dqcell/dtcell;
+      // Loop over ticks.
+      for ( int it=it1; it<=it2; ++it ) {
+        if ( it < 0 ) {
+          cout << myname << "WARNING: Skipping tick " << it << " for cell " << iwir << endl;
+          continue;
+        }
+        if ( it > nsam ) {
+          cout << myname << "WARNING: Skipping tick " << it << " for cell " << iwir << endl;
+          continue;
+        }
+        float t1 = it > tmin ? it : tmin;
+        float t2 = it+1 < tmax ? it+1 : tmax;
+        if ( t2 > t1 ) {
+          float qdep = dqdt*(t2 - t1);
+          csamples[it] = qdep;
+          cout << myname << "  Q[" << iwir << "][" << it << "] = " << qdep << endl;
+        }
+      }
+    }  // End loop over wire pixels.
+#else
+  //   w is wire coordinate in wire spacing units
+  //   t is drift coordinate in ticks (not time or distance)
+  //   wpWid = wire pixel width [wire spacings]
+  //   tpWid = time pixel width [ticks]
+  //   Wire pixel 0 is at the left edge of the central cell.
+  //   Time pixel 0 is tick 0
+  //   (wtoff, ttoff) is a point on the track
+  //   dtdw derived from dxdz is the track angle
+    int iwir1 = -ncel*nbinPerWire;
+    int iwir2 = (ncel + 1)*nbinPerWire;
+    for ( int iwir=iwir1; iwir<iwir2; ++iwir ) {
+      pixsamples[iwir].resize(nsam, 0.0);
+    }
+    sttlPrefix = "New ";
+    float wpWid = 1.0/nbinPerWire;
+    float tpWid = 1.0;
+    float wpOff = 0.0;
+    float dtdw = dxdz*dzcell/dxdt;    // dimensionless
+    float dzds = cos(thtxz);
+    float dxds = sin(thtxz);
+    float dqdw = dqds*dzcell/dzds;
+    float dqdt = dqds*dxdt/dxds;
+    float wtOff = 0.0;
+    float ttOff = isig;
+    // Loop over wire pixels.
+    for ( auto& kwir : pixsamples ) {
+      int iwir = kwir.first;
+      cout << myname << "Wire pixel " << iwir << endl;
+      vector<float>& wsamples = kwir.second;
+      // Handle track parallel to APA
+      if ( dxdz == 0.0 ) {
+        float qdep = dqdw*wpWid;
+        wsamples[isig] = qdep;
+        cout << myname << "  Q[" << iwir << "][" << isig << "] = " << qdep << endl;
+        continue;
+      }
+      float xwir = wpOff + wpWid*iwir;
+      float tmin = ttOff + dtdw*(iwir)*wpWid;
+      float tmax = ttOff + dtdw*(iwir+1)*wpWid;
+      int it1 = tmin - 1.0;
+      int it2 = tmax + 1.0;
+      // Loop over ticks.
+      for ( int it=it1; it<=it2; ++it ) {
+        if ( it < 0 ) {
+          cout << myname << "WARNING: Skipping tick " << it << " for cell " << iwir << endl;
+          continue;
+        }
+        if ( it > nsam ) {
+          cout << myname << "WARNING: Skipping tick " << it << " for cell " << iwir << endl;
+          continue;
+        }
+        float t1 = it > tmin ? it : tmin;
+        float t2 = it+1 < tmax ? it+1 : tmax;
+        if ( t2 > t1 ) {
+          float qdep = dqdt*(t2 - t1);
+          wsamples[it] = qdep;
+          cout << myname << "  Q[" << iwir << "][" << it << "] = " << qdep << endl;
+        }
+      }
+    }  // End loop over wire pixels.
+    // Temporary: fill cells from pixels.
+    int ipix = -ncel*nbinPerWire;
+    if ( pixsamples.size() ) {
+      for ( int icel=-ncel; icel<=ncel; ++icel ) {
+        vector<float>& dest = celsamples[icel];
+        for ( int ibin=0; ibin<nbinPerWire; ++ibin, ++ipix ) {
+          std::transform(dest.begin(), dest.end(), pixsamples[ipix].begin(), dest.begin(), std::plus<float>());
+        }
       }
     }
-    if ( dqrem > 0.0 ) {
-      samples[itick] = dqrem;
-      cout << myname << "  Q[" << itick << "] = " << dqrem << endl;
-    }
-    // Offset the signal so it is centered.
-    Index ioff = dt/2;
-    if ( ! doOldXRange ) isig -= ioff;
+#endif
   }
-  cout << myname << "Sample count: " << samples.size() << endl;
+  cout << myname << "Pixel sample counts: " << endl;
+  for ( auto& kwir : pixsamples ) {
+    int iwir = kwir.first;
+    cout << myname << setw(6) << iwir << ": " << pixsamples[iwir].size() << endl;
+  }
+  cout << myname << "Cell sample counts: " << endl;
+  for ( auto& kwir : celsamples ) {
+    int iwir = kwir.first;
+    cout << myname << setw(6) << iwir << ": " << celsamples[iwir].size() << endl;
+  }
 
   // Assign chanel numbers, colors, styles, etc. for the three views.
   // Note channel number will be offset by the track angle.
   LineColors lc;
-  vector<int> chans = {2000, 0, 1000};
+  vector<int> chans = {2100, 100, 1100};
   vector<int> mycols = {lc.blue(), lc.red(), lc.green()};
   vector<int> mywids = {2, 2, 4};
   vector<int> mystys = {1, 2, 3};
@@ -227,19 +342,34 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
       acd.channel = icha;
       acd.samples.resize(nsam);
       acd.channelStatus = 0;
-      Index isam = isig;
-      for ( Index jsam=0; jsam<samples.size(); ++jsam ) {
+      // Fill samples from cells.
+      for ( Index isam=0; isam<celsamples[0].size(); ++isam ) {
         if ( isam >= nsam ) break;
-        acd.samples[isam] = samples[jsam];
-        ++isam;
+        acd.samples[isam] = celsamples[0][isam];
       }
       if ( pconvg != nullptr ) {
         cout << myname << "Adding longitudinal diffusion " << icha << endl;
         pconvg->update(acd).print();
       }
       if ( iproc > 0 ) {
-        cout << myname << "Convoluting with detector reponse " << icha << endl;
+        cout << myname << "Convoluting with detector response " << icha << endl;
         pconvo->update(acd).print();
+        if ( apaConCells.size() ) {
+          cout << myname << "Adding APA contributions from neighbors" << endl;
+          for ( int icel : apaConCells ) {
+            cout << myname << "...cell " << icel << endl;
+            AdcChannelTool* pncon = abs(icel) == 1 ? pconvo1 : nullptr;
+            if ( pncon == nullptr ) {
+              cout << myname << "WARNING: Convolution tool not found for cell " << icel << endl;
+              continue;
+            }
+            AdcChannelData acdtmp;
+            acdtmp.channel = icha + icel;
+            acdtmp.samples = celsamples[icel];
+            pncon->update(acdtmp);
+            for ( Index isam=0; isam<acdtmp.samples.size(); ++isam ) acd.samples[isam] += acdtmp.samples[isam];
+          }
+        }
         if ( noise > 0.0 ) {
           cout << myname << "Adding noise " << icha << endl;
           for ( float& sam : acd.samples ) sam += noise*cen.get();
@@ -329,6 +459,8 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
                     iproc == 2 ? "DFT deconvoluted reponse" :
                     iproc == 1 ? "Response to" : "Deposit from";
       sttl += " to 1 MIP for #theta_{xz}=" + stht + "#circ with " + slabsmr;
+      if ( nchDep ) sttl += " (N_{neighbor} =" + to_string(nchDep) + ")";
+      if ( sttlPrefix.size() ) sttl = sttlPrefix + sttl;
       man.setTitle(sttl);
       man.addHorizontalLine(0.0);
       man.setLabel("Run " + to_string(irun) + " event " + to_string(ievt));

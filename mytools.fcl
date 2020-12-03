@@ -44,19 +44,19 @@ data.ResponseVector1X: [
 ]
 
 # Second off diagonal
-ResponseVector2U: [
+data.ResponseVector2U: [
   0.000301878, 0.000278552, 0.000243603,  0.00019379, 0.000125203, 3.34149e-05,-8.56191e-05,-0.000230406,-0.000366374,-0.000392173,
  -0.000225586, 8.05792e-05, 0.000367811, 0.000501654, 0.000474536, 0.000362206, 0.000198912,-5.14795e-05,-0.000412819, -0.00082776,
   -0.00119622, -0.00145487, -0.00161291, -0.00171642, -0.00175378,  -0.0016756, -0.00146727, -0.00116864, -0.00084595,-0.000556996,
  -0.000333341,-0.000180549,-8.76204e-05,-3.73527e-05,-1.34602e-05,-3.78087e-06,-6.76969e-07,-6.07635e-08,-1.04611e-07,-1.78121e-07
 ]
-ResponseVector2V: [
+data.ResponseVector2V: [
   7.98121e-05, 7.89337e-05, 7.66877e-05, 7.26525e-05, 6.63129e-05, 5.70726e-05, 4.44317e-05, 2.94832e-05, 2.38235e-05, 6.17706e-05,
   0.000174426, 0.000351117, 0.000547504, 0.000732284, 0.000923159,  0.00114597,  0.00135915,  0.00146133,  0.00138745,   0.0011685,
   0.000861206, 0.000458767,-0.000121036,-0.000929196, -0.00177867, -0.00236443, -0.00251376, -0.00226383, -0.00178073, -0.00124451,
  -0.000779051,-0.000437094,-0.000218147,-9.49767e-05,-3.45689e-05,-9.48502e-06,-1.33674e-06, 2.01222e-07,-5.96432e-08,-3.86586e-07
 ]
-ResponseVector2X: [
+data.ResponseVector2X: [
    1.8178e-05, 1.84746e-05, 1.86263e-05,  1.8582e-05, 1.82773e-05, 1.76405e-05, 1.66338e-05,   1.562e-05, 1.76067e-05, 3.14924e-05,
    6.5897e-05, 0.000119575, 0.000183546,  0.00025399, 0.000343093, 0.000466641, 0.000619495, 0.000778193,  0.00093524,   0.0011079,
    0.00127954,  0.00134749,  0.00111739, 0.000427309,-0.000555995, -0.00143787, -0.00192011, -0.00194834, -0.00165251, -0.00121862,
@@ -65,6 +65,8 @@ ResponseVector2X: [
 
 
 data.ResponseVectors: [ @local::data.ResponseVectorU, @local::data.ResponseVectorV, @local::data.ResponseVectorX]
+data.ResponseVectors1: [ @local::data.ResponseVector1U, @local::data.ResponseVector1V, @local::data.ResponseVector1X]
+data.ResponseVectors2: [ @local::data.ResponseVector2U, @local::data.ResponseVector2V, @local::data.ResponseVector2X]
 data.ResponseCenters: [25, 25, 25]
 
 data.EmptyVectors: [[]]
@@ -156,7 +158,7 @@ tools.cmdecon: {
   IndexMapTool: pdspChannelToPlane
 }
 
-# Convolute with response function
+# Convolution with diagonal response
 tools.convo: {
   tool_type: AdcDeconvoluteFFT
   LogLevel: 1
@@ -170,6 +172,10 @@ tools.convo: {
   LowFilterPowers: [ 0.0,  0.0,  0.0]
   IndexMapTool: pdspChannelToPlane
 }
+
+# Convolution with diagonal+1 response
+tools.convo1: @local::tools.convo
+tools.convo1.ResponseVectors: @local::data.ResponseVectors1
 
 # Convolute with Gaussian.
 tools.convg1: {

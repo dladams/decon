@@ -20,10 +20,10 @@ ToolBasedRawDigitPrepService::ctor:                     LogLevel: 3
 ToolBasedRawDigitPrepService::ctor:                      DoWires: 0
 ToolBasedRawDigitPrepService::ctor:     No ADC channel tools.
 DuneToolManager::instance: Configuration file: mytools.fcl
-(DuneToolManager *) 0x50a2840
+(DuneToolManager *) 0x853c430
 Tool manager is available at ptm
 
-Processing run.C(0, "0", 1, 0.0, 101, 1)...
+Processing run.C(60, "0", 1, 0.0, 101, 1)...
 run: Fetching waveform plotter.
 StandardAdcChannelStringTool::ctor: Configuration parameters:
 StandardAdcChannelStringTool::ctor:       LogLevel: 1
@@ -72,6 +72,32 @@ AdcDeconvoluteFFT:ctor:                      [  0.0000436,   0.0000480,   0.0000
 AdcDeconvoluteFFT:ctor:                         0.0002883,   0.0004691,   0.0007037,   0.0010068,   0.0014613,   0.0021849,   0.0032521,   0.0047398,   0.0069598,   0.0105867, 
 AdcDeconvoluteFFT:ctor:                         0.0163138,   0.0247836,   0.0400853,   0.0694278,   0.1073940,   0.1375910,   0.1473380,   0.1352770,   0.1088480,   0.0778980, 
 AdcDeconvoluteFFT:ctor:                         0.0499836,   0.0287999,   0.0148160,   0.0066973,   0.0025690,   0.0007717,   0.0001410,  -0.0000058,  -0.0000033,   0.0000178]
+AdcDeconvoluteFFT:ctor:                    ]
+AdcDeconvoluteFFT:ctor:    ResponseShifts: [25, 25, 25]
+AdcDeconvoluteFFT:ctor:     SmoothVectors: []
+AdcDeconvoluteFFT:ctor:                    ]
+AdcDeconvoluteFFT:ctor:      SmoothScales: [  1.0000000]
+AdcDeconvoluteFFT:ctor:  GausFilterSigmas: [3.0000000, 3.0000000, 3.0000000]
+AdcDeconvoluteFFT:ctor:   LowFilterWidths: [-1.0000000, -1.0000000, -1.0000000]
+AdcDeconvoluteFFT:ctor:   LowFilterPowers: [0.0000000, 0.0000000, 0.0000000]
+AdcDeconvoluteFFT:ctor:    ChannelMapTool: pdspChannelToPlane
+AdcDeconvoluteFFT:ctor: Using channel mapping tool pdspChannelToPlane
+AdcDeconvoluteFFT:ctor: Parameters:
+AdcDeconvoluteFFT:ctor:          LogLevel: 1
+AdcDeconvoluteFFT:ctor:            Action: 2 (FFT response convolution.)
+AdcDeconvoluteFFT:ctor:   ResponseVectors: [
+AdcDeconvoluteFFT:ctor:                      [  0.0008896,   0.0009659,   0.0010491,   0.0011389,   0.0012344,   0.0013336,   0.0014341,   0.0015478,   0.0017957,   0.0025417, 
+AdcDeconvoluteFFT:ctor:                         0.0041054,   0.0062995,   0.0084308,   0.0097003,   0.0096303,   0.0081014,   0.0051762,   0.0011404,  -0.0033513,  -0.0073621, 
+AdcDeconvoluteFFT:ctor:                        -0.0100897,  -0.0112417,  -0.0110774,  -0.0101387,  -0.0088160,  -0.0072874,  -0.0056776,  -0.0041333,  -0.0027943,  -0.0017463, 
+AdcDeconvoluteFFT:ctor:                        -0.0010040,  -0.0005275,  -0.0002505,  -0.0001056,  -0.0000383,  -0.0000114,  -0.0000026,  -0.0000006,  -0.0000005,  -0.0000005], 
+AdcDeconvoluteFFT:ctor:                      [  0.0001810,   0.0001964,   0.0002134,   0.0002323,   0.0002532,   0.0002761,   0.0003017,   0.0003340,   0.0004032,   0.0005991, 
+AdcDeconvoluteFFT:ctor:                         0.0010145,   0.0016521,   0.0024455,   0.0033962,   0.0046928,   0.0065381,   0.0087850,   0.0108319,   0.0118956,   0.0113587, 
+AdcDeconvoluteFFT:ctor:                         0.0089321,   0.0047458,  -0.0007321,  -0.0067433,  -0.0118507,  -0.0146568,  -0.0147394,  -0.0127086,  -0.0096484,  -0.0065416, 
+AdcDeconvoluteFFT:ctor:                        -0.0039847,  -0.0021783,  -0.0010589,  -0.0004482,  -0.0001578,  -0.0000416,  -0.0000058,   0.0000002,  -0.0000012,  -0.0000025], 
+AdcDeconvoluteFFT:ctor:                      [  0.0000355,   0.0000384,   0.0000416,   0.0000452,   0.0000491,   0.0000535,   0.0000585,   0.0000649,   0.0000789,   0.0001185, 
+AdcDeconvoluteFFT:ctor:                         0.0002030,   0.0003337,   0.0004990,   0.0007035,   0.0009967,   0.0014463,   0.0020781,   0.0028918,   0.0039767,   0.0055398, 
+AdcDeconvoluteFFT:ctor:                         0.0076140,   0.0096131,   0.0098913,   0.0065796,   0.0002892,  -0.0062153,  -0.0104682,  -0.0116644,  -0.0104354,  -0.0079794, 
+AdcDeconvoluteFFT:ctor:                        -0.0053554,  -0.0031864,  -0.0016776,  -0.0007697,  -0.0002962,  -0.0000865,  -0.0000126,   0.0000037,   0.0000022,  -0.0000014]
 AdcDeconvoluteFFT:ctor:                    ]
 AdcDeconvoluteFFT:ctor:    ResponseShifts: [25, 25, 25]
 AdcDeconvoluteFFT:ctor:     SmoothVectors: []
@@ -249,181 +275,229 @@ AdcRoiViewer::ctor:         PlotLabels: []
 AdcRoiViewer::ctor:       RunDataTool: "" @ 0
 AdcRoiViewer::ctor:    TickOffsetTool: "" @ 0
 AdcRoiViewer::ctor: End constructing tool.
-run:   ds = 4.79 mm
-run:   dt = 0 tick
-run:   dq = 28.74 ke
-run:   Q[0] = 28.74
-run: Sample count: 100
+run: Wire pixel -2
+run:   Q[-2][24] = 2.05438
+run:   Q[-2][25] = 5.54256
+run:   Q[-2][26] = 5.54256
+run:   Q[-2][27] = 5.54256
+run:   Q[-2][28] = 5.54256
+run:   Q[-2][29] = 4.51537
+run: Wire pixel -1
+run:   Q[-1][29] = 1.02719
+run:   Q[-1][30] = 5.54256
+run:   Q[-1][31] = 5.54256
+run:   Q[-1][32] = 5.54256
+run:   Q[-1][33] = 5.54256
+run:   Q[-1][34] = 5.54256
+run: Wire pixel 0
+run:   Q[0][35] = 5.54256
+run:   Q[0][36] = 5.54256
+run:   Q[0][37] = 5.54256
+run:   Q[0][38] = 5.54256
+run:   Q[0][39] = 5.54256
+run:   Q[0][40] = 1.02718
+run: Wire pixel 1
+run:   Q[1][40] = 4.51538
+run:   Q[1][41] = 5.54256
+run:   Q[1][42] = 5.54256
+run:   Q[1][43] = 5.54256
+run:   Q[1][44] = 5.54256
+run:   Q[1][45] = 2.05438
+run: Wire pixel 2
+run:   Q[2][45] = 3.48818
+run:   Q[2][46] = 5.54256
+run:   Q[2][47] = 5.54256
+run:   Q[2][48] = 5.54256
+run:   Q[2][49] = 5.54256
+run:   Q[2][50] = 3.08158
+run: Wire pixel 3
+run:   Q[3][50] = 2.46098
+run:   Q[3][51] = 5.54256
+run:   Q[3][52] = 5.54256
+run:   Q[3][53] = 5.54256
+run:   Q[3][54] = 5.54256
+run:   Q[3][55] = 4.10876
+run: Pixel sample counts: 
+run:     -2: 70
+run:     -1: 70
+run:      0: 70
+run:      1: 70
+run:      2: 70
+run:      3: 70
+run: Cell sample counts: 
+run:     -1: 70
+run:      0: 70
+run:      1: 70
 run: ################################# Event 1
 run: Noise counts: 0, 0.  Last = 0
-run: Convoluting with detector reponse 2000
+run: Convoluting with detector response 2160
 Status: 0
+run: Adding APA contributions from neighbors
+run: ...cell -1
+run: ...cell 1
 run: Finding signal
 Status: 0
 Integers:
-  nThresholdBins: 9
+  nThresholdBins: 15
   nroi: 1
 run: Updating ROI histograms
-AdcRoiViewer::doView: Processing channel 2000. Input ROI count is 1
-AdcRoiViewer::doView:   ROI 0(raw 0): [87, 115]
-AdcRoiViewer::writeRoiPlots:   Creating plots for roi_chan002000_000.png
-AdcRoiViewer::fillSumHists: Creating histogram hsa_ch02000
-AdcRoiViewer::fillSumHists:    Name: hsa_ch02000
-AdcRoiViewer::fillSumHists:   Title: ROI signal area run 101 channel 2000
+AdcRoiViewer::doView: Processing channel 2160. Input ROI count is 1
+AdcRoiViewer::doView:   ROI 0(raw 0): [24, 58]
+AdcRoiViewer::writeRoiPlots:   Creating plots for roi_chan002160_000.png
+AdcRoiViewer::fillSumHists: Creating histogram hsa_ch02160
+AdcRoiViewer::fillSumHists:    Name: hsa_ch02160
+AdcRoiViewer::fillSumHists:   Title: ROI signal area run 101 channel 2160
 AdcRoiViewer::fillSumHists:    nbin: 200
 AdcRoiViewer::fillSumHists:    xmin: -50
 AdcRoiViewer::fillSumHists:    xmax: 150
 AdcRoiViewer::fillSumHists:     fit: gaus
-AdcRoiViewer::fillSumHists: Filling summary histogram hsa_ch02000. Fill count is 1
+AdcRoiViewer::fillSumHists: Filling summary histogram hsa_ch02160. Fill count is 1
 Status: 0
 Integers:
-  roiChannel: 2000
+  roiChannel: 2160
   roiCount: 1
   roiEvent: 1
-  roiNTickChannel: 200
+  roiNTickChannel: 70
   roiRawCount: 1
   roiRun: 101
   roiSubRun: -1
 Int vectors:
   roiNOverflows[1]: 0
-  roiNTicks[1]: 29
+  roiNTicks[1]: 35
   roiNUnderflows[1]: 0
-  roiTick0s[1]: 87
-  roiTickMaxs[1]: 14
-  roiTickMins[1]: 25
+  roiTick0s[1]: 24
+  roiTickMaxs[1]: 17
+  roiTickMins[1]: 31
   roiTimes[1]: 0
 Float vectors:
-  roiSigAreas[1]: 28.7296
-  roiSigMaxs[1]: 4.23449
-  roiSigMins[1]: -0.000165434
+  roiSigAreas[1]: 55.7916
+  roiSigMaxs[1]: 5.21574
+  roiSigMins[1]: -0.31071
 Histogram vectors:
   roiHists[1]
 run: Evaluating background RMS
-run: Sample RMS: 0.641032
-run: Signal RMS: 0.00135776
-TH1.Print Name  = adc_prepared_ev1_ch2000, Entries= 200, Total sum= 28.7745
-run: X: Area = 28.8, #Sigma|Area| = 28.8, Asym = 1.000
-run: Convoluting with detector reponse 0
+run: Sample RMS: 1.79338
+run: Signal RMS: 0.0907592
+TH1.Print Name  = adc_prepared_ev1_ch2160, Entries= 70, Total sum= 56.9854
+run: X: Area = 57.0, #Sigma|Area| = 60.7, Asym = 0.939
+run: Convoluting with detector response 160
 Status: 0
+run: Adding APA contributions from neighbors
+run: ...cell -1
+run: ...cell 1
 run: Finding signal
 Status: 0
 Integers:
-  nThresholdBins: 3
-  nroi: 1
+  nThresholdBins: 0
+  nroi: 0
 run: Updating ROI histograms
-AdcRoiViewer::doView: Processing channel 0. Input ROI count is 1
-AdcRoiViewer::doView:   ROI 0(raw 0): [78, 100]
-AdcRoiViewer::writeRoiPlots:   Creating plots for roi_chan000000_000.png
-AdcRoiViewer::fillSumHists: Creating histogram hsa_ch00000
-AdcRoiViewer::fillSumHists:    Name: hsa_ch00000
-AdcRoiViewer::fillSumHists:   Title: ROI signal area run 101 channel 0
+AdcRoiViewer::doView: Processing channel 160. Input ROI count is 0
+AdcRoiViewer::fillSumHists: Creating histogram hsa_ch00160
+AdcRoiViewer::fillSumHists:    Name: hsa_ch00160
+AdcRoiViewer::fillSumHists:   Title: ROI signal area run 101 channel 160
 AdcRoiViewer::fillSumHists:    nbin: 200
 AdcRoiViewer::fillSumHists:    xmin: -50
 AdcRoiViewer::fillSumHists:    xmax: 150
 AdcRoiViewer::fillSumHists:     fit: gaus
-AdcRoiViewer::fillSumHists: Filling summary histogram hsa_ch00000. Fill count is 1
+AdcRoiViewer::fillSumHists: Filling summary histogram hsa_ch00160. Fill count is 0
 Status: 0
 Integers:
-  roiChannel: 0
-  roiCount: 1
+  roiChannel: 160
+  roiCount: 0
   roiEvent: 1
-  roiNTickChannel: 200
-  roiRawCount: 1
+  roiNTickChannel: 70
+  roiRawCount: 0
   roiRun: 101
   roiSubRun: -1
 Int vectors:
-  roiNOverflows[1]: 0
-  roiNTicks[1]: 23
-  roiNUnderflows[1]: 0
-  roiTick0s[1]: 78
-  roiTickMaxs[1]: 11
-  roiTickMins[1]: 18
-  roiTimes[1]: 0
+  roiNOverflows[0]:
+  roiNTicks[0]:
+  roiNUnderflows[0]:
+  roiTick0s[0]:
+  roiTickMaxs[0]:
+  roiTickMins[0]:
+  roiTimes[0]:
 Float vectors:
-  roiSigAreas[1]: 0.134895
-  roiSigMaxs[1]: 1.13069
-  roiSigMins[1]: -1.0216
+  roiSigAreas[0]:
+  roiSigMaxs[0]:
+  roiSigMins[0]:
 Histogram vectors:
-  roiHists[1]
+  roiHists[0]
 run: Evaluating background RMS
-run: Sample RMS: 0.220462
-run: Signal RMS: 0.02999
-TH1.Print Name  = adc_prepared_ev1_ch0, Entries= 200, Total sum= -0.531328
-run: U: Area = -0.5, #Sigma|Area| = 13.0, Asym = -0.041
-run: Convoluting with detector reponse 1000
+run: Sample RMS: 0.411083
+run: Signal RMS: 0.411083
+TH1.Print Name  = adc_prepared_ev1_ch160, Entries= 70, Total sum= -3.26325
+run: U: Area = -3.3, #Sigma|Area| = 21.5, Asym = -0.152
+run: Convoluting with detector response 1160
 Status: 0
+run: Adding APA contributions from neighbors
+run: ...cell -1
+run: ...cell 1
 run: Finding signal
 Status: 0
 Integers:
-  nThresholdBins: 2
-  nroi: 1
+  nThresholdBins: 0
+  nroi: 0
 run: Updating ROI histograms
-AdcRoiViewer::doView: Processing channel 1000. Input ROI count is 1
-AdcRoiViewer::doView:   ROI 0(raw 0): [83, 104]
-AdcRoiViewer::writeRoiPlots:   Creating plots for roi_chan001000_000.png
-AdcRoiViewer::fillSumHists: Creating histogram hsa_ch01000
-AdcRoiViewer::fillSumHists:    Name: hsa_ch01000
-AdcRoiViewer::fillSumHists:   Title: ROI signal area run 101 channel 1000
+AdcRoiViewer::doView: Processing channel 1160. Input ROI count is 0
+AdcRoiViewer::fillSumHists: Creating histogram hsa_ch01160
+AdcRoiViewer::fillSumHists:    Name: hsa_ch01160
+AdcRoiViewer::fillSumHists:   Title: ROI signal area run 101 channel 1160
 AdcRoiViewer::fillSumHists:    nbin: 200
 AdcRoiViewer::fillSumHists:    xmin: -50
 AdcRoiViewer::fillSumHists:    xmax: 150
 AdcRoiViewer::fillSumHists:     fit: gaus
-AdcRoiViewer::fillSumHists: Filling summary histogram hsa_ch01000. Fill count is 1
+AdcRoiViewer::fillSumHists: Filling summary histogram hsa_ch01160. Fill count is 0
 Status: 0
 Integers:
-  roiChannel: 1000
-  roiCount: 1
+  roiChannel: 1160
+  roiCount: 0
   roiEvent: 1
-  roiNTickChannel: 200
-  roiRawCount: 1
+  roiNTickChannel: 70
+  roiRawCount: 0
   roiRun: 101
   roiSubRun: -1
 Int vectors:
-  roiNOverflows[1]: 0
-  roiNTicks[1]: 22
-  roiNUnderflows[1]: 0
-  roiTick0s[1]: 83
-  roiTickMaxs[1]: 11
-  roiTickMins[1]: 17
-  roiTimes[1]: 0
+  roiNOverflows[0]:
+  roiNTicks[0]:
+  roiNUnderflows[0]:
+  roiTick0s[0]:
+  roiTickMaxs[0]:
+  roiTickMins[0]:
+  roiTimes[0]:
 Float vectors:
-  roiSigAreas[1]: 0.258561
-  roiSigMaxs[1]: 1.07655
-  roiSigMins[1]: -1.09826
+  roiSigAreas[0]:
+  roiSigMaxs[0]:
+  roiSigMins[0]:
 Histogram vectors:
-  roiHists[1]
+  roiHists[0]
 run: Evaluating background RMS
-run: Sample RMS: 0.217425
-run: Signal RMS: 0.021801
-TH1.Print Name  = adc_prepared_ev1_ch1000, Entries= 200, Total sum= -0.137707
-run: V: Area = -0.1, #Sigma|Area| = 12.2, Asym = -0.011
-run: Printing wfconv-sigma0-thtxz0.0nsam00200-evt001.{png,tpad}
+run: Sample RMS: 0.362484
+run: Signal RMS: 0.362484
+TH1.Print Name  = adc_prepared_ev1_ch1160, Entries= 70, Total sum= -0.990603
+run: V: Area = -1.0, #Sigma|Area| = 19.1, Asym = -0.052
+run: Printing wfconv-sigma0-thtxz60.0nsam00070-evt001.{png,tpad}
 run: Closing tools.
 AdcRoiViewer::dtor: Exiting.
 AdcRoiViewer::dtor:   Event count: 1
 AdcRoiViewer::dtor:    Call count: 3
 AdcRoiViewer::dtor:   Sample unit: ke/tick
 AdcRoiViewer::dtor: Printing 3 ROI pads
-AdcRoiViewer::dtor: Writing roi_chan000000_000.png
-AdcRoiViewer::dtor: Writing roi_chan001000_000.png
-AdcRoiViewer::dtor: Writing roi_chan002000_000.png
+AdcRoiViewer::dtor: Writing roi_chan002160_000.png
 AdcRoiViewer::fitSumHists: Fitting summary histograms. Count is 3.
-AdcRoiViewer::fitSumHists: Fitting hist hsa_ch00000 with gaus
-AdcRoiViewer::fitSumHists:   WARNING: Fit gaus of hsa_ch00000 returned 4
-AdcRoiViewer::fitSumHists: Fitting hist hsa_ch01000 with gaus
-AdcRoiViewer::fitSumHists:   WARNING: Fit gaus of hsa_ch01000 returned 4
-AdcRoiViewer::fitSumHists: Fitting hist hsa_ch02000 with gaus
-AdcRoiViewer::fitSumHists:   WARNING: Fit gaus of hsa_ch02000 returned 4
+AdcRoiViewer::fitSumHists: Fitting hist hsa_ch00160 with gaus
+AdcRoiViewer::fitSumHists: Fitting hist hsa_ch01160 with gaus
+AdcRoiViewer::fitSumHists: Fitting hist hsa_ch02160 with gaus
 AdcRoiViewer::writeSumPlots: Plotting 1 set of summary histograms 
-AdcRoiViewer::writeSumPlots:   Creating plots for hsa_ch02000.{png,tpad}
-AdcRoiViewer::writeSumPlots:     Plotting hsa_ch02000
-AdcRoiViewer::writeSumPlots:   Writing hsa_ch02000.{png,tpad}
-AdcRoiViewer::writeSumPlots:   Creating plots for hsa_ch00000.{png,tpad}
-AdcRoiViewer::writeSumPlots:     Plotting hsa_ch00000
-AdcRoiViewer::writeSumPlots:   Writing hsa_ch00000.{png,tpad}
-AdcRoiViewer::writeSumPlots:   Creating plots for hsa_ch01000.{png,tpad}
-AdcRoiViewer::writeSumPlots:     Plotting hsa_ch01000
-AdcRoiViewer::writeSumPlots:   Writing hsa_ch01000.{png,tpad}
+AdcRoiViewer::writeSumPlots:   Creating plots for hsa_ch02160.{png,tpad}
+AdcRoiViewer::writeSumPlots:     Plotting hsa_ch02160
+AdcRoiViewer::writeSumPlots:   Writing hsa_ch02160.{png,tpad}
+AdcRoiViewer::writeSumPlots:   Creating plots for hsa_ch00160.{png,tpad}
+AdcRoiViewer::writeSumPlots:     Plotting hsa_ch00160
+AdcRoiViewer::writeSumPlots:   Writing hsa_ch00160.{png,tpad}
+AdcRoiViewer::writeSumPlots:   Creating plots for hsa_ch01160.{png,tpad}
+AdcRoiViewer::writeSumPlots:     Plotting hsa_ch01160
+AdcRoiViewer::writeSumPlots:   Writing hsa_ch01160.{png,tpad}
 run: Exiting.
 (int) 0
 AdcChannelMetric::dtor: Summary for metric sigRms
@@ -451,5 +525,3 @@ AdcChannelMetric::dtor:      # channels with max # entries: 0
 ToolBasedRawDigitPrepService:dtor: Event count: 0
 ToolBasedRawDigitPrepService:dtor:  Call count: 0
 ToolBasedRawDigitPrepService:dtor: Time report for 0 tools.
-DIR: /dune/data/users/dladams/wwwdune/protodune/test/test07
-URL: http://internal.dunescience.org/people/dladams/protodune/test/test07
