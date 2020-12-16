@@ -23,12 +23,16 @@
 //      "2" - smear RMS = 2 ==> 3.6 m
 //      "nosig" - No signal (noise only)
 // iproc specifies the extent of processing:
-//    0 - Energy deposit and diffusion smearing
-//    1 - Convoluted with detector response
-//    2 - Deconvoluted
-//    3 - Direct matrix deconvoluted
-//    4 - Filtered matrix deconvoluted
-//    5 - Chi-square matrix deconvoluted
+// iproc = 10*iprocRec + iprocSim
+//   iprocSim: 0 - energy deposit only
+//             1 - 1D response
+//             2 - Neighbor cell 2D response
+//             3 - Binned 2D response
+//   iprocRec: 0 - no deconvolution
+//             1 - 1D DFT deconvolution
+//             2 - 1D directr matrix deconvolution
+//             3 - 1D direct matrix deconvolution
+//             4 - 1D filtered matrix deconvolution
 // noise is the noise level in ke
 // run is the run number and is used to seed the noise
 // nevt is the number of events to process (1 track with 3 views for each event)
@@ -37,18 +41,37 @@
 // Waveform plots - One for each event overlaying the three views.
 // Power plots - One for each view, before and after reonstruction.
 
+int fetchTool(string tnam, AdcChannelTool*& ptoo, string prefix) {
+  ptoo = ptm->getShared<AdcChannelTool>(tnam);
+  if ( ptoo == nullptr ) {
+    cout << prefix << "ERROR: Unable to find tool " << tnam << endl;
+    return 1;
+  }
+  cout << prefix << "Found tool " << tnam << endl;
+  return 0;
+}
+
 int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned int irun =0, unsigned int nevt =1) {
   string myname = "run: ";
   using Index = unsigned int;
-  Index nsam =    70;     // Number of time samples
-  Index nchDep = 1;       // Number of neighboring cells with signals
+  Index nsam =   300;     // Number of time samples
+  Index nchDep = 2;       // Number of neighboring cells with signals
+  int ncel = int(nchDep);
   Index nbinPerWire = 2;  // Number of energy deposit bins per wire.
-  vector<int> apaConCells = {-1, 1};      // Cells contributing to central signal.
+  vector<int> apaConCells; // Cells contributing to central signal.
+  bool mostDistantResponse =  true;   // Only for debugging
+  if ( mostDistantResponse ) {
+    apaConCells.push_back(-int(nchDep));
+    apaConCells.push_back( int(nchDep));
+  } else {
+    for ( int icel=-ncel; icel<=ncel; ++icel ) apaConCells.push_back(icel);
+  }
   Index isig = nsam/2;    // Position of the signal.
   float wfxmin = isig - 45;
   float wfxmax = isig + 45;
-  float wfymin = -2.0;
-  float wfymax = 7.0;
+  float wfyfac = 0.1;
+  float wfymin = -3.0*wfyfac;
+  float wfymax =  6.0*wfyfac;
   if ( false ) {
     wfymax = 50;
     wfymin = -wfymax;
@@ -74,12 +97,10 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
     }
   }
     
-
-  // Check arguments.
-  if ( iproc > 5 ) {
-    cout << myname << "Invalid conv option: " << iproc << endl;
-    return 1;
-  }
+  // Extract the simulation and deconvolution options.
+  // The values will be checked when the correponding tools are fetched.
+  int iprocSim = iproc%10;
+  int iprocRec = iproc/10;
 
   // Fetch noise scaled to 1.0 for this run.
   CeNoise cen(irun);
@@ -89,20 +110,58 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
   // here to ensure those objects are still present.
   cout << myname << "Fetching waveform plotter." << endl;
   AdcChannelTool* pwf = ptm->getShared<AdcChannelTool>("wf");
-  cout << myname << "Fetching reponse convolution tool." << endl;
+  cout << myname << "Fetching 1D reponse convolution tools." << endl;
   AdcChannelTool* pconvo = ptm->getShared<AdcChannelTool>("convo");
   AdcChannelTool* pconvo1 = ptm->getShared<AdcChannelTool>("convo1");
+  AdcChannelTool* pconvo2 = ptm->getShared<AdcChannelTool>("convo2");
+  AdcChannelTool* pconvo3 = ptm->getShared<AdcChannelTool>("convo3");
+  AdcChannelTool* pconvo4 = ptm->getShared<AdcChannelTool>("convo4");
+  cout << myname << "Fetching 2D reponse convolution tools." << endl;
+  AdcChannelTool *pconv2dx, *pconv2du, *pconv2dv;
+  if ( fetchTool("conv2dx", pconv2dx, myname) ) return 2;
+  if ( fetchTool("conv2du", pconv2du, myname) ) return 2;
+  if ( fetchTool("conv2dv", pconv2dv, myname) ) return 2;
   AdcChannelTool* pdecon = nullptr;
-  cout << myname << "Fetching deconvolution tool." << endl;
-  string deconName;
-  if ( iproc > 1 ) {
-    deconName = iproc==5 ? "cmdecon" : iproc==4 ? "fmdecon" : iproc==3 ? "dmdecon" : "decon";
-    pdecon = ptm->getShared<AdcChannelTool>(deconName);
-    if ( pdecon == nullptr ) {
-      cout << myname << "ERROR: Unable to find tool " << deconName << endl;
-      return 2;
-    }
+  string responseTitle;
+  if ( iprocSim == 0 ) {
+    cout << myname << "No convolution." << endl;
+    responseTitle = "Response from";
+  } else if ( iprocSim == 1 ) {
+    cout << myname << "1D convolution." << endl;
+    responseTitle = "1D convolution of";
+  } else if ( iprocSim == 2 ) {
+    cout << myname << "Neighbor convolution." << endl;
+    responseTitle = "Neighbor convolution of";
+  } else if ( iprocSim == 3 ) {
+    cout << myname << "Binned 2D convolution." << endl;
+    responseTitle = "Binned 2D convolution of";
+  } else {
+    cout << "Invalid simulation option: " << iprocSim << endl;
   }
+  cout << myname << "Fetching deconvolution tool(s)." << endl;
+  string deconName;
+  if ( iprocRec == 0 ) {
+    cout << myname << "No deconvolution." << endl;
+  } else if ( iprocRec == 1 ) {
+    cout << myname << "1D DFT deconvolution." << endl;
+    deconName = "decon";
+    responseTitle = "DFT deconvoluted reponse to";
+  } else if ( iprocRec == 2 ) {
+    cout << myname << "1D direct deconvolution." << endl;
+    deconName = "dmdecon";
+    responseTitle = "Direct matrix deconvoluted reponse to";
+  } else if ( iprocRec == 3 ) {
+    cout << myname << "1D filtered matrix deconvolution." << endl;
+    deconName = "fmdecon";
+    responseTitle = "Filtered matrix deconvoluted reponse to";
+  } else if ( iprocRec == 4 ) {
+    cout << myname << "1D chi-square matrix deconvolution." << endl;
+    deconName = "cmdecon";
+    responseTitle = "Chi-square matrix deconvoluted reponse to";
+  } else {
+    cout << "Invalid deconvolution option: " << iprocRec << endl;
+  }
+  if ( deconName.size() && fetchTool(deconName, pdecon, myname) ) return 3;
   AdcChannelTool* pconvg = nullptr;
   string slabsmr = "no smearing";
   bool doSig = ssig != "nosig";
@@ -152,12 +211,11 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
   if ( proiview == nullptr ) return 3;
 
   // Create charge deposition.
-  // Charge is deposited in time-wire pixels with
+  // Charge is deposited in time-wire bins.
   // We integrate across each 0.5 us time bin starting at the left edge of bin 0.
   string sttlPrefix;
-  map<int, vector<float>> pixsamples;
-  map<int, vector<float>> celsamples;
-  int ncel = int(nchDep);
+  map<int, vector<float>> binsamples;     // Q[ibin][isam]
+  map<int, vector<float>> celsamples;     // Q[icel][isam]
   for ( int icel=-ncel; icel<=ncel; ++icel ) {
     celsamples[icel].resize(nsam, 0.0);
   }
@@ -183,7 +241,7 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
     cout << myname << "  dtcell = " << dtcell << " tick" << endl;
     cout << myname << "  dqcell = " << dqcell << " ke" << endl;
     unsigned int itick = isig;
-    // Loop over wire pixels.
+    // Loop over wire bins.
     for ( auto& kwir : celsamples ) {
       int iwir = kwir.first;
       vector<float>& csamples = kwir.second;
@@ -216,25 +274,25 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
           cout << myname << "  Q[" << iwir << "][" << it << "] = " << qdep << endl;
         }
       }
-    }  // End loop over wire pixels.
+    }  // End loop over wire bins.
 #else
-  //   w is wire coordinate in wire spacing units
-  //   t is drift coordinate in ticks (not time or distance)
-  //   wpWid = wire pixel width [wire spacings]
-  //   tpWid = time pixel width [ticks]
-  //   Wire pixel 0 is at the left edge of the central cell.
-  //   Time pixel 0 is tick 0
-  //   (wtoff, ttoff) is a point on the track
-  //   dtdw derived from dxdz is the track angle
+    //   w is wire coordinate in wire spacing units
+    //   t is drift coordinate in ticks (not time or distance)
+    //   wbWid = wire bin width [wire spacings]
+    //   tbWid = time bin width [ticks]
+    //   Wire bin 0 is at the left edge of the central cell.
+    //   Time bin 0 is tick 0
+    //   (wtoff, ttoff) is a point on the track
+    //   dtdw derived from dxdz is the track angle
     int iwir1 = -ncel*nbinPerWire;
     int iwir2 = (ncel + 1)*nbinPerWire;
     for ( int iwir=iwir1; iwir<iwir2; ++iwir ) {
-      pixsamples[iwir].resize(nsam, 0.0);
+      binsamples[iwir].resize(nsam, 0.0);
     }
-    sttlPrefix = "New ";
-    float wpWid = 1.0/nbinPerWire;
-    float tpWid = 1.0;
-    float wpOff = 0.0;
+    sttlPrefix = "";
+    float wbWid = 1.0/nbinPerWire;
+    float tbWid = 1.0;
+    float wbOff = 0.0;
     float dtdw = dxdz*dzcell/dxdt;    // dimensionless
     float dzds = cos(thtxz);
     float dxds = sin(thtxz);
@@ -242,21 +300,21 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
     float dqdt = dqds*dxdt/dxds;
     float wtOff = 0.0;
     float ttOff = isig;
-    // Loop over wire pixels.
-    for ( auto& kwir : pixsamples ) {
+    // Loop over wire bins.
+    for ( auto& kwir : binsamples ) {
       int iwir = kwir.first;
-      cout << myname << "Wire pixel " << iwir << endl;
+      cout << myname << "Wire bin " << iwir << endl;
       vector<float>& wsamples = kwir.second;
       // Handle track parallel to APA
       if ( dxdz == 0.0 ) {
-        float qdep = dqdw*wpWid;
+        float qdep = dqdw*wbWid;
         wsamples[isig] = qdep;
         cout << myname << "  Q[" << iwir << "][" << isig << "] = " << qdep << endl;
         continue;
       }
-      float xwir = wpOff + wpWid*iwir;
-      float tmin = ttOff + dtdw*(iwir)*wpWid;
-      float tmax = ttOff + dtdw*(iwir+1)*wpWid;
+      float xwir = wbOff + wbWid*iwir;
+      float tmin = ttOff + dtdw*(iwir)*wbWid;
+      float tmax = ttOff + dtdw*(iwir+1)*wbWid;
       int it1 = tmin - 1.0;
       int it2 = tmax + 1.0;
       // Loop over ticks.
@@ -277,31 +335,37 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
           cout << myname << "  Q[" << iwir << "][" << it << "] = " << qdep << endl;
         }
       }
-    }  // End loop over wire pixels.
-    // Temporary: fill cells from pixels.
-    int ipix = -ncel*nbinPerWire;
-    if ( pixsamples.size() ) {
+    }  // End loop over wire bins.
+    // Temporary: fill cells from bins.
+    if ( binsamples.size() ) {
       for ( int icel=-ncel; icel<=ncel; ++icel ) {
+        if ( find(apaConCells.begin(), apaConCells.end(), icel) == apaConCells.end() ) continue;
+        int ibin = icel*nbinPerWire;
         vector<float>& dest = celsamples[icel];
-        for ( int ibin=0; ibin<nbinPerWire; ++ibin, ++ipix ) {
-          std::transform(dest.begin(), dest.end(), pixsamples[ipix].begin(), dest.begin(), std::plus<float>());
+        for ( int iwbi=0; iwbi<nbinPerWire; ++iwbi, ++ibin ) {
+          cout << myname << "Adding bin " << ibin << " to cell " << icel << endl;
+          std::transform(dest.begin(), dest.end(), binsamples[ibin].begin(), dest.begin(), std::plus<float>());
         }
       }
     }
 #endif
   }
-  cout << myname << "Pixel sample counts: " << endl;
-  for ( auto& kwir : pixsamples ) {
+  cout << myname << "Bin sample counts, charge: " << endl;
+  for ( auto& kwir : binsamples ) {
     int iwir = kwir.first;
-    cout << myname << setw(6) << iwir << ": " << pixsamples[iwir].size() << endl;
+    float qsum = 0.0;
+    for ( float q : binsamples[iwir] ) qsum += q;
+    cout << myname << setw(6) << iwir << ": " << binsamples[iwir].size() << ", " << qsum << endl;
   }
   cout << myname << "Cell sample counts: " << endl;
   for ( auto& kwir : celsamples ) {
     int iwir = kwir.first;
-    cout << myname << setw(6) << iwir << ": " << celsamples[iwir].size() << endl;
+    float qsum = 0.0;
+    for ( float q : celsamples[iwir] ) qsum += q;
+    cout << myname << setw(6) << iwir << ": " << celsamples[iwir].size() << ", " << qsum << endl;
   }
 
-  // Assign chanel numbers, colors, styles, etc. for the three views.
+  // Assign channel numbers, colors, styles, etc. for the three views.
   // Note channel number will be offset by the track angle.
   LineColors lc;
   vector<int> chans = {2100, 100, 1100};
@@ -311,7 +375,7 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
   vector<string> mylabs = {"X", "U", "V"};
 
   unsigned int ncon = 3;
-  if ( iproc == 0 ) ncon = 1;
+  if ( iprocSim == 0 ) ncon = 1;
   vector<TH1*> myhsts(ncon, nullptr);
   Index maxEvtPlot = 20;    // # events for which waveform plots are made
   unique_ptr<TPadManipulator> pman;
@@ -342,23 +406,30 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
       acd.channel = icha;
       acd.samples.resize(nsam);
       acd.channelStatus = 0;
-      // Fill samples from cells.
-      for ( Index isam=0; isam<celsamples[0].size(); ++isam ) {
-        if ( isam >= nsam ) break;
-        acd.samples[isam] = celsamples[0][isam];
+      if ( iprocSim == 0 || iprocSim == 1 ) {
+        // Fill samples from cells.
+        for ( Index isam=0; isam<celsamples[0].size(); ++isam ) {
+          if ( isam >= nsam ) break;
+          acd.samples[isam] = celsamples[0][isam];
+        }
+        if ( pconvg != nullptr ) {
+          cout << myname << "Adding longitudinal diffusion to single channel " << icha << endl;
+          pconvg->update(acd).print();
+        }
       }
-      if ( pconvg != nullptr ) {
-        cout << myname << "Adding longitudinal diffusion " << icha << endl;
-        pconvg->update(acd).print();
-      }
-      if ( iproc > 0 ) {
-        cout << myname << "Convoluting with detector response " << icha << endl;
-        pconvo->update(acd).print();
-        if ( apaConCells.size() ) {
-          cout << myname << "Adding APA contributions from neighbors" << endl;
+      if ( iprocSim > 0 ) {
+        if ( iprocSim == 1 ) {
+          cout << myname << "Convoluting with detector response " << icha << endl;
+          pconvo->update(acd).print();
+        } else if ( iprocSim == 2 ) {
+          cout << myname << "Adding APA contributions from cells" << endl;
           for ( int icel : apaConCells ) {
             cout << myname << "...cell " << icel << endl;
-            AdcChannelTool* pncon = abs(icel) == 1 ? pconvo1 : nullptr;
+            AdcChannelTool* pncon = abs(icel) == 0 ? pconvo  :
+                                    abs(icel) == 1 ? pconvo1 :
+                                    abs(icel) == 2 ? pconvo2 :
+                                    abs(icel) == 3 ? pconvo3 :
+                                    abs(icel) == 4 ? pconvo4 : nullptr;
             if ( pncon == nullptr ) {
               cout << myname << "WARNING: Convolution tool not found for cell " << icel << endl;
               continue;
@@ -366,9 +437,13 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
             AdcChannelData acdtmp;
             acdtmp.channel = icha + icel;
             acdtmp.samples = celsamples[icel];
+            if ( pconvg != nullptr ) {
+              cout << myname << "Adding longitudinal diffusion to channel " << acdtmp.channel << endl;
+              pconvg->update(acdtmp).print();
+            }
             pncon->update(acdtmp);
             for ( Index isam=0; isam<acdtmp.samples.size(); ++isam ) acd.samples[isam] += acdtmp.samples[isam];
-          }
+          }  // End loop over neighbors
         }
         if ( noise > 0.0 ) {
           cout << myname << "Adding noise " << icha << endl;
@@ -379,7 +454,7 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
         pfft->update(acd);
         pplotDftBefore->viewMap(acm);
         // Deconvolution.
-        if ( iproc > 1 ) {
+        if ( iprocRec > 0 ) {
           cout << myname << "Deconvoluting channel " << icha << endl;
           pdecon->update(acd).print();
           if ( doRebaseline ) {
@@ -453,19 +528,15 @@ int run(float thtxzdeg, string ssig, int iproc =1, float noise = 0.0, unsigned i
       ostringstream ssout;
       ssout << std::fixed << std::setprecision(1) << thtxzdeg;
       string stht = ssout.str();
-      string sttl = iproc == 5 ? "Chi-square matrix deconvoluted reponse" :
-                    iproc == 4 ? "Filtered matrix deconvoluted reponse" :
-                    iproc == 3 ? "Direct matrix deconvoluted reponse" :
-                    iproc == 2 ? "DFT deconvoluted reponse" :
-                    iproc == 1 ? "Response to" : "Deposit from";
-      sttl += " to 1 MIP for #theta_{xz}=" + stht + "#circ with " + slabsmr;
-      if ( nchDep ) sttl += " (N_{neighbor} =" + to_string(nchDep) + ")";
+      string sttl = responseTitle;
+      sttl += " 1 MIP for #theta_{xz}=" + stht + "#circ with " + slabsmr;
+      if ( iprocSim==2 && nchDep ) sttl += " (N_{nb} =" + to_string(nchDep) + ")";
       if ( sttlPrefix.size() ) sttl = sttlPrefix + sttl;
       man.setTitle(sttl);
       man.addHorizontalLine(0.0);
       man.setLabel("Run " + to_string(irun) + " event " + to_string(ievt));
       string fnam = "wf";
-      fnam += (iproc>1 ? deconName : iproc ? "conv" : "noconv");
+      fnam += (iprocRec>0 ? deconName : iprocSim ? "conv" : "noconv");
       fnam += "-sigma" + ssig;
       fnam += "-thtxz" + stht;
       string snsam = to_string(nsam);

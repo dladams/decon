@@ -1,4 +1,5 @@
 #include "load_dataprep.fcl"
+#include "wc2dresponse.fcl"
 
 tools.wf: @local::tools.adcPlotPrepared
 
@@ -64,9 +65,50 @@ data.ResponseVector2X: [
 ]
 
 
+data.ResponseVector3U: [
+ -4.08663e-05,-8.46397e-05, -0.00013612,-0.000196071, -0.00026513,-0.000343649,-0.000431313, -0.00052542,-0.000611902,-0.000654569,
+ -0.000622568,-0.000526204,-0.000409011,-0.000312271,-0.000247045,-0.000201426,-0.000168558, -0.00015576, -0.00016933, -0.00020057,
+ -0.000233394,-0.000259839,-0.000285816,-0.000320788,-0.000353918,-0.000362608,-0.000335217,-0.000278003,-0.000207457,-0.000139856,
+ -8.52973e-05,-4.69293e-05,-2.30767e-05,-9.94341e-06,-3.60624e-06, -1.0054e-06,-1.63709e-07, 1.10932e-09, -1.6898e-08,-4.32144e-08
+]
+data.ResponseVector3V: [
+  5.62552e-06,-1.81556e-06,-1.07728e-05, -2.1468e-05,-3.41311e-05,-4.89721e-05,-6.60835e-05, -8.4877e-05,-0.000100968, -0.00010221,
+ -7.80641e-05,-3.25696e-05,  1.8551e-05, 6.21646e-05, 9.88941e-05, 0.000135614,  0.00016858, 0.000182799, 0.000169114, 0.000135178,
+  9.22791e-05, 3.80302e-05,-4.69745e-05,-0.000178496,-0.000325745,-0.000431563,-0.000460804,-0.000417295,-0.000330033,-0.000231839,
+ -0.000145847,-8.22356e-05,-4.12592e-05, -1.8072e-05,-6.62809e-06,-1.83922e-06,-2.65262e-07, 4.09991e-08,-4.78903e-09,-6.82793e-08
+]
+data.ResponseVector3X: [
+  3.53387e-06, 2.37036e-06,  9.4554e-07, -7.8419e-07,-2.86663e-06,-5.34897e-06,-8.25537e-06,-1.14317e-05,-1.36458e-05,-1.13769e-05,
+ -1.43373e-06, 1.52462e-05, 3.44334e-05, 5.31523e-05, 7.32939e-05, 9.82174e-05, 0.000125872, 0.000149175, 0.000164479, 0.000175328,
+  0.000182262, 0.000172734, 0.000120046, 2.79335e-06,-0.000150839,-0.000280475,-0.000343184,-0.000334332,-0.000276851,-0.000200863,
+  -0.00012953,-7.45448e-05,-3.80821e-05,-1.69646e-05,-6.32455e-06,-1.77948e-06,-2.49674e-07, 5.97057e-08, 1.62388e-08,-5.21316e-08
+]
+
+data.ResponseVector4U: [
+ -0.000156496,-0.000189149,-0.000224628,-0.000262813,-0.000303465,-0.000346177,-0.000390265, -0.00043411,-0.000471371,  -0.0004864,
+ -0.000465696,-0.000412598,-0.000344384,-0.000278982,-0.000224496,-0.000180011,-0.000143529,-0.000115749,-9.74421e-05,-8.64111e-05,
+ -7.90976e-05,-7.38911e-05,-7.22689e-05,-7.62208e-05, -8.2422e-05,-8.44443e-05,-7.85564e-05,-6.56252e-05,-4.93073e-05,-3.34435e-05,
+ -2.05092e-05,-1.13411e-05,-5.60367e-06,-2.42583e-06,-8.83649e-07,-2.46936e-07, -3.9469e-08, 1.51707e-09,-3.03461e-09,-9.92228e-09
+]
+data.ResponseVector4V: [
+ -2.70254e-05,-3.39221e-05,-4.15783e-05,-5.00189e-05,-5.92498e-05,-6.92453e-05,-7.99096e-05,-9.08647e-05,-0.000100262,-0.000103313,
+ -9.58834e-05,-7.92369e-05,-5.90372e-05,-4.06505e-05,-2.54405e-05, -1.2067e-05,-5.98656e-07, 6.64091e-06, 8.17191e-06, 5.59121e-06,
+  1.17907e-06,-5.43153e-06,-1.80068e-05,-3.98219e-05,-6.53163e-05,-8.37315e-05,-8.82909e-05, -7.9524e-05,-6.27407e-05,-4.40275e-05,
+ -2.76895e-05,-1.56162e-05,-7.84009e-06,-3.43809e-06,-1.26353e-06,-3.52076e-07,-5.15296e-08, 7.58525e-09,-7.24126e-10,-1.27229e-08
+]
+data.ResponseVector4X: [
+ -4.18357e-06,-5.51794e-06,-7.02077e-06,-8.70434e-06,-1.05789e-05,-1.26498e-05, -1.4907e-05,-1.72645e-05,-1.92139e-05,-1.93831e-05,
+ -1.65673e-05,-1.11457e-05,-4.77471e-06, 1.13059e-06, 6.59692e-06, 1.23455e-05, 1.80339e-05,  2.2172e-05, 2.39203e-05, 2.40811e-05,
+  2.32942e-05, 2.00184e-05, 1.02221e-05, -9.3609e-06,-3.39906e-05,-5.39027e-05, -6.2412e-05,-5.91562e-05, -4.8186e-05,-3.45718e-05,
+ -2.21089e-05,-1.26383e-05,-6.41895e-06,-2.84429e-06,-1.05506e-06,-2.95656e-07, -4.1888e-08, 8.87137e-09, 1.63614e-09,-9.35461e-09
+]
+
+
 data.ResponseVectors: [ @local::data.ResponseVectorU, @local::data.ResponseVectorV, @local::data.ResponseVectorX]
 data.ResponseVectors1: [ @local::data.ResponseVector1U, @local::data.ResponseVector1V, @local::data.ResponseVector1X]
 data.ResponseVectors2: [ @local::data.ResponseVector2U, @local::data.ResponseVector2V, @local::data.ResponseVector2X]
+data.ResponseVectors3: [ @local::data.ResponseVector2U, @local::data.ResponseVector2V, @local::data.ResponseVector2X]
+data.ResponseVectors4: [ @local::data.ResponseVector2U, @local::data.ResponseVector2V, @local::data.ResponseVector2X]
 data.ResponseCenters: [25, 25, 25]
 
 data.EmptyVectors: [[]]
@@ -158,7 +200,11 @@ tools.cmdecon: {
   IndexMapTool: pdspChannelToPlane
 }
 
-# Convolution with diagonal response
+########################################################################
+# Convolution tools.
+########################################################################
+
+# 1D Convolution with diagonal response
 tools.convo: {
   tool_type: AdcDeconvoluteFFT
   LogLevel: 1
@@ -173,11 +219,23 @@ tools.convo: {
   IndexMapTool: pdspChannelToPlane
 }
 
-# Convolution with diagonal+1 response
+# 1D Convolution with diagonal+1 response
 tools.convo1: @local::tools.convo
 tools.convo1.ResponseVectors: @local::data.ResponseVectors1
 
-# Convolute with Gaussian.
+# 1D Convolution with diagonal+2 response
+tools.convo2: @local::tools.convo
+tools.convo2.ResponseVectors: @local::data.ResponseVectors2
+
+# 1D Convolution with diagonal+3 response
+tools.convo3: @local::tools.convo
+tools.convo3.ResponseVectors: @local::data.ResponseVectors3
+
+# 1D Convolution with diagonal+4 response
+tools.convo4: @local::tools.convo
+tools.convo4.ResponseVectors: @local::data.ResponseVectors4
+
+# 1D Convolute with 1-tick Gaussian.
 tools.convg1: {
   tool_type: AdcDeconvoluteFFT
   LogLevel: 1
@@ -192,11 +250,37 @@ tools.convg1: {
   IndexMapTool: ""
 }
 
+# 1D Convolute with 2-tick Gaussian.
 tools.convg2: @local::tools.convg1
 tools.convg2.GausFilterSigmas: [2.0]
 
+# 1D Convolute with 3-tick Gaussian.
 tools.convg3: @local::tools.convg1
 tools.convg3.GausFilterSigmas: [3.0]
+
+# 2D APA X convoution.
+tools.conv2dx: {
+  tool_type: Adc2dConvolute
+  LogLevel: 1
+  ResponseVectors: @local::data.responseVector2dx
+  ResponseCenter: 25
+  BinsPerWire: 10
+  BinsPerTick: 1
+  MinChannel: 1600
+  MaxChannel: 2559
+}
+
+# 2D APA U convoution.
+tools.conv2du: @local::tools.conv2dx
+tools.conv2du.ResponseVectors: @local::data.responseVector2du
+tools.conv2du.MinChannel:    0
+tools.conv2du.MaxChannel:  799
+
+# 2D APA V convoution.
+tools.conv2dv: @local::tools.conv2dx
+tools.conv2dv.ResponseVectors: @local::data.responseVector2dv
+tools.conv2dv.MinChannel:  800
+tools.conv2dv.MaxChannel: 1599
 
 ########################################################################
 

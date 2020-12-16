@@ -8,16 +8,27 @@
 # Shell script to run the simulation in run.C.
 
 ICONV=$1
-DXDZ=$2
+THTXZ=$2
 SIGMA=$3
 NOISE=$4
 RUN=$5
 NEVT=$6
 if [ -z "$SIGMA" ]; then
-  echo Usage: $0 ICONV THTDZ SIGMA [NOISE [RUN [NEVT]]]]
-  echo "         ICONV = 0: True energy deposit"
-  echo "         ICONV = 1: Convolution and smearing"
-  echo "         ICONV = 2: Deconvolution"
+  echo Usage: $0 ICONV THTXZ SIGMA [NOISE [RUN [NEVT]]]]
+  echo "         ICONV = 10*IREC + ISIM"
+  echo "         ISIM = 0: Energy deposit w/o convolution"
+  echo "                1: 1D APA convolution"
+  echo "                2: Neighbor APA convolution"
+  echo "                3: Binned 2D APA convolution"
+  echo "         IREC = 0: No deconvolution."
+  echo "                1: DFT deconvolution."
+  echo "                2: Direct matrix deconvolution."
+  echo "                3: Filtered matrix deconvolution."
+  echo "                4: Chi-square matrix deconvolution."
+  echo "        THTXZ = Track angle in XZ plane."
+  echo "        SIGMA = Logitudinal smearing sigma [ticks]: 0, 1, 2 or 3"
+  echo "          RUN = Run number and random seed."
+  echo "         NEVT = # events (1 track per event)"
   exit 0
 fi
 if [ -z "$NOISE" ]; then
@@ -31,6 +42,6 @@ if [ -z "NEVT" ]; then
 fi
 rm -f wsave/* &&
 rm -f *.png *.tpad
-root.exe -b -q 'run.C('$DXDZ', "'$SIGMA'", '$ICONV', '$NOISE', '$RUN', '$NEVT')' | tee run.log &&
+root.exe -b -q 'run.C('$THTXZ', "'$SIGMA'", '$ICONV', '$NOISE', '$RUN', '$NEVT')' | tee run.log &&
 cp *.png wsave
 makeIndex wsave
