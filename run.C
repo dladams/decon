@@ -29,12 +29,14 @@
 //         NSIG = longitudinal diffusion Gaussian sigma in ticks [0]
 //         NOISE = noise level in e [0]
 //         Blank or omitted values take the defaults indicated in brackets.
-// iproc specifies the extent of reconstruction processing:
-//   iproc: 0 - no deconvolution
-//          1 - 1D DFT deconvolution
-//          2 - 1D direct matrix deconvolution
-//          3 - 1D filtered matrix deconvolution
-//          4 - 1D chi-square matrix deconvolution
+// sdeco specifies the deconvolution
+//   sdeco: nodeco = no deconvolution
+//          deco1d:OPT = 1D deconvolution with option OPT
+//            OPT = dft - DFT deconvolution
+//                  dm is direct matrix deconvolution
+//                  fm is filtered matrix deconvolution
+//                  cm is chi-square matrix deconvolution
+//          deco1d:NBIN = 2D deconvolution with NBIN bins/wire
 // run is the run number and is used to seed the noise
 // nevt is the number of events to process (1 track with 3 views for each event)
 //
@@ -60,7 +62,7 @@ int fetchTool(string tnam, AdcChannelTool*& ptoo, string prefix) {
 // Main program.
 //************************************************************************
 
-int run(float thtxzdeg, string sresp, int iproc =1, unsigned int irun =0, unsigned int nevt =1) {
+int run(float thtxzdeg, string sresp, string sdeco, unsigned int irun =0, unsigned int nevt =1) {
   string myname = "run: ";
   using Index = unsigned int;
 
@@ -154,6 +156,50 @@ int run(float thtxzdeg, string sresp, int iproc =1, unsigned int irun =0, unsign
     return 1;
   }
 
+  // Decode the deconvolution specifier.
+  vector<string> dsubs = StringManipulator(sdeco).split(":", true);
+  string dnam = dsubs[0];
+  bool do1dDeconvolution = false;
+  bool do2dDeconvolution = false;
+  vector<string> deconToolNames;
+  string deconTitle;
+  int deconError = 0;
+  if ( dnam == "nodeco" ) {
+    cout << myname << "No deconvolution." << endl;
+  } else if ( dnam == "deco1d" ) {
+    do1dDeconvolution = true;
+    string dopt = dsubs.size() == 2 ? dsubs[1] : "BAAAD";
+    if ( dopt == "dft" ) {
+      cout << myname << "1D DFT deconvolution." << endl;
+      deconToolNames.push_back("decon");
+      deconTitle = "1D DFT deconvoluted reponse to";
+    } else if ( dopt == "dm" ) {
+      cout << myname << "1D direct deconvolution." << endl;
+      deconToolNames.push_back("dmdecon");
+      deconTitle = "1D Direct matrix deconvoluted response to";
+    } else if ( dopt == "fm" ) {
+      cout << myname << "1D filtered matrix deconvolution." << endl;
+      deconToolNames.push_back("fmdecon");
+      deconTitle = "1D Filtered matrix deconvoluted reponse to";
+    } else if ( dopt == "cm" ) {
+      cout << myname << "1D chi-square matrix deconvolution." << endl;
+      deconToolNames.push_back("cmdecon");
+      deconTitle = "1D Chi-square matrix deconvoluted reponse to";
+    } else deconError = 2;
+  } else if ( dnam == "deco2d" ) {
+    deconTitle = "2D deconvoluted reponse to";
+    if ( dsubs.size() != 2 ) deconError = 3;
+    cout << myname << "ERROR: 2D deconvolution is not yet supported." << endl;
+    return 1;
+  } else deconError = 1;
+  if ( deconError ) {
+    cout << "Invalid deconvolution option: " << sdeco << endl;
+    return 1;
+  }
+  bool doDeconvolution = do1dDeconvolution || do2dDeconvolution;
+  string deconName;
+  for ( string dsub : dsubs ) deconName += dsub;
+
   // Derived parameters.
   float noise = 0.001*enoise;
   int ncel = nnbr;
@@ -170,13 +216,11 @@ int run(float thtxzdeg, string sresp, int iproc =1, unsigned int irun =0, unsign
     cout << myname << "No convolution." << endl;
     responseTitle = "Response from";
     nbinPerWire = 1;
+  } else if ( doDeconvolution ) {
+    responseTitle = deconTitle;
   } else if ( ! use2dConvolution ) {
     cout << myname << "1D convolution." << endl;
     responseTitle = "1D convolution of";
-  //} else if ( nbinPerWire == 1 ) {
-  //  cout << myname << "Neighbor convolution." << endl;
-  //  responseTitle = "Neighbor convolution of";
-  //  if ( mostDistantResponse ) responseTitle = "Neighbor only convolution of";
   } else {
     cout << myname << "Binned 2D convolution." << endl;
     responseTitle = "Binned 2D convolution of";
@@ -214,31 +258,13 @@ int run(float thtxzdeg, string sresp, int iproc =1, unsigned int irun =0, unsign
       if ( fetchTool(tnam, pcon2ds[nbin][sview], myname) ) return 2;
     }
   }
-  AdcChannelTool* pdecon = nullptr;
+  vector<AdcChannelTool*> deconTools(deconToolNames.size(), nullptr);
   cout << myname << "Fetching deconvolution tool(s)." << endl;
-  string deconName;
-  if ( iproc == 0 ) {
-    cout << myname << "No deconvolution." << endl;
-  } else if ( iproc == 1 ) {
-    cout << myname << "1D DFT deconvolution." << endl;
-    deconName = "decon";
-    responseTitle = "DFT deconvoluted reponse to";
-  } else if ( iproc == 2 ) {
-    cout << myname << "1D direct deconvolution." << endl;
-    deconName = "dmdecon";
-    responseTitle = "Direct matrix deconvoluted reponse to";
-  } else if ( iproc == 3 ) {
-    cout << myname << "1D filtered matrix deconvolution." << endl;
-    deconName = "fmdecon";
-    responseTitle = "Filtered matrix deconvoluted reponse to";
-  } else if ( iproc == 4 ) {
-    cout << myname << "1D chi-square matrix deconvolution." << endl;
-    deconName = "cmdecon";
-    responseTitle = "Chi-square matrix deconvoluted reponse to";
-  } else {
-    cout << "Invalid deconvolution option: " << iproc << endl;
+  auto idt = deconTools.begin();
+  for ( string deconToolName : deconToolNames ) {
+    if ( fetchTool(deconToolName, *(idt++), myname) ) return 3;
   }
-  if ( deconName.size() && fetchTool(deconName, pdecon, myname) ) return 3;
+  cout << myname << "Fetching longitudinal diffusion smearing tool." << endl;
   AdcChannelTool* pconvg = nullptr;
   string slabsmr = "no smearing";
   if ( ssigl == "1" || ssigl == "2" ) {
@@ -524,9 +550,9 @@ int run(float thtxzdeg, string sresp, int iproc =1, unsigned int irun =0, unsign
         pfft->update(acd);
         pplotDftBefore->viewMap(acm);
         // Deconvolution.
-        if ( iproc > 0 ) {
+        if ( doDeconvolution ) {
           cout << myname << "Deconvoluting channel " << icha << endl;
-          pdecon->update(acd).print();
+          for ( AdcChannelTool* pdecon : deconTools ) pdecon->update(acd).print();
           if ( doRebaseline ) {
             cout << myname << "Rebaselining channel " << icha << endl;
             prbl->update(acd).print();
@@ -609,7 +635,7 @@ int run(float thtxzdeg, string sresp, int iproc =1, unsigned int irun =0, unsign
       man.addHorizontalLine(0.0);
       man.setLabel("Run " + to_string(irun) + " event " + to_string(ievt));
       string fnam = "wf";
-      fnam += (iproc>0 ? deconName : doConvolution ? "conv" : "noconv");
+      fnam += (doDeconvolution ? deconName : doConvolution ? "conv" : "noconv");
       fnam += "-sigma" + ssigl;
       fnam += "-thtxz" + stht;
       if ( showNsam ) {

@@ -263,30 +263,6 @@ tools.convg2.GausFilterSigmas: [2.0]
 tools.convg3: @local::tools.convg1
 tools.convg3.GausFilterSigmas: [3.0]
 
-# 2D APA X convoution.
-tools.conv2dNbin10x: {
-  tool_type: Adc2dConvolute
-  LogLevel: 1
-  ResponseVectors: @local::data.responseVector2dNbin10x
-  ResponseCenter: 25
-  BinsPerWire: 10
-  BinsPerTick: 1
-  MinChannel: 1600
-  MaxChannel: 2559
-}
-
-# 2D APA U convoution.
-tools.conv2dNbin10u: @local::tools.conv2dNbin10x
-tools.conv2dNbin10u.ResponseVectors: @local::data.responseVector2dNbin10u
-tools.conv2dNbin10u.MinChannel:    0
-tools.conv2dNbin10u.MaxChannel:  799
-
-# 2D APA V convoution.
-tools.conv2dNbin10v: @local::tools.conv2dNbin10x
-tools.conv2dNbin10v.ResponseVectors: @local::data.responseVector2dNbin10v
-tools.conv2dNbin10v.MinChannel:  800
-tools.conv2dNbin10v.MaxChannel: 1599
-
 ########################################################################
 
 tools.plotDft: @local::tools.adcPlotDftTickPower

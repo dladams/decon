@@ -653,7 +653,7 @@ data.responseVector2dNbin10x: [
   ]
 ]
 
-# 2D APA X convoution.
+# 2D APA X convolution.
 tools.conv2dNbin10x: {
   tool_type: Adc2dConvolute
   LogLevel: 1
@@ -665,13 +665,13 @@ tools.conv2dNbin10x: {
   MaxChannel: 2559
 }
 
-# 2D APA U convoution.
+# 2D APA U convolution.
 tools.conv2dNbin10u: @local::tools.conv2dNbin10x
 tools.conv2dNbin10u.ResponseVectors: @local::data.responseVector2dNbin10u
 tools.conv2dNbin10u.MinChannel:    0
 tools.conv2dNbin10u.MaxChannel:  799
 
-# 2D APA V convoution.
+# 2D APA V convolution.
 tools.conv2dNbin10v: @local::tools.conv2dNbin10x
 tools.conv2dNbin10v.ResponseVectors: @local::data.responseVector2dNbin10v
 tools.conv2dNbin10v.MinChannel:  800
