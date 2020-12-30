@@ -10,33 +10,31 @@
 // The APA response (charge/tick) for that cell is obtained using the wirecell
 // response histograms intepreted with the code in package wirecell-kernel and
 // smeared with the CE response from dunetpc.
-// There is also the option (ssig) to add diffusion smearing of 1 or 2 ticks
+// There is also the option to add diffusion smearing of 1 or 2 ticks
 // roughly corresponding respectively to 1 or 3.6 m drift.
 // Noise is added using CeNoise which is random in each tick followed by
 // smearing with the CE response function and then scaled to have RMS 1.0.
 // This is scaled by the noise level (noise) in ke.
 //
 // thtxzdeg: horizontal angle w.r.t. the APA plane
-// ssig:
-//      "" - no smearing
-//      "1" - smear RMS = 1 ==> 1 m
-//      "2" - smear RMS = 2 ==> 3.6 m
-//      "nosig" - No signal (noise only)
 // sresp specifies the response simulation
 //       = nosig - No charge deposit (noise only)
 //       = noconv - Charge deposit only
-//       = conv1d for conv1d:NNBR for 1D convolution
-//       = NNBR:NBIN or NNBR:NBIN:NSIG for 2D convolution
-//         NNBR = # neighbor cells to include (-1 for 1D simulation)
-//         NBIN = # bins in each cell: 0 means no convolution
-//         NSIG is the longitudinal transfusion smearing in ticks
+//       = conv1d:CVAL:CVALS
+//       = conv1d:CVALS for 1D convolution
+//       = CVALS for 2D convolution
+//       CVALS = NNBR:NBIN:NSIG:NOISE
+//         NNBR = # neighbor cells to include (-1 for 1D simulation) [0]
+//         NBIN = # bins/wire [1]
+//         NSIG = longitudinal diffusion Gaussian sigma in ticks [0]
+//         NOISE = noise level in e [0]
+//         Blank or omitted values take the defaults indicated in brackets.
 // iproc specifies the extent of reconstruction processing:
 //   iproc: 0 - no deconvolution
 //          1 - 1D DFT deconvolution
 //          2 - 1D direct matrix deconvolution
 //          3 - 1D filtered matrix deconvolution
 //          4 - 1D chi-square matrix deconvolution
-// noise is the noise level in ke
 // run is the run number and is used to seed the noise
 // nevt is the number of events to process (1 track with 3 views for each event)
 //
@@ -62,7 +60,7 @@ int fetchTool(string tnam, AdcChannelTool*& ptoo, string prefix) {
 // Main program.
 //************************************************************************
 
-int run(float thtxzdeg, string sresp, int iproc =1, float noise = 0.0, unsigned int irun =0, unsigned int nevt =1) {
+int run(float thtxzdeg, string sresp, int iproc =1, unsigned int irun =0, unsigned int nevt =1) {
   string myname = "run: ";
   using Index = unsigned int;
 
@@ -107,41 +105,57 @@ int run(float thtxzdeg, string sresp, int iproc =1, float noise = 0.0, unsigned 
     }
   }
 
-  // Decode the response nnbr-nbinPerWire-ssig
+  // Decode the response nnbr-nbinPerWire-ssigl-enoise
   Index nnbr = 0;
   Index nbinPerWire = 1;
-  string ssig = "0";
+  string ssigl = "0";
+  Index enoise = 0;
   bool doSig = true;
   bool doConvolution = nbinPerWire > 0;
   bool use2dConvolution = true;
-  vector<string> rsubs = StringManipulator(sresp).split(":");
-  Index nsub = rsubs.size();
   Index badUInt = 9999;
-  if ( sresp == "nosig" ) {
-    doSig = false;
-    doConvolution = false;
-    use2dConvolution = false;
-  } else if ( sresp == "noconv" ) {
-    doConvolution = false;
-  } else if ( rsubs[0] == "conv1d" ) {
-    use2dConvolution = false;
-    nnbr = nsub > 1 ? StringManipulator(rsubs[1]).toUnsignedInt(badUInt) : 0;
+  if ( sresp.size() ) {
+    vector<string> rsubs = StringManipulator(sresp).split(":", true);
+    Index nsub = rsubs.size();
+    string sconv = rsubs[0];
+    if ( sconv == "nosig" ) {
+      doSig = false;
+      doConvolution = false;
+      use2dConvolution = false;
+    } else if ( sconv == "noconv" ) {
+      doConvolution = false;
+    } else if ( sconv == "conv1d" ) {
+      use2dConvolution = false;
+    } else if ( sconv == "conv2d" ) {
+      use2dConvolution = true;
+    } else {
+      sconv = "UnknownConversion";
+    }
+    if ( nsub > 1 ) {
+      StringManipulator smval(rsubs[1]);
+      if ( smval.size() ) nnbr = smval.toUnsignedInt(badUInt);
+    }
+    if ( nsub > 2 ) {
+      StringManipulator smval(rsubs[2]);
+      if ( smval.size() ) nbinPerWire = smval.toUnsignedInt(badUInt);
+    }
+    if ( nsub > 3 ) ssigl = rsubs[3];
+    if ( nsub > 4 ) {
+      StringManipulator smval(rsubs[4]);
+      if ( smval.size() ) enoise = smval.toUnsignedInt(badUInt);
+    }
+    if ( sconv == "UnknownConversion" || nnbr == badUInt || nbinPerWire == badUInt || enoise == badUInt ) {
+      cout << myname << "ERROR: Invalid response configuration: " << sresp << " --> "
+           << sconv << ":" << nnbr << ":" << nbinPerWire << ":" << ssigl << ":" << enoise << endl;
+      return 1;
+    }
   } else {
-    nnbr = badUInt;
-    nbinPerWire = badUInt;
-    ssig = "badsig";
-    int ierr = 0;
-    nnbr        = nsub > 0 ? StringManipulator(rsubs[0]).toUnsignedInt(badUInt) : badUInt;
-    nbinPerWire = nsub > 1 ? StringManipulator(rsubs[1]).toUnsignedInt(badUInt) : badUInt;
-    ssig = nsub > 2 ? rsubs[2] : "0";
-  }
-  if ( nnbr == badUInt || nbinPerWire == badUInt || ssig == "badsig" ) {
-    cout << myname << "ERROR: Invalid response configuration: " << sresp << " --> "
-         << nnbr << "-" << nbinPerWire << "-" << ssig << endl;
+    cout << myname << "ERROR: Response configuration must be provided." << endl;
     return 1;
   }
 
   // Derived parameters.
+  float noise = 0.001*enoise;
   int ncel = nnbr;
   vector<int> apaConCells; // Cells contributing to central signal.
   if ( mostDistantResponse ) {
@@ -227,17 +241,17 @@ int run(float thtxzdeg, string sresp, int iproc =1, float noise = 0.0, unsigned 
   if ( deconName.size() && fetchTool(deconName, pdecon, myname) ) return 3;
   AdcChannelTool* pconvg = nullptr;
   string slabsmr = "no smearing";
-  if ( ssig == "1" || ssig == "2" ) {
-    string sconvg = "convg" + ssig;
+  if ( ssigl == "1" || ssigl == "2" ) {
+    string sconvg = "convg" + ssigl;
     cout << myname << "Fetching filter smearing tool " << sconvg << endl;
     pconvg = ptm->getShared<AdcChannelTool>(sconvg);
     if ( pconvg == nullptr ) {
       cout << myname << "ERROR: Unable to find tool " << sconvg << endl;
       return 2;
     }
-    slabsmr = "#sigma_{smear} = " + ssig + " ticks";
-  } else if ( ssig != "0" ) {
-    cout << myname << "ERROR: Invalid ssig: " << ssig << endl;
+    slabsmr = "#sigma_{smear} = " + ssigl + " ticks";
+  } else if ( ssigl != "0" ) {
+    cout << myname << "ERROR: Invalid ssigl: " << ssigl << endl;
     return 2;
   }
   cout << myname << "Fetching DFT before plotter." << endl;
@@ -506,7 +520,7 @@ int run(float thtxzdeg, string sresp, int iproc =1, float noise = 0.0, unsigned 
         acd.dftmags.clear();
         acd.dftphases.clear();
       }
-      if ( doConvolution ) {
+      if ( true ) {
         pfft->update(acd);
         pplotDftBefore->viewMap(acm);
         // Deconvolution.
@@ -596,7 +610,7 @@ int run(float thtxzdeg, string sresp, int iproc =1, float noise = 0.0, unsigned 
       man.setLabel("Run " + to_string(irun) + " event " + to_string(ievt));
       string fnam = "wf";
       fnam += (iproc>0 ? deconName : doConvolution ? "conv" : "noconv");
-      fnam += "-sigma" + ssig;
+      fnam += "-sigma" + ssigl;
       fnam += "-thtxz" + stht;
       if ( showNsam ) {
         string snsam = to_string(nsam);

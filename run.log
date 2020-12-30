@@ -20,14 +20,14 @@ ToolBasedRawDigitPrepService::ctor:                     LogLevel: 3
 ToolBasedRawDigitPrepService::ctor:                      DoWires: 0
 ToolBasedRawDigitPrepService::ctor:     No ADC channel tools.
 DuneToolManager::instance: Configuration file: mytools.fcl
-(DuneToolManager *) 0x9582fb0
+(DuneToolManager *) 0x8a3bae0
 Tool manager is available at ptm
 
-Processing run.C(0, "nosig", 0, 0.0, 1, 1)...
-run: No convolution.
-run: Neighbor count: 0
-run: # contributing cells: 1
-run: # bins/wire: 1
+Processing run.C(0, "conv2d:1:10", 1, 1, 1)...
+run: Binned 2D convolution.
+run: Neighbor count: 1
+run: # contributing cells: 3
+run: # bins/wire: 10
 run: # samples: 110
 run: Signal tick: 60
 run: ************************************************************
@@ -1840,7 +1840,34 @@ Adc2dConvolute::ctor:        MinChannel: 800
 Adc2dConvolute::ctor:        MaxChannel: 1599
 run: Found tool conv2dNbin20v
 run: Fetching deconvolution tool(s).
-run: No deconvolution.
+run: 1D DFT deconvolution.
+AdcDeconvoluteFFT:ctor: Using channel mapping tool pdspChannelToPlane
+AdcDeconvoluteFFT:ctor: Parameters:
+AdcDeconvoluteFFT:ctor:          LogLevel: 1
+AdcDeconvoluteFFT:ctor:            Action: 1 (Deconvolution.)
+AdcDeconvoluteFFT:ctor:   ResponseVectors: [
+AdcDeconvoluteFFT:ctor:                      [  0.0012385,   0.0013957,   0.0015833,   0.0018085,   0.0020812,   0.0024141,   0.0028265,   0.0033739,   0.0043385,   0.0065527, 
+AdcDeconvoluteFFT:ctor:                         0.0109848,   0.0179115,   0.0266767,   0.0352190,   0.0393419,   0.0348150,   0.0212409,   0.0025350,  -0.0157293,  -0.0290488, 
+AdcDeconvoluteFFT:ctor:                        -0.0354568,  -0.0355463,  -0.0314740,  -0.0256824,  -0.0198311,  -0.0146580,  -0.0103759,  -0.0069977,  -0.0044654,  -0.0026774, 
+AdcDeconvoluteFFT:ctor:                        -0.0014978,  -0.0007753,  -0.0003674,  -0.0001569,  -0.0000590,  -0.0000188,  -0.0000049,  -0.0000011,  -0.0000005,  -0.0000004], 
+AdcDeconvoluteFFT:ctor:                      [  0.0002332,   0.0002589,   0.0002889,   0.0003239,   0.0003650,   0.0004135,   0.0004713,   0.0005460,   0.0006826,   0.0010144, 
+AdcDeconvoluteFFT:ctor:                         0.0016902,   0.0027450,   0.0041410,   0.0060075,   0.0089036,   0.0136016,   0.0204460,   0.0287503,   0.0359051,   0.0374584, 
+AdcDeconvoluteFFT:ctor:                         0.0302649,   0.0154112,  -0.0029333,  -0.0203670,  -0.0329147,  -0.0382135,  -0.0365549,  -0.0302588,  -0.0221915,  -0.0145915, 
+AdcDeconvoluteFFT:ctor:                        -0.0086380,  -0.0045918,  -0.0021684,  -0.0008887,  -0.0003015,  -0.0000762,  -0.0000111,  -0.0000019,  -0.0000049,  -0.0000064], 
+AdcDeconvoluteFFT:ctor:                      [  0.0000436,   0.0000480,   0.0000530,   0.0000587,   0.0000653,   0.0000730,   0.0000820,   0.0000935,   0.0001156,   0.0001719, 
+AdcDeconvoluteFFT:ctor:                         0.0002883,   0.0004691,   0.0007037,   0.0010068,   0.0014613,   0.0021849,   0.0032521,   0.0047398,   0.0069598,   0.0105867, 
+AdcDeconvoluteFFT:ctor:                         0.0163138,   0.0247836,   0.0400853,   0.0694278,   0.1073940,   0.1375910,   0.1473380,   0.1352770,   0.1088480,   0.0778980, 
+AdcDeconvoluteFFT:ctor:                         0.0499836,   0.0287999,   0.0148160,   0.0066973,   0.0025690,   0.0007717,   0.0001410,  -0.0000058,  -0.0000033,   0.0000178]
+AdcDeconvoluteFFT:ctor:                    ]
+AdcDeconvoluteFFT:ctor:    ResponseShifts: [25, 25, 25]
+AdcDeconvoluteFFT:ctor:     SmoothVectors: []
+AdcDeconvoluteFFT:ctor:                    ]
+AdcDeconvoluteFFT:ctor:      SmoothScales: [  1.0000000]
+AdcDeconvoluteFFT:ctor:  GausFilterSigmas: [3.0000000, 3.0000000, 3.0000000]
+AdcDeconvoluteFFT:ctor:   LowFilterWidths: [-1.0000000, -1.0000000, -1.0000000]
+AdcDeconvoluteFFT:ctor:   LowFilterPowers: [2.0000000, 2.0000000, 2.0000000]
+AdcDeconvoluteFFT:ctor:    ChannelMapTool: pdspChannelToPlane
+run: Found tool decon
 run: Fetching DFT before plotter.
 AdcMultiChannelPlotter::ctor:            LogLevel: 1
 AdcMultiChannelPlotter::ctor:    PlotChannelRanges: []
@@ -2011,20 +2038,161 @@ AdcRoiViewer::ctor: End constructing tool.
 run: ************************************************************
 run: Depositing charge.
 run: ************************************************************
+run: Depositing charge.
+run: Adding signal.
+run: Wire bin -10
+run:   Q[-10][60] = 2.8740001
+run: Wire bin -9
+run:   Q[-9][60] = 2.8740001
+run: Wire bin -8
+run:   Q[-8][60] = 2.8740001
+run: Wire bin -7
+run:   Q[-7][60] = 2.8740001
+run: Wire bin -6
+run:   Q[-6][60] = 2.8740001
+run: Wire bin -5
+run:   Q[-5][60] = 2.8740001
+run: Wire bin -4
+run:   Q[-4][60] = 2.8740001
+run: Wire bin -3
+run:   Q[-3][60] = 2.8740001
+run: Wire bin -2
+run:   Q[-2][60] = 2.8740001
+run: Wire bin -1
+run:   Q[-1][60] = 2.8740001
+run: Wire bin 0
+run:   Q[0][60] = 2.8740001
+run: Wire bin 1
+run:   Q[1][60] = 2.8740001
+run: Wire bin 2
+run:   Q[2][60] = 2.8740001
+run: Wire bin 3
+run:   Q[3][60] = 2.8740001
+run: Wire bin 4
+run:   Q[4][60] = 2.8740001
+run: Wire bin 5
+run:   Q[5][60] = 2.8740001
+run: Wire bin 6
+run:   Q[6][60] = 2.8740001
+run: Wire bin 7
+run:   Q[7][60] = 2.8740001
+run: Wire bin 8
+run:   Q[8][60] = 2.8740001
+run: Wire bin 9
+run:   Q[9][60] = 2.8740001
+run: Wire bin 10
+run:   Q[10][60] = 2.8740001
+run: Wire bin 11
+run:   Q[11][60] = 2.8740001
+run: Wire bin 12
+run:   Q[12][60] = 2.8740001
+run: Wire bin 13
+run:   Q[13][60] = 2.8740001
+run: Wire bin 14
+run:   Q[14][60] = 2.8740001
+run: Wire bin 15
+run:   Q[15][60] = 2.8740001
+run: Wire bin 16
+run:   Q[16][60] = 2.8740001
+run: Wire bin 17
+run:   Q[17][60] = 2.8740001
+run: Wire bin 18
+run:   Q[18][60] = 2.8740001
+run: Wire bin 19
+run:   Q[19][60] = 2.8740001
+run: Not filling samples from sample bins.
 run: Bin sample counts, charge: 
+run:    -10: 110, 2.8740001
+run:     -9: 110, 2.8740001
+run:     -8: 110, 2.8740001
+run:     -7: 110, 2.8740001
+run:     -6: 110, 2.8740001
+run:     -5: 110, 2.8740001
+run:     -4: 110, 2.8740001
+run:     -3: 110, 2.8740001
+run:     -2: 110, 2.8740001
+run:     -1: 110, 2.8740001
+run:      0: 110, 2.8740001
+run:      1: 110, 2.8740001
+run:      2: 110, 2.8740001
+run:      3: 110, 2.8740001
+run:      4: 110, 2.8740001
+run:      5: 110, 2.8740001
+run:      6: 110, 2.8740001
+run:      7: 110, 2.8740001
+run:      8: 110, 2.8740001
+run:      9: 110, 2.8740001
+run:     10: 110, 2.8740001
+run:     11: 110, 2.8740001
+run:     12: 110, 2.8740001
+run:     13: 110, 2.8740001
+run:     14: 110, 2.8740001
+run:     15: 110, 2.8740001
+run:     16: 110, 2.8740001
+run:     17: 110, 2.8740001
+run:     18: 110, 2.8740001
+run:     19: 110, 2.8740001
 run: Cell sample counts: 
 run: ************************************************************
 run: ######## Event 1
 run: ************************************************************
 run: Noise counts: 0, 0.  Last = 0.0000000
-run: Creating 1 channels.
+run: Creating 3 channels.
+run: Convoluting in 2D
+run:   Filling chan/bin 2099/0 from edep bin -10
+run:   Filling chan/bin 2099/1 from edep bin -9
+run:   Filling chan/bin 2099/2 from edep bin -8
+run:   Filling chan/bin 2099/3 from edep bin -7
+run:   Filling chan/bin 2099/4 from edep bin -6
+run:   Filling chan/bin 2099/5 from edep bin -5
+run:   Filling chan/bin 2099/6 from edep bin -4
+run:   Filling chan/bin 2099/7 from edep bin -3
+run:   Filling chan/bin 2099/8 from edep bin -2
+run:   Filling chan/bin 2099/9 from edep bin -1
+run:   Filling chan/bin 2100/0 from edep bin 0
+run:   Filling chan/bin 2100/1 from edep bin 1
+run:   Filling chan/bin 2100/2 from edep bin 2
+run:   Filling chan/bin 2100/3 from edep bin 3
+run:   Filling chan/bin 2100/4 from edep bin 4
+run:   Filling chan/bin 2100/5 from edep bin 5
+run:   Filling chan/bin 2100/6 from edep bin 6
+run:   Filling chan/bin 2100/7 from edep bin 7
+run:   Filling chan/bin 2100/8 from edep bin 8
+run:   Filling chan/bin 2100/9 from edep bin 9
+run:   Filling chan/bin 2101/0 from edep bin 10
+run:   Filling chan/bin 2101/1 from edep bin 11
+run:   Filling chan/bin 2101/2 from edep bin 12
+run:   Filling chan/bin 2101/3 from edep bin 13
+run:   Filling chan/bin 2101/4 from edep bin 14
+run:   Filling chan/bin 2101/5 from edep bin 15
+run:   Filling chan/bin 2101/6 from edep bin 16
+run:   Filling chan/bin 2101/7 from edep bin 17
+run:   Filling chan/bin 2101/8 from edep bin 18
+run:   Filling chan/bin 2101/9 from edep bin 19
+Status: 0
+Integers:
+  channelMax: 2101
+  channelMin: 2099
+  nmult: 357300
+  responseVectorCount: 35
+AdcChannelDftPlotter::viewLocal: ERROR: DFT is not present.
+AdcChannelDftPlotter::viewLocal: ERROR: DFT is not present.
+run: Deconvoluting channel 2100
+Status: 0
+run: Rebaselining channel 2100
+ExpTailPedRemover::update: Skipping channel 2100
+Status: 0
+AdcChannelDftPlotter::viewLocal: ERROR: DFT is not present.
+AdcChannelDftPlotter::viewLocal: ERROR: DFT is not present.
 run: Finding signal
 Status: 0
 Integers:
-  nThresholdBins: 0
-  nroi: 0
+  nThresholdBins: 10
+  nroi: 1
 run: Updating ROI histograms
-AdcRoiViewer::doView: Processing channel 2100. Input ROI count is 0
+AdcRoiViewer::doView: Processing channel 2100. Input ROI count is 1
+AdcRoiViewer::doView:   ROI 0(raw 0): [45, 74]
+AdcRoiViewer::writeRoiPlots:   Creating plots for roi_chan002100_000.png
 AdcRoiViewer::fillSumHists: Creating histogram hsa_ch02100
 AdcRoiViewer::fillSumHists:    Name: hsa_ch02100
 AdcRoiViewer::fillSumHists:   Title: ROI signal area run 1 channel 2100
@@ -2032,48 +2200,268 @@ AdcRoiViewer::fillSumHists:    nbin: 200
 AdcRoiViewer::fillSumHists:    xmin: -50.0000000
 AdcRoiViewer::fillSumHists:    xmax: 150.0000000
 AdcRoiViewer::fillSumHists:     fit: gaus
-AdcRoiViewer::fillSumHists: Filling summary histogram hsa_ch02100. Fill count is 0
+AdcRoiViewer::fillSumHists: Filling summary histogram hsa_ch02100. Fill count is 1
 Status: 0
 Integers:
   roiChannel: 2100
-  roiCount: 0
+  roiCount: 1
   roiEvent: 1
   roiNTickChannel: 110
-  roiRawCount: 0
+  roiRawCount: 1
   roiRun: 1
   roiSubRun: -1
 Int vectors:
-  roiNOverflows[0]:
-  roiNTicks[0]:
-  roiNUnderflows[0]:
-  roiTick0s[0]:
-  roiTickMaxs[0]:
-  roiTickMins[0]:
-  roiTimes[0]:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 30
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 45
+  roiTickMaxs[1]: 15
+  roiTickMins[1]: 29
+  roiTimes[1]: 0
 Float vectors:
-  roiSigAreas[0]:
-  roiSigMaxs[0]:
-  roiSigMins[0]:
+  roiSigAreas[1]: 28.4357738
+  roiSigMaxs[1]: 3.3393166
+  roiSigMins[1]: 0.0000861
 Histogram vectors:
-  roiHists[0]
+  roiHists[1]
 run: Evaluating background RMS
-run: Sample RMS: 0.0000000
-run: Signal RMS: 0.0000000
-TH1.Print Name  = adc_prepared_ev1_ch2100, Entries= 110, Total sum= 0
-run: X: A = 0.0, #Sigma|A| = 0.0, #Phi = 0.000
-run: Printing wfnoconv-sigma0-thtxz0-nnbr0-nbin1-evt001.{png,tpad}
+run: Sample RMS: 0.7794481
+run: Signal RMS: 0.0009428
+TH1.Print Name  = adc_prepared_ev1_ch2100, Entries= 110, Total sum= 28.4585
+run: X: A = 28.5, #Sigma|A| = 28.5, #Phi = 1.000
+run: Creating 3 channels.
+run: Convoluting in 2D
+run:   Filling chan/bin 99/0 from edep bin -10
+run:   Filling chan/bin 99/1 from edep bin -9
+run:   Filling chan/bin 99/2 from edep bin -8
+run:   Filling chan/bin 99/3 from edep bin -7
+run:   Filling chan/bin 99/4 from edep bin -6
+run:   Filling chan/bin 99/5 from edep bin -5
+run:   Filling chan/bin 99/6 from edep bin -4
+run:   Filling chan/bin 99/7 from edep bin -3
+run:   Filling chan/bin 99/8 from edep bin -2
+run:   Filling chan/bin 99/9 from edep bin -1
+run:   Filling chan/bin 100/0 from edep bin 0
+run:   Filling chan/bin 100/1 from edep bin 1
+run:   Filling chan/bin 100/2 from edep bin 2
+run:   Filling chan/bin 100/3 from edep bin 3
+run:   Filling chan/bin 100/4 from edep bin 4
+run:   Filling chan/bin 100/5 from edep bin 5
+run:   Filling chan/bin 100/6 from edep bin 6
+run:   Filling chan/bin 100/7 from edep bin 7
+run:   Filling chan/bin 100/8 from edep bin 8
+run:   Filling chan/bin 100/9 from edep bin 9
+run:   Filling chan/bin 101/0 from edep bin 10
+run:   Filling chan/bin 101/1 from edep bin 11
+run:   Filling chan/bin 101/2 from edep bin 12
+run:   Filling chan/bin 101/3 from edep bin 13
+run:   Filling chan/bin 101/4 from edep bin 14
+run:   Filling chan/bin 101/5 from edep bin 15
+run:   Filling chan/bin 101/6 from edep bin 16
+run:   Filling chan/bin 101/7 from edep bin 17
+run:   Filling chan/bin 101/8 from edep bin 18
+run:   Filling chan/bin 101/9 from edep bin 19
+Status: 0
+Integers:
+  channelMax: 101
+  channelMin: 99
+  nmult: 357300
+  responseVectorCount: 35
+AdcChannelDftPlotter::viewLocal: ERROR: DFT is not present.
+AdcChannelDftPlotter::viewLocal: ERROR: DFT is not present.
+run: Deconvoluting channel 100
+Status: 0
+run: Rebaselining channel 100
+ExpTailPedRemover::update: Correcting run 1 event 1 channel 100
+ExpTailPedRemover::update:  Channel 100: Iteration 0: nsamfit=76, noise=0.0603166; {ped}: {0.3239919}
+ExpTailPedRemover::update:  Channel 100: Iteration 1: nsamfit=77, noise=0.0612053; {ped}: {0.3254147}
+ExpTailPedRemover::update:  Channel 100: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 100: Iteration count: 2
+ExpTailPedRemover::update:  Channel 100: Noise: 0.0612053 ke/tick from 77/110 samples
+ExpTailPedRemover::update:  Channel 100: Final {ped}: {0.3254147}
+Status: 0
+Integers:
+  uscNiteration: 2
+  uscNsamFit: 77
+Floats:
+  uscNoise: 0.0612053
+  uscPedestal: 0.3254147
+AdcChannelDftPlotter::viewLocal: ERROR: DFT is not present.
+AdcChannelDftPlotter::viewLocal: ERROR: DFT is not present.
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 13
+  nroi: 1
+run: Updating ROI histograms
+AdcRoiViewer::doView: Processing channel 100. Input ROI count is 1
+AdcRoiViewer::doView:   ROI 0(raw 0): [44, 76]
+AdcRoiViewer::writeRoiPlots:   Creating plots for roi_chan000100_000.png
+AdcRoiViewer::fillSumHists: Creating histogram hsa_ch00100
+AdcRoiViewer::fillSumHists:    Name: hsa_ch00100
+AdcRoiViewer::fillSumHists:   Title: ROI signal area run 1 channel 100
+AdcRoiViewer::fillSumHists:    nbin: 200
+AdcRoiViewer::fillSumHists:    xmin: -50.0000000
+AdcRoiViewer::fillSumHists:    xmax: 150.0000000
+AdcRoiViewer::fillSumHists:     fit: gaus
+AdcRoiViewer::fillSumHists: Filling summary histogram hsa_ch00100. Fill count is 1
+Status: 0
+Integers:
+  roiChannel: 100
+  roiCount: 1
+  roiEvent: 1
+  roiNTickChannel: 110
+  roiRawCount: 1
+  roiRun: 1
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 33
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 44
+  roiTickMaxs[1]: 16
+  roiTickMins[1]: 29
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 52.4603462
+  roiSigMaxs[1]: 6.3076134
+  roiSigMins[1]: -0.1214781
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 1.4451743
+run: Signal RMS: 0.0608066
+TH1.Print Name  = adc_prepared_ev1_ch100, Entries= 110, Total sum= 52.4604
+run: U: A = 52.5, #Sigma|A| = 57.9, #Phi = 0.906
+run: Creating 3 channels.
+run: Convoluting in 2D
+run:   Filling chan/bin 1099/0 from edep bin -10
+run:   Filling chan/bin 1099/1 from edep bin -9
+run:   Filling chan/bin 1099/2 from edep bin -8
+run:   Filling chan/bin 1099/3 from edep bin -7
+run:   Filling chan/bin 1099/4 from edep bin -6
+run:   Filling chan/bin 1099/5 from edep bin -5
+run:   Filling chan/bin 1099/6 from edep bin -4
+run:   Filling chan/bin 1099/7 from edep bin -3
+run:   Filling chan/bin 1099/8 from edep bin -2
+run:   Filling chan/bin 1099/9 from edep bin -1
+run:   Filling chan/bin 1100/0 from edep bin 0
+run:   Filling chan/bin 1100/1 from edep bin 1
+run:   Filling chan/bin 1100/2 from edep bin 2
+run:   Filling chan/bin 1100/3 from edep bin 3
+run:   Filling chan/bin 1100/4 from edep bin 4
+run:   Filling chan/bin 1100/5 from edep bin 5
+run:   Filling chan/bin 1100/6 from edep bin 6
+run:   Filling chan/bin 1100/7 from edep bin 7
+run:   Filling chan/bin 1100/8 from edep bin 8
+run:   Filling chan/bin 1100/9 from edep bin 9
+run:   Filling chan/bin 1101/0 from edep bin 10
+run:   Filling chan/bin 1101/1 from edep bin 11
+run:   Filling chan/bin 1101/2 from edep bin 12
+run:   Filling chan/bin 1101/3 from edep bin 13
+run:   Filling chan/bin 1101/4 from edep bin 14
+run:   Filling chan/bin 1101/5 from edep bin 15
+run:   Filling chan/bin 1101/6 from edep bin 16
+run:   Filling chan/bin 1101/7 from edep bin 17
+run:   Filling chan/bin 1101/8 from edep bin 18
+run:   Filling chan/bin 1101/9 from edep bin 19
+Status: 0
+Integers:
+  channelMax: 1101
+  channelMin: 1099
+  nmult: 357300
+  responseVectorCount: 35
+AdcChannelDftPlotter::viewLocal: ERROR: DFT is not present.
+AdcChannelDftPlotter::viewLocal: ERROR: DFT is not present.
+run: Deconvoluting channel 1100
+Status: 0
+run: Rebaselining channel 1100
+ExpTailPedRemover::update: Correcting run 1 event 1 channel 1100
+ExpTailPedRemover::update:  Channel 1100: Iteration 0: nsamfit=76, noise=0.0260784; {ped}: {0.4526321}
+ExpTailPedRemover::update:  Channel 1100: Iteration 1: nsamfit=78, noise=0.0270571; {ped}: {0.4528920}
+ExpTailPedRemover::update:  Channel 1100: Signal is unchanged. Exiting loop.
+ExpTailPedRemover::update:  Channel 1100: Iteration count: 2
+ExpTailPedRemover::update:  Channel 1100: Noise: 0.0270571 ke/tick from 78/110 samples
+ExpTailPedRemover::update:  Channel 1100: Final {ped}: {0.4528920}
+Status: 0
+Integers:
+  uscNiteration: 2
+  uscNsamFit: 78
+Floats:
+  uscNoise: 0.0270571
+  uscPedestal: 0.4528920
+AdcChannelDftPlotter::viewLocal: ERROR: DFT is not present.
+AdcChannelDftPlotter::viewLocal: ERROR: DFT is not present.
+run: Finding signal
+Status: 0
+Integers:
+  nThresholdBins: 12
+  nroi: 1
+run: Updating ROI histograms
+AdcRoiViewer::doView: Processing channel 1100. Input ROI count is 1
+AdcRoiViewer::doView:   ROI 0(raw 0): [44, 75]
+AdcRoiViewer::writeRoiPlots:   Creating plots for roi_chan001100_000.png
+AdcRoiViewer::fillSumHists: Creating histogram hsa_ch01100
+AdcRoiViewer::fillSumHists:    Name: hsa_ch01100
+AdcRoiViewer::fillSumHists:   Title: ROI signal area run 1 channel 1100
+AdcRoiViewer::fillSumHists:    nbin: 200
+AdcRoiViewer::fillSumHists:    xmin: -50.0000000
+AdcRoiViewer::fillSumHists:    xmax: 150.0000000
+AdcRoiViewer::fillSumHists:     fit: gaus
+AdcRoiViewer::fillSumHists: Filling summary histogram hsa_ch01100. Fill count is 1
+Status: 0
+Integers:
+  roiChannel: 1100
+  roiCount: 1
+  roiEvent: 1
+  roiNTickChannel: 110
+  roiRawCount: 1
+  roiRun: 1
+  roiSubRun: -1
+Int vectors:
+  roiNOverflows[1]: 0
+  roiNTicks[1]: 32
+  roiNUnderflows[1]: 0
+  roiTick0s[1]: 44
+  roiTickMaxs[1]: 16
+  roiTickMins[1]: 29
+  roiTimes[1]: 0
+Float vectors:
+  roiSigAreas[1]: 53.5527878
+  roiSigMaxs[1]: 6.7313671
+  roiSigMins[1]: -0.0510960
+Histogram vectors:
+  roiHists[1]
+run: Evaluating background RMS
+run: Sample RMS: 1.5200121
+run: Signal RMS: 0.0268831
+TH1.Print Name  = adc_prepared_ev1_ch1100, Entries= 110, Total sum= 53.5528
+run: V: A = 53.6, #Sigma|A| = 55.8, #Phi = 0.959
+run: Printing wfdecon-sigma0-thtxz0-nnbr1-nbin10-evt001.{png,tpad}
 run: Closing tools.
 AdcRoiViewer::dtor: Exiting.
 AdcRoiViewer::dtor:   Event count: 1
-AdcRoiViewer::dtor:    Call count: 1
+AdcRoiViewer::dtor:    Call count: 3
 AdcRoiViewer::dtor:   Sample unit: ke/tick
-AdcRoiViewer::dtor: Printing 1 ROI pad
-AdcRoiViewer::fitSumHists: Fitting summary histograms. Count is 1.
+AdcRoiViewer::dtor: Printing 3 ROI pads
+AdcRoiViewer::dtor: Writing roi_chan000100_000.png
+AdcRoiViewer::dtor: Writing roi_chan001100_000.png
+AdcRoiViewer::dtor: Writing roi_chan002100_000.png
+AdcRoiViewer::fitSumHists: Fitting summary histograms. Count is 3.
+AdcRoiViewer::fitSumHists: Fitting hist hsa_ch00100 with gaus
+AdcRoiViewer::fitSumHists: Fitting hist hsa_ch01100 with gaus
 AdcRoiViewer::fitSumHists: Fitting hist hsa_ch02100 with gaus
+AdcRoiViewer::fitSumHists:   WARNING: Fit gaus of hsa_ch02100 returned 4
 AdcRoiViewer::writeSumPlots: Plotting 1 set of summary histograms 
 AdcRoiViewer::writeSumPlots:   Creating plots for hsa_ch02100.{png,tpad}
 AdcRoiViewer::writeSumPlots:     Plotting hsa_ch02100
 AdcRoiViewer::writeSumPlots:   Writing hsa_ch02100.{png,tpad}
+AdcRoiViewer::writeSumPlots:   Creating plots for hsa_ch00100.{png,tpad}
+AdcRoiViewer::writeSumPlots:     Plotting hsa_ch00100
+AdcRoiViewer::writeSumPlots:   Writing hsa_ch00100.{png,tpad}
+AdcRoiViewer::writeSumPlots:   Creating plots for hsa_ch01100.{png,tpad}
+AdcRoiViewer::writeSumPlots:     Plotting hsa_ch01100
+AdcRoiViewer::writeSumPlots:   Writing hsa_ch01100.{png,tpad}
 run: Exiting.
 (int) 0
 AdcChannelMetric::dtor: Summary for metric sigRms
