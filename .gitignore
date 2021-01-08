@@ -3,4 +3,6 @@
 *.tpad
 tmp
 wsave
+xfer
 cache
+matrix.C
