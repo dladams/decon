@@ -464,14 +464,19 @@ int run(float thtxzdeg, string sresp, string sdeco, unsigned int irun =0, unsign
         ichas.push_back(jcha);
       }
       cout << myname << "Creating " << ichas.size() << " channels." << endl;
+      Index ifmb = 0;
+      Index ifch = 0;
+      Index chanStat = 0;
       for ( Index jcha : ichas ) {
         AdcChannelData& jacd = acm[jcha];
-        jacd.run = irun;
-        jacd.event = ievt;
+        //jacd.run = irun;
+        //jacd.event = ievt;
+        jacd.setEventInfo(irun, ievt);
         jacd.sampleUnit = "ke/tick";
-        jacd.channel = jcha;
+        //jacd.channel = jcha;
+        jacd.setChannelInfo(jcha, ifmb, ifch, chanStat);
         jacd.samples.resize(nsam);
-        jacd.channelStatus = 0;
+        //jacd.channelStatus = 0;
       }
       AdcChannelData& acd = acm[icha];
       if ( ! doConvolution ) {
@@ -530,10 +535,10 @@ int run(float thtxzdeg, string sresp, string sdeco, unsigned int irun =0, unsign
             continue;
           }
           AdcChannelData acdtmp;
-          acdtmp.channel = icha + icel;
+          acdtmp.setChannelInfo(icha + icel, ifmb, ifch + icel, chanStat);
           acdtmp.samples = celsamples[icel];
           if ( pconvg != nullptr ) {
-            cout << myname << "Adding longitudinal diffusion to channel " << acdtmp.channel << endl;
+            cout << myname << "Adding longitudinal diffusion to channel " << acdtmp.channel() << endl;
             pconvg->update(acdtmp).print();
           }
           pncon->update(acdtmp);
