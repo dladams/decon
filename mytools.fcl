@@ -265,6 +265,13 @@ tools.convg3.GausFilterSigmas: [3.0]
 
 ########################################################################
 
+tools.plotSamples: @local::tools.preparedAdcPlotter
+tools.plotSamples.TickRange: plotAllTicks
+tools.plotSamples.MinSignal: -0.1
+tools.plotSamples.MaxSignal:  0.1
+
+########################################################################
+
 tools.plotDft: @local::tools.adcPlotDftTickPower
 tools.plotDft.YMax: 10.0
 tools.plotDft.YMax: 0.0
@@ -367,7 +374,7 @@ tools.adcPedestalFit: {
 
 ########################################################################
 
-# This ROI viewer cretaes the final charge histograms.
+# This ROI viewer creates the final charge histograms.
 
 tools.roiViewer: @local::tools.adcRoiViewer
 tools.roiViewer.SumHists: [
