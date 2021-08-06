@@ -48,8 +48,8 @@
 // Helpers.
 //************************************************************************
 
-int fetchTool(string tnam, AdcChannelTool*& ptoo, string prefix) {
-  ptoo = ptm->getShared<AdcChannelTool>(tnam);
+int fetchTool(string tnam, TpcDataTool*& ptoo, string prefix) {
+  ptoo = ptm->getShared<TpcDataTool>(tnam);
   if ( ptoo == nullptr ) {
     cout << prefix << "ERROR: Unable to find tool " << tnam << endl;
     return 1;
@@ -243,34 +243,34 @@ int run(float thtxzdeg, string sresp, string sdeco, unsigned int irun =0, unsign
   cout << myname << "Fetching tools." << endl;
   cout << myname << line << endl;
   cout << myname << "Fetching waveform plotter." << endl;
-  AdcChannelTool* pwf = ptm->getShared<AdcChannelTool>("wf");
+  TpcDataTool* pwf = ptm->getShared<TpcDataTool>("wf");
   cout << myname << "Fetching 1D reponse convolution tools." << endl;
-  AdcChannelTool* pconvo = ptm->getShared<AdcChannelTool>("convo");
-  AdcChannelTool* pconvo1 = ptm->getShared<AdcChannelTool>("convo1");
-  AdcChannelTool* pconvo2 = ptm->getShared<AdcChannelTool>("convo2");
-  AdcChannelTool* pconvo3 = ptm->getShared<AdcChannelTool>("convo3");
-  AdcChannelTool* pconvo4 = ptm->getShared<AdcChannelTool>("convo4");
+  TpcDataTool* pconvo = ptm->getShared<TpcDataTool>("convo");
+  TpcDataTool* pconvo1 = ptm->getShared<TpcDataTool>("convo1");
+  TpcDataTool* pconvo2 = ptm->getShared<TpcDataTool>("convo2");
+  TpcDataTool* pconvo3 = ptm->getShared<TpcDataTool>("convo3");
+  TpcDataTool* pconvo4 = ptm->getShared<TpcDataTool>("convo4");
   cout << myname << "Fetching 2D response convolution tools." << endl;
-  map<Index, map<string, AdcChannelTool*>> pcon2ds;
+  map<Index, map<string, TpcDataTool*>> pcon2ds;
   for ( Index nbin : {1, 5, 10, 20} ) {
     for ( string sview : {"x", "u", "v"} ) {
       string tnam = "conv2dNbin" + to_string(nbin) + sview;
       if ( fetchTool(tnam, pcon2ds[nbin][sview], myname) ) return 2;
     }
   }
-  vector<AdcChannelTool*> deconTools(deconToolNames.size(), nullptr);
+  vector<TpcDataTool*> deconTools(deconToolNames.size(), nullptr);
   cout << myname << "Fetching deconvolution tool(s)." << endl;
   auto idt = deconTools.begin();
   for ( string deconToolName : deconToolNames ) {
     if ( fetchTool(deconToolName, *(idt++), myname) ) return 3;
   }
   cout << myname << "Fetching longitudinal diffusion smearing tool." << endl;
-  AdcChannelTool* pconvg = nullptr;
+  TpcDataTool* pconvg = nullptr;
   string slabsmr = "no smearing";
   if ( ssigl == "1" || ssigl == "2" ) {
     string sconvg = "convg" + ssigl;
     cout << myname << "Fetching filter smearing tool " << sconvg << endl;
-    pconvg = ptm->getShared<AdcChannelTool>(sconvg);
+    pconvg = ptm->getShared<TpcDataTool>(sconvg);
     if ( pconvg == nullptr ) {
       cout << myname << "ERROR: Unable to find tool " << sconvg << endl;
       return 2;
@@ -281,33 +281,33 @@ int run(float thtxzdeg, string sresp, string sdeco, unsigned int irun =0, unsign
     return 2;
   }
   cout << myname << "Fetching DFT before plotter." << endl;
-  auto pplotDftBefore = ptm->getPrivate<AdcChannelTool>("plotDftBefore");
+  auto pplotDftBefore = ptm->getPrivate<TpcDataTool>("plotDftBefore");
   if ( ! pplotDftBefore ) return 3;
   cout << myname << "Fetching DFT after plotter." << endl;
-  auto pplotDftAfter  = ptm->getPrivate<AdcChannelTool>("plotDftAfter");
+  auto pplotDftAfter  = ptm->getPrivate<TpcDataTool>("plotDftAfter");
   if ( ! pplotDftAfter ) return 3;
   cout << myname << "Fetching FFT calculator." << endl;
-  AdcChannelTool* pfft = ptm->getShared<AdcChannelTool>("adcFFT");
+  TpcDataTool* pfft = ptm->getShared<TpcDataTool>("adcFFT");
   if ( pfft == nullptr ) return 3;
   cout << myname << "Fetching signal finder." << endl;
-  AdcChannelTool* psigfind = doDeconvolution ? ptm->getShared<AdcChannelTool>("deconSignalFinder")
-                                             : ptm->getShared<AdcChannelTool>("nodeconSignalFinder");
+  TpcDataTool* psigfind = doDeconvolution ? ptm->getShared<TpcDataTool>("deconSignalFinder")
+                                             : ptm->getShared<TpcDataTool>("nodeconSignalFinder");
   if ( psigfind == nullptr ) return 3;
   cout << myname << "Fetching sample RMS calculator." << endl;
-  AdcChannelTool* psamrms = ptm->getShared<AdcChannelTool>("adcChannelSamplelRmsPlotter");
+  TpcDataTool* psamrms = ptm->getShared<TpcDataTool>("adcChannelSamplelRmsPlotter");
   if ( psamrms == nullptr ) return 3;
   cout << myname << "Fetching signal RMS calculator." << endl;
-  AdcChannelTool* psigrms = ptm->getShared<AdcChannelTool>("adcChannelSignalRmsPlotter");
+  TpcDataTool* psigrms = ptm->getShared<TpcDataTool>("adcChannelSignalRmsPlotter");
   if ( psigrms == nullptr ) return 3;
   cout << myname << "Fetching rebaseline tool." << endl;
-  AdcChannelTool* prbl = ptm->getShared<AdcChannelTool>("rebaseline");
-  //AdcChannelTool* prbl = ptm->getShared<AdcChannelTool>("adcPedestalFit");
+  TpcDataTool* prbl = ptm->getShared<TpcDataTool>("rebaseline");
+  //TpcDataTool* prbl = ptm->getShared<TpcDataTool>("adcPedestalFit");
   if ( prbl == nullptr ) return 3;
   cout << myname << "Fetching ROI viewer." << endl;
   string rvname = "roiViewer";
   if ( thtxzdeg > 80 ) rvname += "Wide2";
   else if ( thtxzdeg > 70 ) rvname += "Wide";
-  auto proiview = ptm->getPrivate<AdcChannelTool>(rvname);
+  auto proiview = ptm->getPrivate<TpcDataTool>(rvname);
   if ( proiview == nullptr ) return 3;
   // End fetching tools.
 
@@ -520,13 +520,13 @@ int run(float thtxzdeg, string sresp, string sdeco, unsigned int irun =0, unsign
           cout << myname << "Tool for 2d convolution with " << nbinPerWire << " bins not found." << endl;
           return 1;
         }
-        AdcChannelTool* pcon2d = pcon2ds[nbinPerWire][sview];
+        TpcDataTool* pcon2d = pcon2ds[nbinPerWire][sview];
         pcon2d->updateMap(acm).print();
       } else {
         cout << myname << "Convoluting with neighbors" << endl;
         for ( int icel : apaConCells ) {
           cout << myname << "...cell " << icel << endl;
-          AdcChannelTool* pncon = abs(icel) == 0 ? pconvo  :
+          TpcDataTool* pncon = abs(icel) == 0 ? pconvo  :
                                   abs(icel) == 1 ? pconvo1 :
                                   abs(icel) == 2 ? pconvo2 :
                                   abs(icel) == 3 ? pconvo3 :
@@ -558,7 +558,7 @@ int run(float thtxzdeg, string sresp, string sdeco, unsigned int irun =0, unsign
         // Deconvolution.
         if ( doDeconvolution ) {
           cout << myname << "Deconvoluting channel " << icha << endl;
-          for ( AdcChannelTool* pdecon : deconTools ) pdecon->update(acd).print();
+          for ( TpcDataTool* pdecon : deconTools ) pdecon->update(acd).print();
           if ( doRebaseline ) {
             cout << myname << "Rebaselining channel " << icha << endl;
             prbl->update(acd).print();
