@@ -290,7 +290,8 @@ int run(float thtxzdeg, string sresp, string sdeco, unsigned int irun =0, unsign
   AdcChannelTool* pfft = ptm->getShared<AdcChannelTool>("adcFFT");
   if ( pfft == nullptr ) return 3;
   cout << myname << "Fetching signal finder." << endl;
-  AdcChannelTool* psigfind = ptm->getShared<AdcChannelTool>("deconSignalFinder");
+  AdcChannelTool* psigfind = doDeconvolution ? ptm->getShared<AdcChannelTool>("deconSignalFinder")
+                                             : ptm->getShared<AdcChannelTool>("nodeconSignalFinder");
   if ( psigfind == nullptr ) return 3;
   cout << myname << "Fetching sample RMS calculator." << endl;
   AdcChannelTool* psamrms = ptm->getShared<AdcChannelTool>("adcChannelSamplelRmsPlotter");

@@ -1,0 +1,3 @@
+tools.decon2d: {
+  tool_type: Tpc2dDeconvolute
+}

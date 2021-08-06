@@ -3,6 +3,7 @@
 #include "wc2dresponseNbin5.fcl"
 #include "wc2dresponseNbin10.fcl"
 #include "wc2dresponseNbin20.fcl"
+#include "wc2ddecon.fcl"
 
 tools.conv2dNbin1x.LogLevel: 5
 
@@ -318,6 +319,11 @@ tools.deconSignalFinder: {
   FlagNegative: false
 }
 
+# Final signal finder where deconvolution is not applied.
+tools.nodeconSignalFinder: @local::tools.deconSignalFinder
+tools.nodeconSignalFinder.Threshold: 0.4
+tools.nodeconSignalFinder.FlagNegative: true
+
 tools.adcChannelSamplelRmsPlotter.MetricLabel: "RMS [ke]"
 tools.adcChannelSignalRmsPlotter.MetricLabel: "RMS [ke]"
 
@@ -349,7 +355,7 @@ tools.rebaseline: {
   ExcludeChannelRanges: []
 }
 
-# This only worke with raw data, not samples
+# This only works with raw data, not samples
 tools.adcPedestalFit: {
   tool_type: AdcPedestalFitter
   LogLevel: 1
