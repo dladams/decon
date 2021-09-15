@@ -1,0 +1,24 @@
+#!/bin/sh
+
+VIEW=$1
+NSAM=$2
+NNBR=$3
+
+if [ -z "$NNBR" ]; then
+  echo Usage: $0 VIEW NSAM NNBR
+  exit 0
+fi
+
+if [ $VIEW = all ]; then
+  VIEWS="x u v"
+else
+  VIEWS=$VIEW
+fi
+
+rm *.png
+for VIEW in $VIEWS; do
+  root.exe -b -q 'responsePower.C("'$VIEW'", '$NSAM', '$NNBR')'
+done
+rm wsave/*
+cp *.png wsave
+makeIndex wsave r

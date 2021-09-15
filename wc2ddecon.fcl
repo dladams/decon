@@ -1,3 +1,59 @@
-tools.decon2d: {
-  tool_type: Tpc2dDeconvolute
+tools.roi2d: {
+     tool_type: AdcToRoi2d
+      LogLevel: 1
+        Option: 1
+  InputAdcMaps: []
+   OutputNames: []
 }
+
+tools.roiToAdc: {
+  tool_type: Roi2dToAdc
+  LogLevel: 1
+}
+
+data.SampleSigma:  3
+data.LowFilterPower:   2
+data.LowFilterWidth:   0
+
+tools.decon2dx: {
+  tool_type: Tpc2dDeconvolute
+  LogLevel: 1
+  FftSize: 1000000
+  ResponseVectors: @local::data.responseVector2dNbin1x
+  ResponseCenter: 20
+  InPath: ""
+  OutPath: ""
+  SampleSigma: 3.0
+  ChannelSigma: 0.0
+  LowFilterPower: 0
+  LowFilterWidth: 0
+}
+
+tools.decon2du: {
+  tool_type: Tpc2dDeconvolute
+  LogLevel: 1
+  FftSize: 1000000
+  ResponseVectors: @local::data.responseVector2dNbin1u
+  ResponseCenter: 20
+  InPath: ""
+  OutPath: ""
+  SampleSigma: @local::data.SampleSigma
+  ChannelSigma: 0.0
+  LowFilterPower: @local::data.LowFilterPower
+  LowFilterWidth: @local::data.LowFilterWidth
+}
+
+tools.decon2dv: {
+  tool_type: Tpc2dDeconvolute
+  LogLevel: 1
+  FftSize: 1000000
+  ResponseVectors: @local::data.responseVector2dNbin1v
+  ResponseCenter: 20
+  InPath: ""
+  OutPath: ""
+  SampleSigma: @local::data.SampleSigma
+  ChannelSigma: 0.0
+  LowFilterPower: @local::data.LowFilterPower
+  LowFilterWidth: @local::data.LowFilterWidth
+}
+

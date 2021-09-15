@@ -7,33 +7,37 @@
 #
 # Shell script to run the simulation in run.C.
 
-THTXZ=$1
+STRK=$1
 SRESP=$2
 SDECO=$3
 RUN=$4
 NEVT=$5
 if [ -z "$SDECO" ]; then
-  echo "Usage: $0 THTXZ SRESP SDECO [NOISE [RUN [NEVT]]]]"
-  echo "       THTXZ = Track angle in XZ plane."
-  echo "       SRESP = SCONV:NNBR:NBIN:SIGL:NOISE"
-  echo "         SCONV = nosig for no signal"
-  echo "               = noconv for no convolution"
-  echo "               = conv1d for 1D convolution"
-  echo "               = conv2d for 2D convolution"
-  echo "          NNBR = # neighbor cells (on each side) in convolution"
-  echo "          NBIN = # bins/wire"
-  echo "          SIGL = Longitudinal smearing sigma [ticks]: 0, 1, 2 or 3"
-  echo "         NOISE = noise level (e/tick, e.g. 90 for protoDUNE)"
-  echo "         SDECO = DNAM:DOPT"
+  echo "Usage: $0 STRK SRESP SDECO [NOISE [RUN [NEVT]]]]"
+  echo "       STRK = THT:MIP:WMN:WMAX"
+  echo "           THT = XY track angle in deg"
+  echo "           MIP = Rate of e- production in MIP [1.0]"
+  echo "           WMN, WMX = Track range in wires [0:1]"
+  echo "       SRESP = SCONV:NSAM:NNBR:NBIN:SIGL:NOISE"
+  echo "           SCONV = nosig for no signal"
+  echo "                 = noconv for no convolution"
+  echo "                 = conv1d for 1D convolution"
+  echo "                 = conv2d for 2D convolution"
+  echo "            NNBR = # samples (ticks)"
+  echo "            NNBR = # neighbor cells (on each side) in convolution"
+  echo "            NBIN = # bins/wire"
+  echo "            SIGL = Longitudinal smearing sigma [ticks]: 0, 1, 2 or 3"
+  echo "           NOISE = noise level (e/tick, e.g. 90 for protoDUNE)"
+  echo "       SDECO = DNAM:DOPT"
   echo "            DNAM = nodeco for no deconvolution"
-  echo "                 = deco1d for 1D deconvolution"
-  echo "              DOPT = dft for DFT deconvolution."
-  echo "                   = dm for direct matrix deconvolution."
-  echo "                   = fm for filtered matrix deconvolution."
-  echo "                   = cm for chi-square matrix deconvolution."
+  echo "                 = deco1d:DOPT for 1D deconvolution"
+  echo "                DOPT = dft for DFT deconvolution."
+  echo "                     = dm for direct matrix deconvolution."
+  echo "                     = fm for filtered matrix deconvolution."
+  echo "                     = cm for chi-square matrix deconvolution."
   echo "                 = deco2d for 2D deconvolution"
-  echo "           RUN = Run number and random seed."
-  echo "          NEVT = # events (1 track per event)"
+  echo "         RUN = Run number and random seed."
+  echo "        NEVT = # events (1 track per event)"
   exit 0
 fi
 if [ -z "$NOISE" ]; then
@@ -47,6 +51,6 @@ if [ -z "$NEVT" ]; then
 fi
 rm -f wsave/* &&
 rm -f *.png *.tpad
-root.exe -b -q 'run.C('$THTXZ', "'$SRESP'", "'$SDECO'", '$RUN', '$NEVT')' | tee run.log &&
+root.exe -b -q 'run.C("'$STRK'", "'$SRESP'", "'$SDECO'", '$RUN', '$NEVT')' | tee run.log &&
 cp *.png wsave
 makeIndex wsave

@@ -1,6 +1,7 @@
 *.log
 *.png
 *.tpad
+*.fcldump
 tmp
 wsave
 xfer
