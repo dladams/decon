@@ -11,8 +11,9 @@ tools.roiToAdc: {
   LogLevel: 1
 }
 
-data.SampleSigma:  3
-data.LowFilterPower:   2
+data.SampleSigma:  4
+data.ChannelSigma:  0
+data.LowFilterPower:   0     # 0 disables filter
 data.LowFilterWidth:   0
 
 tools.decon2dx: {
@@ -38,7 +39,7 @@ tools.decon2du: {
   InPath: ""
   OutPath: ""
   SampleSigma: @local::data.SampleSigma
-  ChannelSigma: 0.0
+  ChannelSigma: @local::data.ChannelSigma
   LowFilterPower: @local::data.LowFilterPower
   LowFilterWidth: @local::data.LowFilterWidth
 }
@@ -52,7 +53,7 @@ tools.decon2dv: {
   InPath: ""
   OutPath: ""
   SampleSigma: @local::data.SampleSigma
-  ChannelSigma: 0.0
+  ChannelSigma: @local::data.ChannelSigma
   LowFilterPower: @local::data.LowFilterPower
   LowFilterWidth: @local::data.LowFilterWidth
 }

@@ -10,20 +10,22 @@
 STRK=$1
 SRESP=$2
 SDECO=$3
-RUN=$4
-NEVT=$5
+SROIF=$4
+RUN=$5
+NEVT=$6
 if [ -z "$SDECO" ]; then
   echo "Usage: $0 STRK SRESP SDECO [NOISE [RUN [NEVT]]]]"
-  echo "       STRK = THT:MIP:WMN:WMAX"
+  echo "       STRK = THT:MIP:WMN:WMAX:WFYFAC"
   echo "           THT = XY track angle in deg"
   echo "           MIP = Rate of e- production in MIP [1.0]"
   echo "           WMN, WMX = Track range in wires [0:1]"
+  echo "           WFYFAC: = Scale factor for y-axis in waveform plots [1]."
   echo "       SRESP = SCONV:NSAM:NNBR:NBIN:SIGL:NOISE"
   echo "           SCONV = nosig for no signal"
   echo "                 = noconv for no convolution"
   echo "                 = conv1d for 1D convolution"
   echo "                 = conv2d for 2D convolution"
-  echo "            NNBR = # samples (ticks)"
+  echo "            NSAM = # samples (ticks)"
   echo "            NNBR = # neighbor cells (on each side) in convolution"
   echo "            NBIN = # bins/wire"
   echo "            SIGL = Longitudinal smearing sigma [ticks]: 0, 1, 2 or 3"
@@ -36,6 +38,8 @@ if [ -z "$SDECO" ]; then
   echo "                     = fm for filtered matrix deconvolution."
   echo "                     = cm for chi-square matrix deconvolution."
   echo "                 = deco2d for 2D deconvolution"
+  echo "       SROIF = ROI finder, e.g. thr1p is 1 ke, positive signals"
+  echo "                                noiroif is no signal finder"
   echo "         RUN = Run number and random seed."
   echo "        NEVT = # events (1 track per event)"
   exit 0
@@ -51,6 +55,6 @@ if [ -z "$NEVT" ]; then
 fi
 rm -f wsave/* &&
 rm -f *.png *.tpad
-root.exe -b -q 'run.C("'$STRK'", "'$SRESP'", "'$SDECO'", '$RUN', '$NEVT')' | tee run.log &&
+root.exe -b -q 'run.C("'$STRK'", "'$SRESP'", "'$SDECO'", "'$SROIF'",'$RUN', '$NEVT')' | tee run.log &&
 cp *.png wsave
 makeIndex wsave

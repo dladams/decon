@@ -324,8 +324,21 @@ tools.nodeconSignalFinder: @local::tools.deconSignalFinder
 tools.nodeconSignalFinder.Threshold: 0.4
 tools.nodeconSignalFinder.FlagNegative: true
 
-tools.adcChannelSamplelRmsPlotter.MetricLabel: "RMS [ke]"
-tools.adcChannelSignalRmsPlotter.MetricLabel: "RMS [ke]"
+# Above are obsolete default signal finders.
+
+tools.thrSignalFinderNone: @local::tools.deconSignalFinder
+tools.thrSignalFinderNone.Threshold: 1.e10
+
+tools.thrSignalFinder1p: @local::tools.deconSignalFinder
+
+tools.thrSignalFinder0p1p: @local::tools.deconSignalFinder
+tools.thrSignalFinder0p1p.Threshold: 0.1
+
+tools.thrSignalFinder0p01p: @local::tools.deconSignalFinder
+tools.thrSignalFinder0p01p.Threshold: 0.01
+
+tools.thrSignalFinder0p001p: @local::tools.deconSignalFinder
+tools.thrSignalFinder0p001p.Threshold: 0.001
 
 ########################################################################
 
@@ -400,3 +413,39 @@ tools.roiViewerWide2.SumHists: [
 ]
 
 tools.roiViewer.LogLevel: 3
+
+########################################################################
+# Metric plotters.
+
+tools.adcChannelSamplelRmsPlotter.PlotFileName:    "hchsamrms_run%0RUN%_chans%0CHAN1%-%0CHAN2%.png"
+tools.adcChannelSignalRmsPlotter.PlotFileName:     "hchsigrms_run%0RUN%_chans%0CHAN1%-%0CHAN2%.png"
+tools.adcChannelNotSignalRmsPlotter.PlotFileName: "hchnsgrms_run%0RUN%_chans%0CHAN1%-%0CHAN2%.png"
+tools.adcChannelNotSignalRmsPlotter.MetricMax: 3.0
+
+tools.adcChannelNotSignalRmsPlotter.MetadataFlags: ["write"]
+
+tools.adcChannelSigFracPlotter: @local::tools.adcChannelNotSignalRmsPlotter
+tools.adcChannelSigFracPlotter.Metric: sigFrac
+tools.adcChannelNotSignalRmsPlotter.MetricMax: 1.0
+tools.adcChannelNotSignalRmsPlotter.MetricLabel: "Fraction"
+
+tools.adcChannelNotSignalRms10Plotter: @local::tools.adcChannelNotSignalRmsPlotter
+tools.adcChannelNotSignalRms10Plotter.Metric: nsgRms10
+
+tools.adcChannelNotSignalRms20Plotter: @local::tools.adcChannelNotSignalRmsPlotter
+tools.adcChannelNotSignalRms20Plotter.Metric: nsgRms20
+
+tools.adcChannelNotSignalRms30Plotter: @local::tools.adcChannelNotSignalRmsPlotter
+tools.adcChannelNotSignalRms30Plotter.Metric: nsgRms30
+
+tools.adcChannelNotSignalRms40Plotter: @local::tools.adcChannelNotSignalRmsPlotter
+tools.adcChannelNotSignalRms40Plotter.Metric: nsgRms40
+
+tools.adcChannelNotSignalRms50Plotter: @local::tools.adcChannelNotSignalRmsPlotter
+tools.adcChannelNotSignalRms50Plotter.Metric: nsgRms50
+
+tools.adcChannelNotSignalRms60Plotter: @local::tools.adcChannelNotSignalRmsPlotter
+tools.adcChannelNotSignalRms60Plotter.Metric: nsgRms60
+
+tools.adcRoiTreeMaker.MetadataFields: ["sigFrac", "nsgRms", "nsgRms10", "nsgRms20", "nsgRms30", "nsgRms40", "nsgRms50", "nsgRms60"]
+

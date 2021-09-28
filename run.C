@@ -37,6 +37,7 @@
 //                  fm is filtered matrix deconvolution
 //                  cm is chi-square matrix deconvolution
 //          deco2d: 2D deconvolution
+// sroif specifies the ROI finder: E.g. thr1p for thrSignalFinder1p or noroif for none
 // run is the run number and is used to seed the noise
 // nevt is the number of events to process (1 track with 3 views for each event)
 //
@@ -62,7 +63,7 @@ int fetchTool(string tnam, TpcDataTool*& ptoo, string prefix) {
 // Main program.
 //************************************************************************
 
-int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned int nevt =1) {
+int run(string strk, string sresp, string sdeco, string sroif, unsigned int irun =0, unsigned int nevt =1) {
   string myname = "run: ";
   using Index = unsigned int;
   using IndexVector = std::vector<Index>;
@@ -75,12 +76,54 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
   Index nsam =   400;          // Number of time samples
   Index rebaselineFlag = 1;    // Rebaselining flag: 0=none, 1=non-signal ticks, 2=tool
   bool mostDistantResponse = false;   // Only for debugging
-  float sigThresh = 0.05;   // BG region is evaluated from true signal using this
-  Index sigFence = 0;       // threshold and fence. Used for rebaseline and BG suppresssion
-  float samScale = 0.0;   // BG suppression. <0 disables. 0 zeroes. >0 is exp time constant.
+  float sigThresh = 0.01;   // BG region is evaluated from true signal using this
+  Index sigFence = 10;       // threshold and fence. Used for baseline and BG suppresssion
+  float samScale = -1.0;   // BG suppression. <0 disables. 0 zeroes. >0 is exp time constant.
   IndexVector sigOff = {0, 10, 5};
-  Index nWfPlot = 3;  // # waveform plot for each event: 0, 1, 3 or 5
+  Index nWfPlot = 5;  // # waveform plot for each event: 0, 1, 3 or 5
+  float thrFac = 1.0;    // Threshold for area calculations in wf plots is thrFac*noise.
 
+  // Decode the track description:  thtxzdeg:mipfac:wDepMin:wDepMax:wfyfac:nWfPlot
+  //   THTXZ - Angle in deg in XZ plane (paralel to plane is 0 deg)
+  //   MIPFAC - Rate of energy deposit in MIP [1.0]
+  //   WMIN - Wire where track starts (0/1 is left/right edge of central wire) [0.0]
+  //   WMAX - Wire where track ends [1.0]
+  //   WFYFAC - Range for wf plots is scaled by this factor [1.0]
+  float thtxzdeg = 0.0;
+  float mipfac =  1.00;         // dQ/ds = dqds * mipfac
+  float wDepMin =  0.00;        // Track deposits energy over the wire range
+  float wDepMax =  1.00;        // (wDepMin, wDepMax) if max > min.
+  float wfyfac = 1.0;
+  if ( strk.size() ) {
+    vector<string> rsubs = StringManipulator(strk).split(":", true);
+    rsubs.resize(6, "");    // Pad with blanks
+    if ( rsubs[0].size() ) thtxzdeg = std::stod(rsubs[0]);
+    if ( rsubs[1].size() ) mipfac = std::stod(rsubs[1]);
+    if ( rsubs[2].size() ) wDepMin = std::stod(rsubs[2]);
+    if ( rsubs[3].size() ) wDepMax = std::stod(rsubs[3]);
+    if ( rsubs[4].size() ) wfyfac = std::stod(rsubs[4]);
+    if ( rsubs[5].size() ) nWfPlot = std::stoi(rsubs[5]);
+  }
+  string strkLab = "tht" + StringManipulator::floatToString( thtxzdeg, 6, true, "p", "m");
+  strkLab +=      "-mip" + StringManipulator::floatToString(   mipfac, 6, true, "p", "m");
+  strkLab +=      "-wmn" + StringManipulator::floatToString(  wDepMin, 6, true, "p", "m");
+  strkLab +=      "-wmx" + StringManipulator::floatToString(  wDepMax, 6, true, "p", "m");
+  ostringstream ssthtxz;
+  ssthtxz << std::fixed << std::setprecision(1) << thtxzdeg;
+  string sthtxz = ssthtxz.str();
+  ostringstream ssmipfac;
+  ssmipfac << std::fixed << std::setprecision(1) << mipfac;
+  string smipfac = ssmipfac.str();
+  ostringstream ssdepRange;
+  ssdepRange << "[" << wDepMin << "," << wDepMax << "]";
+  string sdepRange = ssdepRange.str();
+  float thtxz = thtxzdeg*acos(-1.0)/180.0;
+  float dqds = dqdsMip * mipfac;
+  cout << myname << "THETA_XZ: " << thtxzdeg << " deg = " << thtxz << " rad" << endl;
+  cout << myname << "dQ/ds: " << mipfac << " MIP = " << dqds << " ke/mm" << endl;
+  cout << myname << "Wire range: (" << wDepMin << ", " << wDepMax << ")" << endl;
+  
+  // Build channel labels for the waveform plots.
   std::vector<string> chanLabel(nWfPlot);
   if ( nWfPlot == 1 ) {
     chanLabel[0] = " central";
@@ -96,51 +139,16 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
     chanLabel[4] = " next right";
   } else {
     cout << myname << "ERROR: Invalid WF plot number: " << nWfPlot << endl;
-    abort();
+    return 1;
   }
+  cout << myname << "WF plot number: " << nWfPlot << endl;
 
-  // Decode the track description:  THTXZ:MIPFAC:WMIN:WMAX
-  //   THTXZ - Angle in deg in XZ plane (paralel to plane is 0 deg)
-  //   MIPFAC - Rate of energy deposit in MIP [1.0]
-  //   WMIN - Wire where track starts (0/1 is left/right edge of central wire) [0.0]
-  //   WMAX - Wire where track ends [1.0]
-  float thtxzdeg = 0.0;
-  float mipfac =  1.00;         // dQ/ds = dqds * mipfac
-  float wDepMin =  0.00;        // Track deposits energy over the wire range
-  float wDepMax =  1.00;        // (wDepMin, wDepMax) if max > min.
-  if ( strk.size() ) {
-    vector<string> rsubs = StringManipulator(strk).split(":", true);
-    rsubs.resize(4, "");    // Pad with blanks
-    if ( rsubs[0].size() ) thtxzdeg = std::stod(rsubs[0]);
-    if ( rsubs[1].size() ) mipfac = std::stod(rsubs[1]);
-    if ( rsubs[2].size() ) wDepMin = std::stod(rsubs[2]);
-    if ( rsubs[3].size() ) wDepMax = std::stod(rsubs[3]);
-  }
-  string strkLab = "tht" + StringManipulator::floatToString( thtxzdeg, 6, true, "p", "m");
-  strkLab +=      "-mip" + StringManipulator::floatToString(   mipfac, 6, true, "p", "m");
-  strkLab +=      "-wmn" + StringManipulator::floatToString(  wDepMin, 6, true, "p", "m");
-  strkLab +=      "-wmx" + StringManipulator::floatToString(  wDepMax, 6, true, "p", "m");
-  ostringstream ssthtxz;
-  ssthtxz << std::fixed << std::setprecision(1) << thtxzdeg;
-  string sthtxz = ssthtxz.str();
-  ostringstream ssmipfac;
-  ssmipfac << std::fixed << std::setprecision(1) << mipfac;
-  string smipfac = ssmipfac.str();
-  ostringstream ssdepRange;
-  ssdepRange << "[" << wDepMin << ", " << wDepMax << "]";
-  string sdepRange = ssdepRange.str();
-  float thtxz = thtxzdeg*acos(-1.0)/180.0;
-  float dqds = dqdsMip * mipfac;
-  cout << myname << "THETA_XZ: " << thtxzdeg << " deg = " << thtxz << " rad" << endl;
-  cout << myname << "dQ/ds: " << mipfac << " MIP = " << dqds << " ke/mm" << endl;
-  cout << myname << "Wire range: (" << wDepMin << ", " << wDepMax << ")" << endl;
-  
-  // Decode the response nsam-nnbr-nbinPerWire-ssigl-enoise
+  // Decode the response sconv:nsam:nnbr:nbinPerWire:ssigl:enoise
   Index nnbr = 0;
   Index nbinPerWire = 1;
   string ssigl = "0";
   Index enoise = 0;
-  bool doSig = true;
+  bool doSig = mipfac != 0.0;
   bool doConvolution = nbinPerWire > 0;
   bool use2dConvolution = true;
   Index badUInt = 9999;
@@ -150,8 +158,8 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
     string sconv = rsubs[0];
     if ( sconv == "nosig" ) {
       doSig = false;
+      mipfac = 0.0;
       doConvolution = false;
-      use2dConvolution = false;
     } else if ( sconv == "noconv" ) {
       doConvolution = false;
     } else if ( sconv == "conv1d" ) {
@@ -159,7 +167,8 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
     } else if ( sconv == "conv2d" ) {
       use2dConvolution = true;
     } else {
-      sconv = "UnknownConversion";
+      cout << myname << "ERROR: Invalid convolution specifier: " << sconv << endl;
+      return 1;
     }
     if ( nsub > 1 ) {
       StringManipulator smval(rsubs[1]);
@@ -213,7 +222,6 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
   // Set range for waveform plots
   float wfxmin = isig - 45;    // X-range for waveform plots
   float wfxmax = isig + 45;
-  float wfyfac = 1.0;
   float wfymin = -3.0*wfyfac;  // Y-range for waveform plots
   float wfymax =  8.0*wfyfac;
   if ( false ) {
@@ -222,7 +230,7 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
   }
   bool doWideXRange = true;
   if ( doWideXRange ) {
-    if ( nsam > 8000 ) {
+    if ( nsam > 800 ) {
       wfxmin = isig - 400;
       wfxmax = isig + 400;
     } else {
@@ -240,6 +248,7 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
   vector<vector<string>> decon2dToolNames;
   string deconTitle;
   int deconError = 0;
+  string sdecon = "No decon";
   if ( dnam == "nodeco" ) {
     cout << myname << "No deconvolution." << endl;
   } else if ( dnam == "deco1d" ) {
@@ -249,20 +258,25 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
       cout << myname << "1D DFT deconvolution." << endl;
       deconToolNames.push_back("decon");
       deconTitle = "1D DFT decon of";
+      sdecon = "DFT decon";
     } else if ( dopt == "dm" ) {
       cout << myname << "1D direct deconvolution." << endl;
       deconToolNames.push_back("dmdecon");
       deconTitle = "1D Direct matrix decon of";
+      sdecon = "DM decon";
     } else if ( dopt == "fm" ) {
       cout << myname << "1D filtered matrix deconvolution." << endl;
       deconToolNames.push_back("fmdecon");
       deconTitle = "1D Filtered matrix decon of";
+      sdecon = "FM decon";
     } else if ( dopt == "cm" ) {
       cout << myname << "1D chi-square matrix deconvolution." << endl;
       deconToolNames.push_back("cmdecon");
       deconTitle = "1D Chi-square matrix decon of";
+      sdecon = "#chi^{2} decon";
     } else deconError = 2;
   } else if ( dnam == "deco2d" ) {
+    sdecon = "2D decon";
     do2dDeconvolution = true;
     deconTitle = "2D decon of";
     if ( dsubs.size() != 1 ) deconError = 3;
@@ -289,6 +303,34 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
   bool doDeconvolution = do1dDeconvolution || do2dDeconvolution;
   string deconName;
   for ( string dsub : dsubs ) deconName += dsub;
+
+  // Decode the signal finder specifier.
+  dsubs = StringManipulator(sroif).split(":", true);
+  dnam = dsubs[0];
+  string sroifTool = "roifError";
+  string sroifLabel = "???";
+  if ( dnam == "decon" ) {
+    sroifTool = "deconSignalFinder";
+    sroifLabel = "deconSF";
+  } else if ( dnam == "nodecon" ) {
+    sroifTool = "nodeconSignalFinder";
+    sroifLabel = "nodeconSF";
+  } else if ( dnam == "noROI" ) {
+    sroifLabel = "no SF";
+    sroifTool = "thrSignalFinderNone";
+  } else if ( dnam.substr(0, 3) == "thr" ) {
+    string sthr = dnam.substr(3);
+    string sfthr = sthr;
+    // Replace '.' with 'p'.
+    for ( string::size_type ipos=0; ipos<sfthr.size(); ++ipos ) {
+      if ( sfthr[ipos] == '.' ) sfthr[ipos] = 'p';
+    }
+    sroifLabel = "thr=" + sthr;
+    sroifTool = "thrSignalFinder" + sfthr;
+  } else {
+    cout << myname << "ERROR: Invalid ROI finder specifier: " << dnam << endl;
+    return 1;
+  }
 
   // Derived parameters.
   float noise = 0.001*enoise;
@@ -325,6 +367,28 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
 
   // Fetch noise scaled to 1.0 for this run.
   CeNoise cen(irun);
+
+  // Create global label and name string.
+  ostringstream sslab;
+  string space = "  ";
+  sslab << thtxzdeg << "#circ";
+  sslab << space;
+  if ( doSig ) {
+    sslab << mipfac << " MIP";
+    sslab << space;
+    sslab << "[" << wDepMin << ", " << wDepMax << "]";
+  } else sslab << "Noise only";
+  sslab << space;
+  sslab << nsam << "#times" << ncha << "/" << nbinPerWire;
+  sslab << space;
+  sslab << "#sigma_{#lower[-0.5]{l}}=" << ssigl;
+  sslab << space;
+  sslab << enoise << " e";
+  sslab << space;
+  sslab << sdecon;
+  sslab << space;
+  sslab << sroifLabel;
+  string sglobalLabel = sslab.str();
 
   // Fetch the tools.
   // Tools that use Root objects in their dtors are created as private and deleted
@@ -390,16 +454,34 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
   cout << myname << "Fetching FFT calculator." << endl;
   TpcDataTool* pfft = ptm->getShared<TpcDataTool>("adcFFT");
   if ( pfft == nullptr ) return 22;
-  cout << myname << "Fetching signal finder." << endl;
-  TpcDataTool* psigfind = doDeconvolution ? ptm->getShared<TpcDataTool>("deconSignalFinder")
-                                             : ptm->getShared<TpcDataTool>("nodeconSignalFinder");
-  if ( psigfind == nullptr ) return 23;
+  cout << myname << "Fetching signal finder " << sroifTool << endl;
+  TpcDataTool* psigfind = sroifTool.size() ? ptm->getShared<TpcDataTool>(sroifTool) : nullptr;
+  if ( sroifTool.size() && psigfind == nullptr ) {
+    cout << myname << "Unable to find tool " << sroifTool << endl;
+    return 23;
+  }
   cout << myname << "Fetching sample RMS calculator." << endl;
   TpcDataTool* psamrms = ptm->getShared<TpcDataTool>("adcChannelSamplelRmsPlotter");
   if ( psamrms == nullptr ) return 24;
   cout << myname << "Fetching signal RMS calculator." << endl;
   TpcDataTool* psigrms = ptm->getShared<TpcDataTool>("adcChannelSignalRmsPlotter");
   if ( psigrms == nullptr ) return 25;
+  cout << myname << "Fetching not-signal RMS evaluators." << endl;
+  vector<TpcDataTool*> rmsEvaluators;
+  TpcDataTool* prmsEvaluator = nullptr;
+  for ( string sint : {"SigFrac", "", "10", "20", "30", "40", "50", "60"} ) {
+    string stvar = sint;
+    if ( sint[0] != 'S' ) stvar = "NotSignalRms" + sint;
+    string stnam = "adcChannel" + stvar + "Plotter";
+    cout << myname << "... " << stnam << endl;
+    TpcDataTool* pnsgrms = ptm->getShared<TpcDataTool>(stnam);
+    if ( pnsgrms == nullptr ) {
+      cout << myname << "Tool not found: " << stnam << endl;
+      return 25;
+    }
+    if ( sint == "" ) prmsEvaluator = pnsgrms;
+    rmsEvaluators.push_back(pnsgrms);
+  }
   cout << myname << "Fetching rebaseline tool." << endl;
   TpcDataTool* prbl = ptm->getShared<TpcDataTool>("rebaseline");
   //TpcDataTool* prbl = ptm->getShared<TpcDataTool>("adcPedestalFit");
@@ -410,6 +492,8 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
   else if ( thtxzdeg > 70 ) rvname += "Wide";
   auto proiview = ptm->getPrivate<TpcDataTool>(rvname);
   if ( proiview == nullptr ) return 27;
+  // ROI tree maker.
+  TpcDataTool* proiTreeMaker = ptm->getShared<TpcDataTool>("adcRoiTreeMaker");
   // End fetching tools.
 
   // Create charge deposition.
@@ -552,11 +636,25 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
   vector<string> views = {"x", "u", "v"};
 
   // Loop over the three views unless we are only showing the deposition.
-  unsigned int npla = doConvolution ? 3 : 1;
+  unsigned int npla = doConvolution||doDeconvolution ? 3 : 1;
+
+  // Assign the central channel for each plane.
+  // Also create and fill the data map used when closing the roi viewer.
+  IndexVector centralChannels;
+  DataMap dmRoiview;
+  for ( unsigned int ipla=0; ipla<npla; ++ipla ) {
+    Index icha = chans[ipla] + thtxzdeg;
+    centralChannels.push_back(icha);
+    string scha	= to_string(icha);
+    while ( scha.size() < 5 ) scha = "0" + scha;
+    string resHistName = "hsa_ch" + scha;
+    dmRoiview.setFloat(resHistName, qdeptot);
+  }
+
+  // Loop over events.
   vector<TH1*> myhsts(npla, nullptr);
   Index maxEvtPlot = 20;    // # events for which waveform plots are made
   unique_ptr<TPadManipulator> pmanWfs;
-  // Loop over events.
   for ( Index ievt=1; ievt<nevt+1; ++ievt ) {
     cout << myname << line << endl;
     cout << myname << "######## Event " << ievt << endl;
@@ -575,7 +673,7 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
     vector<vector<string>> slabsWf(nWfPlot);
     for ( unsigned int ipla=0; ipla<npla; ++ipla ) {
       TpcData tpd(1);
-      Index icha = chans[ipla] + thtxzdeg;
+      Index icha = centralChannels[ipla];
       string sview = views[ipla];
       // Create ADC channel data with the energy deposition
       AdcChannelDataMap& acm = *tpd.getAdcData()[0];
@@ -613,6 +711,9 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
           cout << myname << "Adding longitudinal diffusion to single channel " << icha << endl;
           pconvg->update(acd).print();
         }
+      } else if ( ! doSig ) {
+        cout << myname << "ERROR: There is no signal to convolute." << endl;
+        return 23;
       } else if ( use2dConvolution ) {
         // Fill bin samples for the signal cells.
         cout << myname << "Convoluting in 2D" << endl;
@@ -740,7 +841,7 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
         pplotDftBefore->viewMap(acm);
         // Deconvolution.
         if ( do2dDeconvolution ) {
-          cout << myname << "Deconvoluting in 2D channel " << icha << endl;
+          cout << myname << "Deconvoluting in 2D." << endl;
           for ( TpcDataTool* pdecon : decon2dTools[ipla] ) pdecon->updateTpcData(tpd).print();
           pfft->update(acd);
           pplotDftAfter->viewMap(acm);
@@ -779,16 +880,47 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
           }
         }
       }
-      // Find ROI and update ROI histograms.
-      cout << myname << "Finding signal" << endl;
-      psigfind->update(acd).print();
+      // Find ROI and update ROI/noise histograms.
+      if ( psigfind != nullptr ) {
+        cout << myname << "Finding signal" << endl;
+        psigfind->updateMap(acm).print();
+      }
       cout << myname << "Updating ROI histograms" << endl;
       proiview->view(acd).print();
+      cout << myname << "Updating ROI tree" << endl;
+      float sampleRmsAll = 0.0;
+      vector<float> wfPlotNoiseLevels(nWfPlot, 0.0);
+      for ( Index itoo=0; itoo<rmsEvaluators.size(); ++itoo ) {
+        TpcDataTool* ptoo = rmsEvaluators[itoo];
+        DataMap dm = ptoo->updateMap(acm);
+        if ( dm.getString("metricName") == "nsgRms" ) {
+          const DataMap::IntVector& chas = dm.getIntVector("metricChannels");
+          const DataMap::FloatVector& vals = dm.getFloatVector("metricValues");
+          if ( vals.size() != chas.size() ) return 1;
+          Index kchaMet = 0;
+          for ( Index iplt=0; iplt<nWfPlot; ++iplt ) {
+            Index ichaPlot = icha - nWfPlot/2 + iplt;
+            while ( chas[kchaMet]<ichaPlot && kchaMet<chas.size() ) ++kchaMet;
+            if ( kchaMet == chas.size() ) {
+              cout << myname << "Noise metric nsgRms does not have channel " << ichaPlot << endl;
+              return 1;
+            }
+            wfPlotNoiseLevels[iplt] = vals[kchaMet];
+            ++kchaMet;
+          }
+        }
+        dm.print();
+      }
+      proiTreeMaker->viewMap(acm).print();
+      DataMap dsamrmsNew = prmsEvaluator->view(acd);
+      float sampleRmsNew = dsamrmsNew.getFloat("metricValue");
       cout << myname << "Evaluating background RMS" << endl;
-      // Invert signal finder to get background nose level.
+      // Invert signal finder to get background noise level.
       for ( Index isam=0; isam<acd.signal.size(); ++isam ) acd.signal[isam] = acd.signal[isam] ? false : true;
-      DataMap dsamrms = psamrms->view(acd);
-      cout << myname << "Sample RMS: " << dsamrms.getFloat("metricValue") << endl;
+      DataMap dsamrmsOld = psamrms->view(acd);
+      float sampleRmsOld = dsamrmsOld.getFloat("metricValue");
+      cout << myname << "Old sample sample RMS: " << sampleRmsOld << endl;
+      cout << myname << "New signal sample RMS: " << sampleRmsNew << endl;
       DataMap dsigrms = psigrms->view(acd);
       cout << myname << "Signal RMS: " << dsigrms.getFloat("metricValue") << endl;
       //dsamrms.print();
@@ -819,8 +951,15 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
           string slab;
           float thr = 3*noise;
           //thr = 0.5;
+          float sampleNoise = wfPlotNoiseLevels[iplt];
           if ( nevt ) {
-            getResponseLabel(ph, slab, thr, 2);
+            float noiseThreshold = 3.0*sampleNoise;
+            if ( true ) {
+              getResponseLabelNoise(ph, slab, sampleNoise, thrFac, 2);
+            } else {
+              noiseThreshold = 0.0;
+              getResponseLabelThreshold(ph, slab, 3*sampleNoise, 2);
+            }
             slab = mylabs[ipla] + ": " + slab;
             slabsWf[iplt].push_back(slab);
             cout << myname << slab << endl;
@@ -831,7 +970,13 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
     }  // End loop over planes.
     // Decorate and scale the waveform plots.
     if ( pmanWfs ) {
+      ostringstream sslab;
+      sslab << "Threshold is ";
+      if ( thrFac == 0.0 ) sslab << "0";
+      else if ( thrFac == 1.0 ) sslab << "N";
+      else sslab << thrFac << "#timesN";
       for ( Index iplt=0; iplt<nWfPlot; ++iplt) {
+        slabsWf[iplt].push_back(sslab.str());
         TPadManipulator& man = *pmanWfs->man(iplt);
         // Decorate and print the waveform plot for this event.
         man.addAxis();
@@ -857,6 +1002,7 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
         if ( ssuf.size() ) sttl += " (" + ssuf + ")";
         if ( sttlPrefix.size() ) sttl = sttlPrefix + sttl;
         man.setTitle(sttl);
+        man.setTitle(sglobalLabel);
         man.addHorizontalLine(0.0);
         man.setLabel("Run " + to_string(irun) + " event " + to_string(ievt) + chanLabel[iplt]);
       }
@@ -886,7 +1032,10 @@ int run(string strk, string sresp, string sdeco, unsigned int irun =0, unsigned 
   cout << myname << "Closing tools." << endl;
   pplotDftBefore.reset();
   pplotDftAfter.reset();
+  dmRoiview.setInt("dbg", 1);
+  proiview->close(&dmRoiview);
   proiview.reset();
+  cout << myname << sglobalLabel << endl;
   cout << myname << "Exiting." << endl;
   return 0;
 }

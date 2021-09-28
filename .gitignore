@@ -2,6 +2,7 @@
 *.png
 *.tpad
 *.fcldump
+*.root
 tmp
 wsave
 xfer
